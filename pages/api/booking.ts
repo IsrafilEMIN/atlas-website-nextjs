@@ -6,10 +6,9 @@ const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
 // Create a mapping object to translate UI strings to your Prisma ENUM values.
-const serviceTypeMapping: Record<string, "INTERIOR" | "EXTERIOR" | "COMMERCIAL" | "RESIDENTIAL"> = {
+const serviceTypeMapping: Record<string, "EXTERIOR" | "COMMERCIAL" | "RESIDENTIAL"> = {
     "residential": "RESIDENTIAL",
     "commercial": "COMMERCIAL",
-    "interior": "INTERIOR",
     "exterior": "EXTERIOR",
   };
 
@@ -75,6 +74,8 @@ export default async function handler(
              <p>Project Details: ${projectDetails}</p>
              <p>Contact: ${customerPhone}, ${customerEmail}</p>`,
     });
+
+    console.log("Received request body:", req.body);
 
     return res.status(200).json({
       booking,

@@ -39,6 +39,7 @@ model Booking {
   timeSlotId     Int
   notifications  Notification[]  // A booking can have many notifications
   createdAt      DateTime      @default(now())
+  status         String
 }
 
 model Notification {
