@@ -7,6 +7,7 @@ import Logo from "@/components/ui/Logo";
 import { useRouter } from "next/router";
 
 export default function Header() {
+  const router = useRouter();
   const { scrollY } = useScroll();
   const backgroundColor = useTransform(
     scrollY,
@@ -19,7 +20,7 @@ export default function Header() {
 
   // Set the current pathname on the client
   useEffect(() => {
-    setClientLocation(useRouter().pathname);
+    setClientLocation(router.pathname);
   }, []);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isActive = (path: string) => useRouter().pathname === path;
+  const isActive = (path: string) => router.pathname === path;
 
   // Navigation link styling - updated with smaller text
   const linkStyle = (path: string) =>
@@ -39,11 +40,11 @@ export default function Header() {
     }`;
 
   const handleClick = (path: string) => (e: React.MouseEvent) => {
-    if (useRouter().pathname === path) {
+    if (router.pathname === path) {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      useRouter().push(path);
+      router.push(path);
     }
     setIsMenuOpen(false); // Close mobile menu if open
   };
