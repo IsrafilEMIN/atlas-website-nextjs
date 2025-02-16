@@ -16,12 +16,12 @@ export default function Header() {
   );
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [clientLocation, setClientLocation] = useState<string>("");
 
   // Set the current pathname on the client
   useEffect(() => {
-    setClientLocation(router.pathname);
-  }, []);
+    // Your logic that depends on router.pathname
+    console.log("Path changed:", router.pathname);
+  }, [router.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
