@@ -24,7 +24,7 @@ export const bookings = pgTable("bookings", {
   customerEmail: text("customer_email").notNull(),
   customerPhone: varchar("customer_phone", { length: 20 }).notNull(),
   serviceType: text("service_type").notNull(),
-  timeSlotId: integer("time_slot_id").references(() => timeSlots.id).notNull(),
+  availableTime: integer("available_time").notNull(),
   status: text("status").notNull().default('pending'),
   projectDetails: text("project_details"),
   createdAt: timestamp("created_at").defaultNow(),
@@ -40,14 +40,13 @@ export const notifications = pgTable("notifications", {
   content: text("content").notNull(),
 });
 
-// Zod schemas for validation
-export const insertTimeSlotSchema = createInsertSchema(timeSlots).omit({
-  id: true,
-});
-
-export const insertBookingSchema = createInsertSchema(bookings).omit({
-  id: true,
-  createdAt: true,
+export const insertBookingSchema = z.object({
+  customerName: z.string().min(1, "Name is required"),
+  customerEmail: z.string().email("Invalid email"),
+  customerPhone: z.string().min(1, "Phone number is required"),
+  serviceType: z.string().min(1, "Service type is required"),
+  projectDetails: z.string().optional(),
+  availableTime: z.string().min(1, "Available time is required"),
 });
 
 export const insertNotificationSchema = createInsertSchema(notifications).omit({
@@ -56,12 +55,10 @@ export const insertNotificationSchema = createInsertSchema(notifications).omit({
 });
 
 // Types for TypeScript
-export type InsertTimeSlot = z.infer<typeof insertTimeSlotSchema>;
 export type InsertBooking = z.infer<typeof insertBookingSchema>;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
 
 export type User = typeof users.$inferSelect;
-export type TimeSlot = typeof timeSlots.$inferSelect;
 export type Booking = typeof bookings.$inferSelect;
 export type Notification = typeof notifications.$inferSelect;
 

@@ -42,7 +42,7 @@ model Booking {
   customerEmail  String
   serviceType    ServiceType
   projectDetails String
-  timeSlotId     Int
+  availableTime  String         @default("")
   notifications  Notification[] // A booking can have many notifications
   createdAt      DateTime       @default(now())
   status         BookingStatus  @default(PENDING)

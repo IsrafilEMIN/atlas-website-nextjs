@@ -40,7 +40,7 @@ export default async function handler(
       customerEmail,
       serviceType,
       projectDetails,
-      timeSlotId,
+      availableTime,
       status,
     } = req.body;
 
@@ -64,7 +64,7 @@ export default async function handler(
         customerEmail,
         serviceType: normalizedServiceType,
         projectDetails,
-        timeSlotId,
+        availableTime,
         status: normalizedStatus,
       },
     });
@@ -85,6 +85,7 @@ export default async function handler(
       subject: "New Booking Received",
       html: `<p>New booking from <strong>${customerName}</strong> for ${serviceType}.</p>
              <p>Project Details: ${projectDetails}</p>
+             <p>Available Time: ${availableTime}</p>
              <p>Contact: ${customerPhone}, ${customerEmail}</p>`,
     });
 
