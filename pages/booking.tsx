@@ -1,24 +1,52 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { insertBookingSchema } from "@/lib/shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+type BookingFormValues = z.infer<typeof insertBookingSchema>;
+
+// Define a type for your form values based on the defaultValues in useForm.
+// type BookingFormValues = {
+//   customerName: string;
+//   customerEmail: string;
+//   customerPhone: string;
+//   serviceType: string;
+//   projectDetails: string;
+//   timeSlotId: number;
+// };
 
 export default function Booking() {
-  const [date, setDate] = useState<Date>();
-  const [timeSlot, setTimeSlot] = useState<string>();
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [timeSlot, setTimeSlot] = useState<string | undefined>(undefined);
   const [isYearSelectOpen, setIsYearSelectOpen] = useState(false);
   const currentYear = new Date().getFullYear();
   const { toast } = useToast();
 
-  const form = useForm({
+  // Initialize the form with the BookingFormValues type
+  const form = useForm<BookingFormValues>({
     resolver: zodResolver(insertBookingSchema),
     defaultValues: {
       customerName: "",
@@ -30,7 +58,8 @@ export default function Booking() {
     },
   });
 
-  const onSubmit = async (data: React.FormEvent<HTMLFormElement>) => {
+  // onSubmit now receives the form data (of type BookingFormValues) directly
+  const onSubmit: SubmitHandler<BookingFormValues> = async (data) => {
     if (!date || !timeSlot) {
       toast({
         title: "Error",
@@ -42,32 +71,36 @@ export default function Booking() {
 
     try {
       // Convert date and timeSlot to a proper timestamp for the backend
-      const [hours, minutes] = timeSlot.split(':')[0].split(' ')[0].split(':');
-      const isPM = timeSlot.includes('PM');
-      let hour = parseInt(hours);
+      // Parsing timeSlot: expecting something like "10:00 AM" or "10:00 PM"
+      // We'll assume the format "HH:MM AM/PM"
+      const [timePart, period] = timeSlot.split(" ");
+      const [hoursStr, minutesStr] = timePart.split(":");
+      let hour = parseInt(hoursStr, 10);
+      const minutes = parseInt(minutesStr, 10);
+      const isPM = period === "PM";
       if (isPM && hour !== 12) hour += 12;
       if (!isPM && hour === 12) hour = 0;
 
       const bookingDate = new Date(date);
       bookingDate.setHours(hour);
-      bookingDate.setMinutes(parseInt(minutes));
+      bookingDate.setMinutes(minutes);
 
-      const response = await fetch('/api/booking', {
-        method: 'POST',
+      const response = await fetch("/api/booking", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...data,
-          timeSlotId: 1, // This should be replaced with actual time slot ID from backend
-          status: 'pending',
+          timeSlotId: 1, // Replace with the actual time slot ID from your backend if needed
+          status: "pending",
           createdAt: new Date().toISOString(),
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to book appointment');
+        throw new Error(errorData.message || "Failed to book appointment");
       }
 
       // Reset form
@@ -80,10 +113,10 @@ export default function Booking() {
         description: "Booking successful! You will receive confirmation via email.",
       });
     } catch (error) {
-      console.error('Booking error:', error);
+      console.error("Booking error:", error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : 'Failed to book appointment. Please try again.',
+        description: error instanceof Error ? error.message : "Failed to book appointment. Please try again.",
         variant: "destructive",
       });
     }
@@ -148,38 +181,40 @@ export default function Booking() {
                   dropdown: "relative inline-block",
                   dropdown_month: "text-black font-semibold",
                   dropdown_year: "text-black font-semibold cursor-pointer",
-                  dropdown_icon: "ml-1 h-4 w-4"
+                  dropdown_icon: "ml-1 h-4 w-4",
                 }}
-                components={{
-                  Caption: ({ displayMonth }: { displayMonth: Date }) => {
-                    const year = displayMonth.getFullYear();
-                    const month = displayMonth.toLocaleString('default', { month: 'long' });
-                    return (
-                      <div className="flex justify-center items-center space-x-2">
-                        <span className="text-black font-semibold">{month}</span>
-                        <span 
-                          className="text-black font-semibold cursor-pointer"
-                          onClick={() => setIsYearSelectOpen(!isYearSelectOpen)}
-                        >
-                          {year}
-                        </span>
-                        {isYearSelectOpen && (
-                          <div className="absolute top-8 bg-white border border-gray-200 rounded-md shadow-lg p-2 z-50">
-                            {Array.from({ length: 5 }, (_, i) => currentYear + i).map((y) => (
-                              <div
-                                key={y}
-                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-black"
-                                onClick={() => handleYearSelect(y)}
-                              >
-                                {y}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
-                }}
+                components={
+                  {
+                    Caption: ({ displayMonth }: { displayMonth: Date }) => {
+                      const year = displayMonth.getFullYear();
+                      const month = displayMonth.toLocaleString("default", { month: "long" });
+                      return (
+                        <div className="flex justify-center items-center space-x-2">
+                          <span className="text-black font-semibold">{month}</span>
+                          <span 
+                            className="text-black font-semibold cursor-pointer"
+                            onClick={() => setIsYearSelectOpen(!isYearSelectOpen)}
+                          >
+                            {year}
+                          </span>
+                          {isYearSelectOpen && (
+                            <div className="absolute top-8 bg-white border border-gray-200 rounded-md shadow-lg p-2 z-50">
+                              {Array.from({ length: 5 }, (_, i) => currentYear + i).map((y) => (
+                                <div
+                                  key={y}
+                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-black"
+                                  onClick={() => handleYearSelect(y)}
+                                >
+                                  {y}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    },
+                  } as any
+                }
               />
 
               {date && (
@@ -188,8 +223,8 @@ export default function Booking() {
                   <div className="grid grid-cols-2 gap-2">
                     {Array.from({ length: 24 }, (_, i) => {
                       const hour = Math.floor(i / 2) + 8;
-                      const minute = i % 2 === 0 ? '00' : '30';
-                      const ampm = hour >= 12 ? 'PM' : 'AM';
+                      const minute = i % 2 === 0 ? "00" : "30";
+                      const ampm = hour >= 12 ? "PM" : "AM";
                       const hour12 = hour > 12 ? hour - 12 : hour;
                       return `${hour12}:${minute} ${ampm}`;
                     }).map((time) => (
@@ -199,8 +234,8 @@ export default function Booking() {
                         onClick={() => setTimeSlot(time)}
                         className={
                           timeSlot === time
-                            ? 'bg-black text-white hover:bg-black/90'
-                            : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+                            ? "bg-black text-white hover:bg-black/90"
+                            : "bg-white text-black border-gray-300 hover:bg-gray-100"
                         }
                       >
                         {time}
@@ -221,20 +256,13 @@ export default function Booking() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-900">Service Type</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="bg-white text-gray-900 border-gray-300">
                               <SelectValue placeholder="Select a service" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent
-                            side="bottom"
-                            position="popper"
-                            className="bg-white text-gray-900 z-50"
-                          >
+                          <SelectContent side="bottom" position="popper" className="bg-white text-gray-900 z-50">
                             <SelectItem value="residential">Residential Painting</SelectItem>
                             <SelectItem value="commercial">Commercial Painting</SelectItem>
                             <SelectItem value="exterior">Exterior Painting</SelectItem>
@@ -294,6 +322,7 @@ export default function Booking() {
                             placeholder="Please describe your project (size, current condition, special requirements, etc.)"
                             className="h-32 bg-white text-gray-900 border-gray-300"
                             {...field}
+                            value={field.value ?? ""}
                           />
                         </FormControl>
                         <FormMessage />
