@@ -30,7 +30,7 @@ export default function Booking() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: React.FormEvent<HTMLFormElement>) => {
     if (!date || !timeSlot) {
       toast({
         title: "Error",

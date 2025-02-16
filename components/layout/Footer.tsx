@@ -32,30 +32,30 @@ export default function Footer() {
               Professional painting services for residential and commercial properties.
             </p>
             <div className="flex space-x-4">
-              <a
+              <Link
                 href="https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
                 className="text-gray-300 hover:text-white/60"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Facebook className="w-5 h-5" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="https://x.com/Atlas_Paint"
                 className="text-gray-300 hover:text-white/60"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Twitter className="w-5 h-5" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="https://www.instagram.com/atlas_homeservices/"
                 className="text-gray-300 hover:text-white/60"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Instagram className="w-5 h-5" />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -122,15 +122,15 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="flex items-center text-gray-300">
                 <Phone className="w-5 h-5 mr-2" />
-                <a href="tel:+16479160826" className="hover:underline">
+                <Link href="tel:+16479160826" className="hover:underline">
                   (647) 916-0826
-                </a>
+                </Link>
               </li>
               <li className="flex items-center text-gray-300">
                 <Mail className="w-5 h-5 mr-2" />
-                <a href="mailto:atlas.homeservices@icloud.com" className="hover:underline">
+                <Link href="mailto:atlas.homeservices@icloud.com" className="hover:underline">
                   atlas.homeservices@icloud.com
-                </a>
+                </Link>
               </li>
               <li className="flex items-center text-gray-300">
                 <MapPin className="w-5 h-5 mr-2" />

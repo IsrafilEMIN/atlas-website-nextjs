@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
 import { useState } from "react";
 import WavePattern from "@/components/ui/patterns/WavePattern";
 import Header from "@/components/layout/Header";
