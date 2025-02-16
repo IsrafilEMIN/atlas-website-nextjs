@@ -6,17 +6,27 @@ const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
 // Create a mapping object to translate UI strings to your Prisma ENUM values.
-const serviceTypeMapping: Record<string, "INTERIOR" | "EXTERIOR" | "COMMERCIAL" | "RESIDENTIAL"> = {
+const serviceTypeMapping: Record<string, "EXTERIOR" | "COMMERCIAL" | "RESIDENTIAL"> = {
     "residential": "RESIDENTIAL",
     "commercial": "COMMERCIAL",
-    "interior": "INTERIOR",
     "exterior": "EXTERIOR",
   };
+
+// Create a mapping object to translate UI strings to your Prisma ENUM values.
+const statusMapping: Record<string, "PENDING"> = {
+  "pending": "PENDING",
+};
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
     return res.status(405).json({ message: `Method ${req.method} Not Allowed` });
@@ -31,12 +41,19 @@ export default async function handler(
       serviceType,
       projectDetails,
       timeSlotId,
+      status,
     } = req.body;
 
     // Map the UI service type to the ENUM value
     const normalizedServiceType = serviceTypeMapping[serviceType];
     if (!normalizedServiceType) {
       throw new Error(`Invalid service type provided: ${serviceType}`);
+    }
+
+    // Map the UI service type to the ENUM value
+    const normalizedStatus = statusMapping[status];
+    if (!normalizedStatus) {
+      throw new Error(`Invalid service type provided: ${status}`);
     }
 
     // Create a new booking entry in the database
@@ -48,6 +65,7 @@ export default async function handler(
         serviceType: normalizedServiceType,
         projectDetails,
         timeSlotId,
+        status: normalizedStatus,
       },
     });
 
@@ -69,6 +87,8 @@ export default async function handler(
              <p>Project Details: ${projectDetails}</p>
              <p>Contact: ${customerPhone}, ${customerEmail}</p>`,
     });
+
+    console.log("Received request body:", req.body);
 
     return res.status(200).json({
       booking,
