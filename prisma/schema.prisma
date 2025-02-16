@@ -29,31 +29,31 @@ enum BookingStatus {
 model Review {
   id           Int         @id @default(autoincrement())
   customerName String
-  rating       Int         // Validate between 1 and 5 in your application
+  rating       Int // Validate between 1 and 5 in your application
   comment      String
   serviceType  ServiceType
   createdAt    DateTime    @default(now())
 }
 
 model Booking {
-  id             Int           @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   customerName   String
   customerPhone  String
   customerEmail  String
   serviceType    ServiceType
   projectDetails String
   timeSlotId     Int
-  notifications  Notification[]  // A booking can have many notifications
-  createdAt      DateTime      @default(now())
-  status         BookingStatus @default(PENDING)
+  notifications  Notification[] // A booking can have many notifications
+  createdAt      DateTime       @default(now())
+  status         BookingStatus  @default(PENDING)
 }
 
 model Notification {
-  id         Int      @id @default(autoincrement())
-  message    String
-  read       Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  message   String
+  read      Boolean  @default(false)
   // Each notification is related to one booking entry.
-  booking    Booking  @relation(fields: [bookingId], references: [id])
-  bookingId  Int
-  createdAt  DateTime @default(now())
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  bookingId Int
+  createdAt DateTime @default(now())
 }

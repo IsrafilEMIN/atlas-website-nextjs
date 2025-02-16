@@ -12,6 +12,11 @@ const serviceTypeMapping: Record<string, "EXTERIOR" | "COMMERCIAL" | "RESIDENTIA
     "exterior": "EXTERIOR",
   };
 
+// Create a mapping object to translate UI strings to your Prisma ENUM values.
+const statusMapping: Record<string, "PENDING"> = {
+  "pending": "PENDING",
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -36,13 +41,19 @@ export default async function handler(
       serviceType,
       projectDetails,
       timeSlotId,
-      status = "pending",
+      status,
     } = req.body;
 
     // Map the UI service type to the ENUM value
     const normalizedServiceType = serviceTypeMapping[serviceType];
     if (!normalizedServiceType) {
       throw new Error(`Invalid service type provided: ${serviceType}`);
+    }
+
+    // Map the UI service type to the ENUM value
+    const normalizedStatus = statusMapping[status];
+    if (!normalizedStatus) {
+      throw new Error(`Invalid service type provided: ${status}`);
     }
 
     // Create a new booking entry in the database
@@ -54,7 +65,7 @@ export default async function handler(
         serviceType: normalizedServiceType,
         projectDetails,
         timeSlotId,
-        status,
+        status: normalizedStatus,
       },
     });
 
