@@ -2,9 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, Filter, Images } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
-import { Review } from "@/lib/shared/schema";
+import Image from "next/image";
+
 import {
   Select,
   SelectContent,
@@ -15,10 +14,6 @@ import {
 
 export default function Reviews() {
   const [ratingFilter, setRatingFilter] = useState<string>("all");
-
-  const { data: apiReviews = [] } = useQuery<Review[]>({
-    queryKey: ['/api/reviews/published'],
-  });
 
   // Import static testimonials from Home page
   const staticTestimonials = [
@@ -139,7 +134,7 @@ export default function Reviews() {
                   {review.images && review.images.length > 0 && (
                     <div className="flex gap-2 mb-4">
                       {review.images.map((image, i) => (
-                        <img
+                        <Image
                           key={i}
                           src={image}
                           alt={`Review image ${i + 1}`}

@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import WavePattern from "../ui/patterns/WavePattern";
+import Image from "next/image";
+import Link from "next/link";
 
 // Update image paths to include the assets directory
 const IMAGES = {
@@ -41,13 +43,13 @@ export default function ProductShowcase() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center max-w-4xl mx-auto">
             {/* Project Cards */}
-            <a 
+            <Link 
               href="/gallery" 
               className="block transition-transform hover:scale-[1.02] duration-300 w-full"
             >
               <div className="bg-white rounded-lg overflow-hidden shadow-lg h-full">
                 <div className="aspect-video bg-gray-100">
-                  <img
+                  <Image 
                     src={IMAGES.modernInterior}
                     alt="Modern Home Interior"
                     className="w-full h-full object-cover"
@@ -62,15 +64,15 @@ export default function ProductShowcase() {
                   <p className="text-gray-600">Complete interior renovation with premium finish</p>
                 </div>
               </div>
-            </a>
+            </Link>
 
-            <a 
+            <Link 
               href="/gallery" 
               className="block transition-transform hover:scale-[1.02] duration-300 w-full"
             >
               <div className="bg-white rounded-lg overflow-hidden shadow-lg h-full">
                 <div className="aspect-video bg-gray-100">
-                  <img
+                  <Image
                     src={IMAGES.commercialOffice}
                     alt="Commercial Office Space"
                     className="w-full h-full object-cover"
@@ -85,7 +87,7 @@ export default function ProductShowcase() {
                   <p className="text-gray-600">Professional painting solution for corporate environment</p>
                 </div>
               </div>
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>

@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import Image from "next/image";
 
 export default function Logo() {
   const [imageError, setImageError] = useState(false);
 
   return (
     <div className="flex items-center">
-      <img 
+      <Image 
         src="/assets/logo.png"
         alt="Atlas HomeServices Logo" 
         className="h-12 w-12" 
