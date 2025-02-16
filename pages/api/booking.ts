@@ -76,7 +76,6 @@ export default async function handler(
       adminEmailResponse,
     });
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error("Booking API Error:", error);
     return res.status(500).json({ error: "Error booking appointment" });
   }

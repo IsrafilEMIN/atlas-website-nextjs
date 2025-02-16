@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, Filter, Images } from "lucide-react";
+import { Star, Filter } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 
