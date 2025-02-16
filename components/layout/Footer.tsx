@@ -3,19 +3,23 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from "lucide-react";
 import Logo from "@/components/ui/Logo";
+import { useRouter } from "next/router";
 
 export default function Footer() {
-  const [clientLocation, setClientLocation] = useState<string>("");
+  const router = useRouter();
 
+  // Set the current pathname on the client
   useEffect(() => {
-    // This effect runs only on the client
-    setClientLocation(window.location.pathname);
-  }, []);
+    // Your logic that depends on router.pathname
+    console.log("Path changed:", router.pathname);
+  }, [router.pathname]);
 
   const handleClick = (path: string) => (e: React.MouseEvent) => {
-    if (clientLocation === path) {
+    if (router.pathname === path) {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      router.push(path);
     }
   };
 
@@ -64,7 +68,7 @@ export default function Footer() {
             <h3 className="text-lg font-semibold text-gray-300 mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" onClick={handleClick("/")} className="text-gray-300 hover:underline">
+                <Link href="/" passHref onClick={handleClick("/")} className="text-gray-300 hover:underline">
                   Home
                 </Link>
               </li>
