@@ -138,7 +138,9 @@ export default function Reviews() {
                           key={i}
                           src={image}
                           alt={`Review image ${i + 1}`}
-                          className="w-20 h-20 object-cover rounded-lg"
+                          className="object-cover rounded-lg"
+                          width={80}
+                          height={80}
                         />
                       ))}
                     </div>
