@@ -36,6 +36,7 @@ export default async function handler(
       serviceType,
       projectDetails,
       timeSlotId,
+      status = "pending",
     } = req.body;
 
     // Map the UI service type to the ENUM value
@@ -53,6 +54,7 @@ export default async function handler(
         serviceType: normalizedServiceType,
         projectDetails,
         timeSlotId,
+        status,
       },
     });
 

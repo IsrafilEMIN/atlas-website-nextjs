@@ -20,6 +20,12 @@ enum ServiceType {
   RESIDENTIAL
 }
 
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
 model Review {
   id           Int         @id @default(autoincrement())
   customerName String
@@ -39,7 +45,7 @@ model Booking {
   timeSlotId     Int
   notifications  Notification[]  // A booking can have many notifications
   createdAt      DateTime      @default(now())
-  status         String
+  status         BookingStatus @default(PENDING)
 }
 
 model Notification {
