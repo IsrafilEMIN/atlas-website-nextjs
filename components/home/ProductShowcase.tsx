@@ -48,7 +48,7 @@ export default function ProductShowcase() {
               className="block transition-transform hover:scale-[1.02] duration-300 w-full"
             >
               <div className="bg-white rounded-lg overflow-hidden shadow-lg h-full">
-                <div className="aspect-video bg-gray-100">
+                <div className="relative aspect-video bg-gray-100">
                   <Image 
                     src={IMAGES.modernInterior}
                     alt="Modern Home Interior"
@@ -72,7 +72,7 @@ export default function ProductShowcase() {
               className="block transition-transform hover:scale-[1.02] duration-300 w-full"
             >
               <div className="bg-white rounded-lg overflow-hidden shadow-lg h-full">
-                <div className="aspect-video bg-gray-100">
+                <div className="relative aspect-video bg-gray-100">
                   <Image
                     src={IMAGES.commercialOffice}
                     alt="Commercial Office Space"

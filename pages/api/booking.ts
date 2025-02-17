@@ -44,6 +44,27 @@ export default async function handler(
       status,
     } = req.body;
 
+    // ✅ Check if customer exists using `findFirst`
+    let customer = await prisma.customer.findFirst({
+      where: {
+        OR: [
+          { email: customerEmail },  // ✅ Check by email
+          { phone: customerPhone }   // ✅ Check by phone
+        ],
+      },
+    });
+
+    // ✅ If customer does not exist, create a new customer entry
+    if (!customer) {
+      customer = await prisma.customer.create({
+        data: {
+          name: customerName,
+          email: customerEmail,
+          phone: customerPhone,
+        },
+      });
+    }
+
     // Map the UI service type to the ENUM value
     const normalizedServiceType = serviceTypeMapping[serviceType];
     if (!normalizedServiceType) {
@@ -59,6 +80,7 @@ export default async function handler(
     // Create a new booking entry in the database
     const booking = await prisma.booking.create({
       data: {
+        customerId: customer.id,
         customerName,
         customerPhone,
         customerEmail,
@@ -89,7 +111,13 @@ export default async function handler(
              <p>Contact: ${customerPhone}, ${customerEmail}</p>`,
     });
 
-    console.log("Received request body:", req.body);
+    // ✅ Store a notification in the Notification table
+    await prisma.notification.create({
+      data: {
+        message: `New booking created for ${customerName}: ${serviceType}.`,
+        bookingId: booking.id,  // ✅ Link notification to the booking
+      },
+    });
 
     return res.status(200).json({
       booking,

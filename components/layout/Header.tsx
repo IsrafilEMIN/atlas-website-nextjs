@@ -75,9 +75,6 @@ export default function Header() {
           <Link href="/gallery" passHref>
             <span onClick={handleClick("/gallery")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Gallery</span>
           </Link>
-          <Link href="/contact" passHref>
-            <span onClick={handleClick("/contact")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Contact</span>
-          </Link>
         </nav>
 
         {/* Mobile Navigation */}
@@ -129,9 +126,6 @@ export default function Header() {
               </Link>
               <Link href="/gallery" passHref>
                 <span onClick={handleClick("/gallery")} className={`${linkStyle("/gallery")} block py-2`}>Gallery</span>
-              </Link>
-              <Link href="/contact" passHref>
-                <span onClick={handleClick("/contact")} className={`${linkStyle("/contact")} block py-2`}>Contact</span>
               </Link>
             </nav>
           </div>
