@@ -101,15 +101,6 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/contact"
-                  onClick={handleClick("/contact")}
-                  className="text-gray-300 hover:underline"
-                >
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/booking"
                   onClick={handleClick("/booking")}
                   className="text-gray-300 hover:underline"
