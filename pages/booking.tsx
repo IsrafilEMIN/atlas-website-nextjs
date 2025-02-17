@@ -32,13 +32,14 @@ export default function Booking() {
   // Initialize the form with the BookingFormValues type
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(insertBookingSchema),
+    mode: "onSubmit",
     defaultValues: {
       customerName: "",
       customerEmail: "",
       customerPhone: "",
       serviceType: "",
       projectDetails: "",
-      availableTime: "", // This will be set based on date and timeSlot
+      availableTime: "",
     },
   });
 
@@ -48,6 +49,7 @@ export default function Booking() {
       toast({
         title: "Error",
         description: "Please enter your available time",
+        className: "bg-white text-black",
         variant: "destructive",
       });
       return;
@@ -76,13 +78,15 @@ export default function Booking() {
 
       toast({
         title: "Success",
-        description: "Booking successful! You will receive confirmation via email.",
+        description: "Booking successful! We will contact you very soon. You will receive confirmation email.",
+        className: "bg-white text-black",
       });
     } catch (error) {
       console.error("Booking error:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to book appointment. Please try again.",
+        className: "bg-white text-black",
         variant: "destructive",
       });
     }
@@ -118,12 +122,12 @@ export default function Booking() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent side="bottom" position="popper" className="bg-white text-gray-900 z-50">
-                          <SelectItem value="residential">Residential Painting</SelectItem>
-                          <SelectItem value="commercial">Commercial Painting</SelectItem>
-                          <SelectItem value="exterior">Exterior Painting</SelectItem>
+                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="residential">Residential Painting</SelectItem>
+                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="commercial">Commercial Painting</SelectItem>
+                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="exterior">Exterior Painting</SelectItem>
                         </SelectContent>
                       </Select>
-                      <FormMessage />
+                      <FormMessage className="text-red-500"/>
                     </FormItem>
                   )}
                 />
@@ -137,7 +141,7 @@ export default function Booking() {
                       <FormControl>
                         <Input placeholder="John Doe" {...field} className="bg-white text-gray-900 border-gray-300" />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-500"/>
                     </FormItem>
                   )}
                 />
@@ -151,7 +155,7 @@ export default function Booking() {
                       <FormControl>
                         <Input type="email" placeholder="you@example.com" {...field} className="bg-white text-gray-900 border-gray-300" />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-500"/>
                     </FormItem>
                   )}
                 />
@@ -165,7 +169,7 @@ export default function Booking() {
                       <FormControl>
                         <Input type="tel" placeholder="(555) 123-4567" {...field} className="bg-white text-gray-900 border-gray-300" />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-500"/>
                     </FormItem>
                   )}
                 />
@@ -184,7 +188,7 @@ export default function Booking() {
                           className="bg-white text-gray-900 border-gray-300 placeholder:text-gray-400"
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-500"/>
                     </FormItem>
                   )}
                 />
@@ -209,8 +213,7 @@ export default function Booking() {
                 />
                 <Button
                   type="submit"
-                  className="w-full bg-black hover:bg-black/90 text-white"
-                  disabled={!form.formState.isValid}
+                  className="w-full bg-black hover:bg-black/80 text-white"
                 >
                   Schedule Consultation
                 </Button>

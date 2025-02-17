@@ -41,12 +41,12 @@ export const notifications = pgTable("notifications", {
 });
 
 export const insertBookingSchema = z.object({
-  customerName: z.string().min(1, "Name is required"),
+  customerName: z.string().min(1, "Enter your name"),
   customerEmail: z.string().email("Invalid email"),
-  customerPhone: z.string().min(1, "Phone number is required"),
-  serviceType: z.string().min(1, "Service type is required"),
+  customerPhone: z.string().min(1, "Enter your name"),
+  serviceType: z.string().min(1, "Select a service type"),
   projectDetails: z.string().optional(),
-  availableTime: z.string().min(1, "Available time is required"),
+  availableTime: z.string().min(1, "Enter your available time"),
 });
 
 export const insertNotificationSchema = createInsertSchema(notifications).omit({
