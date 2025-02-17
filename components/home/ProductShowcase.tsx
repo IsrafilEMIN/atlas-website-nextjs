@@ -52,7 +52,8 @@ export default function ProductShowcase() {
                   <Image 
                     src={IMAGES.modernInterior}
                     alt="Modern Home Interior"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     onError={(e) => {
                       e.currentTarget.src = "/placeholder.jpg";
                       console.error(`Failed to load image: ${IMAGES.modernInterior}`);
@@ -75,7 +76,8 @@ export default function ProductShowcase() {
                   <Image
                     src={IMAGES.commercialOffice}
                     alt="Commercial Office Space"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     onError={(e) => {
                       e.currentTarget.src = "/placeholder.jpg";
                       console.error(`Failed to load image: ${IMAGES.commercialOffice}`);

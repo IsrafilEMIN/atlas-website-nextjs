@@ -4,8 +4,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Logo from "@/components/ui/Logo";
+import { useRouter } from "next/router";
 
 export default function Header() {
+  const router = useRouter();
   const { scrollY } = useScroll();
   const backgroundColor = useTransform(
     scrollY,
@@ -14,12 +16,12 @@ export default function Header() {
   );
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [clientLocation, setClientLocation] = useState<string>("");
 
   // Set the current pathname on the client
   useEffect(() => {
-    setClientLocation(window.location.pathname);
-  }, []);
+    // Your logic that depends on router.pathname
+    console.log("Path changed:", router.pathname);
+  }, [router.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,7 +31,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isActive = (path: string) => clientLocation === path;
+  const isActive = (path: string) => router.pathname === path;
 
   // Navigation link styling - updated with smaller text
   const linkStyle = (path: string) =>
@@ -38,9 +40,11 @@ export default function Header() {
     }`;
 
   const handleClick = (path: string) => (e: React.MouseEvent) => {
-    if (clientLocation === path) {
+    if (router.pathname === path) {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      router.push(path);
     }
     setIsMenuOpen(false); // Close mobile menu if open
   };
@@ -53,35 +57,36 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto px-6 max-w-6xl flex items-center justify-between relative box-content">
-        <Link href="/" onClick={handleClick("/")}>
+        <Link href="/" passHref onClick={handleClick("/")}>
           <Logo />
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-16">
-          <Link href="/" onClick={handleClick("/")}>
-            <span className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Home</span>
+          <Link href="/" passHref>
+            <span onClick={handleClick("/")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Home</span>
           </Link>
-          <Link href="/services" onClick={handleClick("/services")}>
-            <span className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Services</span>
+          <Link href="/services" passHref>
+            <span onClick={handleClick("/services")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Services</span>
           </Link>
-          <Link href="/pricing" onClick={handleClick("/pricing")}>
-            <span className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Pricing</span>
+          <Link href="/pricing" passHref>
+            <span onClick={handleClick("/pricing")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Pricing</span>
           </Link>
-          <Link href="/gallery" onClick={handleClick("/gallery")}>
-            <span className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Gallery</span>
+          <Link href="/gallery" passHref>
+            <span onClick={handleClick("/gallery")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Gallery</span>
           </Link>
-          <Link href="/contact" onClick={handleClick("/contact")}>
-            <span className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Contact</span>
+          <Link href="/contact" passHref>
+            <span onClick={handleClick("/contact")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Contact</span>
           </Link>
         </nav>
 
         {/* Mobile Navigation */}
         <div className="flex items-center gap-4 md:hidden">
-          <Link href="/booking" onClick={handleClick("/booking")}>
+          <Link href="/booking" passHref>
             <Button
               variant="outline"
               className="border-white text-white hover:bg-white hover:text-black"
+              onClick={handleClick("/booking")}
             >
               Book Now
             </Button>
@@ -113,20 +118,20 @@ export default function Header() {
         {isMenuOpen && (
           <div className="absolute top-full left-0 right-0 bg-black border-t border-gray-800 md:hidden">
             <nav className="flex flex-col px-6 py-4">
-              <Link href="/" onClick={handleClick("/")}>
-                <span className={`${linkStyle("/")} block py-2`}>Home</span>
+              <Link href="/" passHref>
+                <span onClick={handleClick("/")} className={`${linkStyle("/")} block py-2`}>Home</span>
               </Link>
-              <Link href="/services" onClick={handleClick("/services")}>
-                <span className={`${linkStyle("/services")} block py-2`}>Services</span>
+              <Link href="/services" passHref>
+                <span  onClick={handleClick("/services")} className={`${linkStyle("/services")} block py-2`}>Services</span>
               </Link>
-              <Link href="/pricing" onClick={handleClick("/pricing")}>
-                <span className={`${linkStyle("/pricing")} block py-2`}>Pricing</span>
+              <Link href="/pricing" passHref>
+                <span onClick={handleClick("/pricing")} className={`${linkStyle("/pricing")} block py-2`}>Pricing</span>
               </Link>
-              <Link href="/gallery" onClick={handleClick("/gallery")}>
-                <span className={`${linkStyle("/gallery")} block py-2`}>Gallery</span>
+              <Link href="/gallery" passHref>
+                <span onClick={handleClick("/gallery")} className={`${linkStyle("/gallery")} block py-2`}>Gallery</span>
               </Link>
-              <Link href="/contact" onClick={handleClick("/contact")}>
-                <span className={`${linkStyle("/contact")} block py-2`}>Contact</span>
+              <Link href="/contact" passHref>
+                <span onClick={handleClick("/contact")} className={`${linkStyle("/contact")} block py-2`}>Contact</span>
               </Link>
             </nav>
           </div>
