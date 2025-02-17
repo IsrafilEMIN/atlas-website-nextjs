@@ -4,9 +4,11 @@ import Link from "next/link";
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function Footer() {
   const router = useRouter();
+  const [showOptions, setShowOptions] = useState(false);
 
   // Set the current pathname on the client
   useEffect(() => {
@@ -21,6 +23,11 @@ export default function Footer() {
     } else {
       router.push(path);
     }
+  };
+
+  const handleMailClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowOptions(!showOptions);
   };
 
   return (
@@ -121,11 +128,50 @@ export default function Footer() {
                   (647) 916-0826
                 </Link>
               </li>
-              <li className="flex items-center text-gray-300">
+              {/* Email with Selection Prompt */}
+              <li className="flex items-center text-gray-300 relative">
                 <Mail className="w-5 h-5 mr-2" />
-                <Link href="mailto:atlas.homeservices@icloud.com" className="hover:underline">
+                <button onClick={handleMailClick} className="hover:underline">
                   atlas.homeservices@icloud.com
-                </Link>
+                </button>
+
+                {/* Dropdown for Email Selection */}
+                {showOptions && (
+                    <div className="absolute left-0 top-10 bg-gray-800 p-3 rounded-md shadow-md border border-gray-700 z-50">
+                      <p className="text-gray-400 text-sm mb-2">Choose how to send email:</p>
+                      <ul className="space-y-2">
+                        <li>
+                          <a href="mailto:atlas.homeservices@icloud.com" className="text-blue-400 hover:underline">
+                            Default Mail App
+                          </a>
+                        </li>
+                        <li>
+                          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=atlas.homeservices@icloud.com"
+                             target="_blank"
+                             rel="noopener noreferrer"
+                             className="text-blue-400 hover:underline">
+                            Gmail
+                          </a>
+                        </li>
+                        <li>
+                          <a href="https://outlook.live.com/owa/?path=/mail/action/compose&to=atlas.homeservices@icloud.com"
+                             target="_blank"
+                             rel="noopener noreferrer"
+                             className="text-blue-400 hover:underline">
+                            Outlook
+                          </a>
+                        </li>
+                        <li>
+                          <a href="https://compose.mail.yahoo.com/?to=atlas.homeservices@icloud.com"
+                             target="_blank"
+                             rel="noopener noreferrer"
+                             className="text-blue-400 hover:underline">
+                            Yahoo Mail
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                )}
               </li>
               <li className="flex items-center text-gray-300">
                 <MapPin className="w-5 h-5 mr-2" />
