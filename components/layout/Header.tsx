@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Logo from "@/components/ui/Logo";
 import { useRouter } from "next/router";
 
@@ -112,24 +112,32 @@ export default function Header() {
         </div>
 
         {/* Mobile Hamburger Menu */}
-        {isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-black border-t border-gray-800 md:hidden">
-            <nav className="flex flex-col px-6 py-4">
-              <Link href="/" passHref>
-                <span onClick={handleClick("/")} className={`${linkStyle("/")} block py-2`}>Home</span>
-              </Link>
-              <Link href="/services" passHref>
-                <span  onClick={handleClick("/services")} className={`${linkStyle("/services")} block py-2`}>Services</span>
-              </Link>
-              <Link href="/pricing" passHref>
-                <span onClick={handleClick("/pricing")} className={`${linkStyle("/pricing")} block py-2`}>Pricing</span>
-              </Link>
-              <Link href="/gallery" passHref>
-                <span onClick={handleClick("/gallery")} className={`${linkStyle("/gallery")} block py-2`}>Gallery</span>
-              </Link>
-            </nav>
-          </div>
-        )}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute top-full left-0 right-0 bg-black border-t border-gray-800 md:hidden"
+              >
+              <nav className="flex flex-col px-6 py-4">
+                <Link href="/" passHref>
+                  <span onClick={handleClick("/")} className={`${linkStyle("/")} block py-2`}>Home</span>
+                </Link>
+                <Link href="/services" passHref>
+                  <span  onClick={handleClick("/services")} className={`${linkStyle("/services")} block py-2`}>Services</span>
+                </Link>
+                <Link href="/pricing" passHref>
+                  <span onClick={handleClick("/pricing")} className={`${linkStyle("/pricing")} block py-2`}>Pricing</span>
+                </Link>
+                <Link href="/gallery" passHref>
+                  <span onClick={handleClick("/gallery")} className={`${linkStyle("/gallery")} block py-2`}>Gallery</span>
+                </Link>
+              </nav>
+            </motion.div>
+          )}
+      </AnimatePresence>
 
         {/* Desktop Book Now Button */}
         <div className="hidden md:block">
