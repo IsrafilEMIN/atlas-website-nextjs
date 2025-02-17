@@ -53,7 +53,7 @@ export default function Header() {
     <motion.header
       style={{ backgroundColor }}
       className={`fixed top-0 left-0 right-0 z-50 bg-black transition-all duration-300 ${
-        isScrolled ? "py-1.5 border-b border-gray-800/50" : "py-2"
+        isScrolled ? "py-1.5" : "py-2"
       }`}
     >
       <div className="mx-auto px-6 max-w-6xl flex items-center justify-between relative box-content">
@@ -115,11 +115,11 @@ export default function Header() {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
-                  initial={{ opacity: 0, y: -20 }}
+                  initial={{ opacity: 0, y: 0 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
+                  exit={{ opacity: 0, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute top-full left-0 right-0 bg-black border-t border-gray-800 md:hidden"
+                  className="absolute top-full left-0 right-0 bg-black md:hidden"
               >
               <nav className="flex flex-col px-6 py-4">
                 <Link href="/" passHref>
