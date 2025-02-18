@@ -1,11 +1,13 @@
+"use client";
+
 import { GetServerSideProps } from "next";
 import { PrismaClient } from "@prisma/client";
 import { useState } from "react";
 import Head from "next/head";
-import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
+import { FormProvider, useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { insertReviewSchema } from "@/lib/shared/schema";
+import { Button } from "@components/ui/button";
+import { insertReviewSchema } from "@lib/shared/schema";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -14,15 +16,15 @@ import {
     FormLabel,
     FormControl,
     FormMessage,
-} from "@/components/ui/form";
+} from "@components/ui/form";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from "@components/ui/select";
+import { Textarea } from "@components/ui/textarea";
 
 const prisma = new PrismaClient();
 
@@ -45,31 +47,29 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-// Derive the form type from your Zod schema.
-// Make sure insertReviewSchema covers at least: customerName, rating, comment, serviceType.
 type ReviewFormValues = z.infer<typeof insertReviewSchema> & {
     rating: number;
 };
 
 export default function ReviewPage({
-   token,
-   customerName,
-}: {
+                                       token,
+                                       customerName,
+                                   }: {
     token: string;
     customerName: string;
 }) {
-    const { toast } = useToast() as { toast: (config: { title: string; description: string; variant?: string }) => void };
+    console.log("ReviewPage component is loading in the browser...");
+    const { toast } = useToast() as {
+        toast: (config: { title: string; description: string; variant?: string }) => void;
+    };
     const [submitting, setSubmitting] = useState(false);
-    // Local state for fields that we want to manage (rating, comment, serviceType)
-    const [rating, setRating] = useState(5);
-    const [comment, setComment] = useState("");
-    const [serviceType, setServiceType] = useState("");
+    // Removed local state for rating since we rely on react-hook-form
 
     const formMethods = useForm<ReviewFormValues>({
         resolver: zodResolver(insertReviewSchema),
         mode: "onSubmit",
         defaultValues: {
-            customerName: "",
+            customerName: customerName, // pre-populate from props
             rating: 5,
             comment: "",
             serviceType: "",
@@ -80,14 +80,15 @@ export default function ReviewPage({
         console.log("onSubmit triggered with data:", data);
         setSubmitting(true);
         try {
+            // Use data from react-hook-form directly
             const response = await fetch("/api/review", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     token,
-                    rating,
-                    comment,
-                    serviceType,
+                    rating: data.rating,
+                    comment: data.comment,
+                    serviceType: data.serviceType,
                 }),
             });
             console.log("API response status:", response.status);
@@ -99,10 +100,6 @@ export default function ReviewPage({
                 title: "Success",
                 description: "Review submitted successfully!",
             });
-            // Reset local state and form values
-            setRating(5);
-            setComment("");
-            setServiceType("");
             formMethods.reset();
         } catch (error) {
             console.error("Error submitting review:", error);
@@ -116,21 +113,25 @@ export default function ReviewPage({
         }
     };
 
+    const onError: SubmitErrorHandler<ReviewFormValues> = (errors) => {
+        console.log("Validation errors:", errors);
+    };
+
     return (
         <>
             <Head>
-                <title>Leave a Review</title>
+                <title className="text-4xl font-bold text-gray-900 mb-8">Leave a Review</title>
             </Head>
             <div className="min-h-screen bg-white text-black">
                 <div className="max-w-2xl mx-auto px-4 pt-24 pb-16">
-                    <h1 className="text-2xl font-bold mb-4">
-                        Leave a Review for {customerName || "Our Service"}
+                    <h1 className="text-4xl font-bold text-gray-900 mb-8">
+                        Leave a Review
                     </h1>
                     <p className="text-gray-600 mb-8">
                         We value your feedback! Please fill out the form below to share your experience.
                     </p>
                     <FormProvider {...formMethods}>
-                        <form onSubmit={formMethods.handleSubmit(onSubmit)} className="space-y-6">
+                        <form onSubmit={formMethods.handleSubmit(onSubmit, onError)} className="space-y-6">
                             {/* Rating Dropdown */}
                             <FormField
                                 control={formMethods.control}
@@ -141,7 +142,6 @@ export default function ReviewPage({
                                         <Select
                                             onValueChange={(value: string) => {
                                                 field.onChange(Number(value));
-                                                setRating(Number(value));
                                             }}
                                             defaultValue={String(field.value)}
                                         >
@@ -194,7 +194,6 @@ export default function ReviewPage({
                                         <Select
                                             onValueChange={(value: string) => {
                                                 field.onChange(value);
-                                                setServiceType(value);
                                             }}
                                             defaultValue={field.value || ""}
                                         >
@@ -223,6 +222,7 @@ export default function ReviewPage({
                             <Button
                                 type="submit"
                                 disabled={submitting}
+                                onClick={() => console.log("Button onClick fired!")}
                                 className="w-full bg-black hover:bg-black/80 text-white"
                             >
                                 {submitting ? "Submitting..." : "Submit Review"}

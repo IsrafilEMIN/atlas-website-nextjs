@@ -94,15 +94,15 @@ export default function Booking() {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-6 pt-32 pb-16 relative">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-bold text-gray-900 mb-8"
-        >
-          Book an Appointment
-        </motion.h1>
-
         <div className="max-w-4xl mx-auto">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl font-bold text-gray-900 mb-8"
+          >
+            Book an Appointment
+          </motion.h1>
+
           {/* Booking Form */}
           <div className="space-y-6">
             <Form {...form}>
