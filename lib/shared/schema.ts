@@ -44,7 +44,7 @@ export const insertBookingSchema = z.object({
 export const insertReviewSchema = z.object({
   customerName: z.string().min(1, "Name is required"),
   rating: z.number(),
-  comment: z.string().min(1, "Enter your comment, tell us what you think!"),
+  comment: z.string().min(1, "Enter your comment, tell us what you think!").max(500, "Max character: 500"),
   serviceType: z.string().min(1, "Select a service type"),
   customerId: z.string().optional(),
 });
