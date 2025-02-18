@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -7,14 +7,6 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
-});
-
-// TimeSlots table for managing availability
-export const timeSlots = pgTable("time_slots", {
-  id: serial("id").primaryKey(),
-  startTime: timestamp("start_time").notNull(),
-  endTime: timestamp("end_time").notNull(),
-  isAvailable: boolean("is_available").notNull().default(true),
 });
 
 // Bookings table for appointments
@@ -47,6 +39,14 @@ export const insertBookingSchema = z.object({
   serviceType: z.string().min(1, "Select a service type"),
   projectDetails: z.string().optional(),
   availableTime: z.string().min(1, "Enter your available time"),
+});
+
+export const insertReviewSchema = z.object({
+  customerName: z.string().min(1, "Name is required"),
+  rating: z.number(),
+  comment: z.string().min(1, "Enter your comment, tell us what you think!"),
+  serviceType: z.string().min(1, "Select a service type"),
+  customerId: z.string().optional(),
 });
 
 export const insertNotificationSchema = createInsertSchema(notifications).omit({

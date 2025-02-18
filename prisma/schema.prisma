@@ -29,12 +29,16 @@ enum BookingStatus {
 model Customer {
   id        String   @id @default(uuid())
   name      String
-  email     String
+  email     String   @unique
   phone     String
   createdAt DateTime @default(now())
 
+  // Relationship with Review
+  reviews Review[]
+
   // Relationship with Booking
-  bookings Booking[]
+  bookings    Booking[]
+  ReviewToken ReviewToken[]
 }
 
 model Review {
@@ -44,6 +48,22 @@ model Review {
   comment      String
   serviceType  ServiceType
   createdAt    DateTime    @default(now())
+
+  // Relationship with Customer
+  Customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+}
+
+model ReviewToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  used       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  expiryTime DateTime
+
+  // Relationship with Customer
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
 }
 
 model Booking {
