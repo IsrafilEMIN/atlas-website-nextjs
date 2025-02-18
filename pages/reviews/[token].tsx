@@ -60,7 +60,7 @@ export default function ReviewPage({
 }) {
     console.log("ReviewPage component is loading in the browser...");
     const { toast } = useToast() as {
-        toast: (config: { title: string; description: string; variant?: string }) => void;
+        toast: (config: { title: string; description: string; variant?: string, className: string }) => void;
     };
     const [submitting, setSubmitting] = useState(false);
     // Removed local state for rating since we rely on react-hook-form
@@ -99,6 +99,7 @@ export default function ReviewPage({
             toast({
                 title: "Success",
                 description: "Review submitted successfully!",
+                className: "bg-white text-black",
             });
             formMethods.reset();
         } catch (error) {
@@ -107,6 +108,7 @@ export default function ReviewPage({
                 title: "Error",
                 description: error instanceof Error ? error.message : "Error submitting review",
                 variant: "destructive",
+                className: "bg-white text-black",
             });
         } finally {
             setSubmitting(false);
