@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function Reviews() {
+export default function AllReviews() {
   const [ratingFilter, setRatingFilter] = useState<string>("all");
 
   // Import static testimonials from Home page
@@ -109,7 +109,7 @@ export default function Reviews() {
           </div>
         </div>
 
-        {/* Reviews Grid */}
+        {/* AllReviews Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredReviews.map((review) => (
             <motion.div
