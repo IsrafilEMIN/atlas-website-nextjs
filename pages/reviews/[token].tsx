@@ -75,7 +75,6 @@ export default function ReviewPage({
             serviceType: "",
         },
     });
-    const { handleSubmit } = formMethods;
 
     const onSubmit: SubmitHandler<ReviewFormValues> = async (data) => {
         console.log("onSubmit triggered with data:", data);
@@ -118,17 +117,20 @@ export default function ReviewPage({
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <>
             <Head>
                 <title>Leave a Review</title>
             </Head>
-            <div className="container mx-auto px-6 pt-32 pb-16 relative">
-                <h1 className="text-4xl font-bold text-gray-900 mb-8">
-                    Leave a Review for {customerName || "Our Service"}
-                </h1>
-                <div className="max-w-2xl mx-auto">
+            <div className="min-h-screen bg-white text-black">
+                <div className="max-w-2xl mx-auto px-4 pt-24 pb-16">
+                    <h1 className="text-2xl font-bold mb-4">
+                        Leave a Review for {customerName || "Our Service"}
+                    </h1>
+                    <p className="text-gray-600 mb-8">
+                        We value your feedback! Please fill out the form below to share your experience.
+                    </p>
                     <FormProvider {...formMethods}>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                        <form onSubmit={formMethods.handleSubmit(onSubmit)} className="space-y-6">
                             {/* Rating Dropdown */}
                             <FormField
                                 control={formMethods.control}
@@ -137,12 +139,11 @@ export default function ReviewPage({
                                     <FormItem>
                                         <FormLabel className="text-gray-900">Rating (1-5)</FormLabel>
                                         <Select
-                                            onValueChange={(value) => {
-                                                const num = Number(value);
-                                                field.onChange(num);
-                                                setRating(num);
+                                            onValueChange={(value: string) => {
+                                                field.onChange(Number(value));
+                                                setRating(Number(value));
                                             }}
-                                            defaultValue={String(field.value || 5)}
+                                            defaultValue={String(field.value)}
                                         >
                                             <FormControl>
                                                 <SelectTrigger className="bg-white text-gray-900 border-gray-300 rounded-md">
@@ -173,6 +174,7 @@ export default function ReviewPage({
                                             <Textarea
                                                 placeholder="Enter your comment..."
                                                 {...field}
+                                                value={field.value ?? ""}
                                                 className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 rows={5}
                                             />
@@ -190,7 +192,7 @@ export default function ReviewPage({
                                     <FormItem>
                                         <FormLabel className="text-gray-900">Service Type</FormLabel>
                                         <Select
-                                            onValueChange={(value) => {
+                                            onValueChange={(value: string) => {
                                                 field.onChange(value);
                                                 setServiceType(value);
                                             }}
@@ -229,6 +231,6 @@ export default function ReviewPage({
                     </FormProvider>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
