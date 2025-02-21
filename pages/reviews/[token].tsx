@@ -122,6 +122,7 @@ export default function ReviewPage({
     return (
         <>
             <Head>
+                <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
                 <title className="text-4xl font-bold text-gray-900 mb-8">Leave a Review</title>
             </Head>
             <div className="min-h-screen bg-white text-black">
