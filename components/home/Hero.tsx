@@ -9,8 +9,8 @@ const BackgroundVideo = dynamic(() => import("@/components/ui/BackgroundVideo"),
 
 export default function Hero() {
   return (
-      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-white">
-        {/* Background Video Component */}
+      <section className="relative h-[100dvh] flex items-center pt-20 overflow-hidden bg-white">
+      {/* Background Video Component */}
         <div className="absolute inset-0 w-full h-full z-0">
           <BackgroundVideo />
           <div className="absolute inset-0 bg-black/40" />
