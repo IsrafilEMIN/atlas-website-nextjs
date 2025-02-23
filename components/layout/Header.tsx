@@ -122,11 +122,11 @@ export default function Header() {
           <AnimatePresence>
             {isMenuOpen && (
                 <motion.div
-                    initial={{ opacity: 0, y: 0 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute top-full left-0 right-0 bg-black md:hidden"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full left-0 right-0 bg-black md:hidden overflow-hidden z-50"
                 >
                   <nav className="flex flex-col px-6 py-4">
                     <Link href="/" passHref>
