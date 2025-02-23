@@ -3,19 +3,19 @@ import * as React from "react";
 import dynamic from "next/dynamic";
 
 const Hero = dynamic(() => import("@/components/home/Hero"), {
-    ssr: true,
+    ssr: false,
 });
 
 const Features = dynamic(() => import("@/components/home/Features"), {
-    ssr: true,
+    ssr: false,
 });
 
 const ProductShowcase = dynamic(() => import("@/components/home/ProductShowcase"), {
-    ssr: true,
+    ssr: false,
 });
 
 const Testimonials = dynamic(() => import("@/components/home/Testimonials"), {
-    ssr: true,
+    ssr: false,
 });
 
 const Header = dynamic(() => import("@/components/layout/Header"), {
