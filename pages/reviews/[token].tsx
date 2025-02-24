@@ -122,8 +122,8 @@ export default function ReviewPage({
     return (
         <>
             <Head>
-                <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
-                <title className="text-4xl font-bold text-gray-900 mb-8">Leave a Review</title>
+                <meta name="format-detection" content="We value your feedback! Share your experience with Atlas Painting and help others choose premium residential & commercial painting services. Leave a review today!" />
+                <title className="text-4xl font-bold text-gray-900 mb-8">Leave a Review | Atlas Painting</title>
             </Head>
             <div className="min-h-screen bg-white text-black">
                 <div className="max-w-2xl mx-auto px-4 pt-24 pb-16">

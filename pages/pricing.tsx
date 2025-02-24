@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import WavePattern from "@/components/ui/patterns/WavePattern";
 import Header from "@/components/layout/Header";
+import Head from "next/head";
+import * as React from "react";
 
 export default function Pricing() {
   const [squareFeet, setSquareFeet] = useState("");
@@ -35,6 +37,10 @@ export default function Pricing() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Head>
+        <title>Get a Free Quote | Atlas Painting</title>
+        <meta name="description" content="Explore our competitive pricing for residential & commercial painting. Get a free quote today and transform your space with premium craftsmanship!" />
+      </Head>
       <Header />
       <div className="relative pt-20">
         <WavePattern />
