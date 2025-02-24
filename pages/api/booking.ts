@@ -95,20 +95,42 @@ export default async function handler(
     const customerEmailResponse = await resend.emails.send({
       from: process.env.EMAIL_FROM!,
       to: customerEmail,
-      subject: "Booking Confirmation",
-      html: `<p>Hi ${customerName},</p>
-             <p>Your appointment for ${serviceType} has been booked successfully. We will contact you shortly.</p>`,
+      subject: "Your Booking is Confirmed - Atlas Painting",
+      html: `<div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+      <h2 style="color: #2c3e50;">Booking Confirmation</h2>
+      <p style="font-size: 16px; color: #444;">Hi <strong>${customerName}</strong>,</p>
+      <p style="font-size: 16px; color: #444;">
+        Thank you for booking with <strong>Atlas Painting</strong>! Your appointment for 
+        <span style="color: #3498db;"><strong>${serviceType}</strong></span> has been successfully scheduled.
+      </p>
+      <p style="font-size: 16px; color: #444;">
+        Our team will reach out to you shortly to finalize the details.
+      </p>
+      <hr style="border: 1px solid #ddd;">
+      <p style="font-size: 14px; color: #777;">If you have any questions, feel free to <a href="mailto:${process.env.EMAIL_FROM}" style="color: #3498db; text-decoration: none;">contact us</a>.</p>
+      <p style="font-size: 14px; color: #777;"><em>We look forward to transforming your space!</em></p>
+    </div>`,
     });
 
     // Send an email notification to the admin
     const adminEmailResponse = await resend.emails.send({
       from: process.env.EMAIL_FROM!,
       to: process.env.ADMIN_EMAIL!,
-      subject: "New Booking Received",
-      html: `<p>New booking from <strong>${customerName}</strong> for ${serviceType}.</p>
-             <p>Project Details: ${projectDetails}</p>
-             <p>Available Time: ${availableTime}</p>
-             <p>Contact: ${customerPhone}, ${customerEmail}</p>`,
+      subject: "📝 New Booking Received – Atlas Painting",
+      html: `<div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+      <h2 style="color: #e74c3c;">New Booking Received</h2>
+      <p style="font-size: 16px; color: #444;">You have a new booking request from <strong>${customerName}</strong>.</p>
+      
+      <div style="background-color: #fff; padding: 15px; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">
+        <p><strong>📌 Service Type:</strong> <span style="color: #3498db;">${serviceType}</span></p>
+        <p><strong>📋 Project Details:</strong> ${projectDetails}</p>
+        <p><strong>⏳ Preferred Time:</strong> ${availableTime}</p>
+        <p><strong>📞 Contact:</strong> <a href="tel:${customerPhone}" style="color: #27ae60; text-decoration: none;">${customerPhone}</a></p>
+        <p><strong>✉️ Email:</strong> <a href="mailto:${customerEmail}" style="color: #3498db; text-decoration: none;">${customerEmail}</a></p>
+      </div>
+      
+      <p style="font-size: 14px; color: #777;">Make sure to follow up promptly to confirm the details.</p>
+    </div>`,
     });
 
     // ✅ Store a notification in the Notification table
