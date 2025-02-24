@@ -49,7 +49,8 @@ export default function Hero() {
                 transition={{ delay: 0.4 }}
                 className="text-lg md:text-xl text-gray-200 mb-10"
             >
-              Expert painting services for residential and commercial properties, delivering quality and excellence in every brushstroke. Contact us today for a free estimate!
+              Expert painting services for residential and commercial properties, delivering quality and excellence in every brushstroke.<br />
+              Contact us today for a free quote!
             </motion.p>
 
             <motion.div

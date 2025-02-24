@@ -6,10 +6,12 @@ const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
 // Create a mapping object to translate UI strings to your Prisma ENUM values.
-const serviceTypeMapping: Record<string, "EXTERIOR" | "COMMERCIAL" | "RESIDENTIAL"> = {
-    "residential": "RESIDENTIAL",
-    "commercial": "COMMERCIAL",
-    "exterior": "EXTERIOR",
+const serviceTypeMapping: Record<string, "EXTERIOR_PAINTING" | "COMMERCIAL_PAINTING" | "RESIDENTIAL_PAINTING" | "WALL_COVERING" | "DRYWALL_PLASTERING"> = {
+    "Residential Painting": "RESIDENTIAL_PAINTING",
+    "Commercial Painting": "COMMERCIAL_PAINTING",
+    "Exterior Painting": "EXTERIOR_PAINTING",
+    "Wall Covering": "WALL_COVERING",
+    "Drywall & Plastering": "DRYWALL_PLASTERING",
   };
 
 // Create a mapping object to translate UI strings to your Prisma ENUM values.
@@ -104,7 +106,7 @@ export default async function handler(
       
       <div style="background-color: #ffffff; padding: 15px; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); margin: 20px 0;">
         <p style="text-align: center; font-size: 16px; color: #2c3e50;">
-          <strong>🖌Service:</strong> <span style="color: #3498db;">${serviceType}</span>
+          <strong>Service:</strong> <span style="color: #3498db;">${serviceType}</span>
         </p>
         <p style="text-align: center; font-size: 16px; color: #2c3e50;">
           <strong>Scheduled Time:</strong> <span style="color: #27ae60;">${availableTime}</span>
