@@ -36,7 +36,7 @@ export default function Services() {
 
           <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Wall Covering</h3>
-            <p className="text-gray-600">Enhance your walls with premium wall coverings that add texture, elegance, and personality to any space. From luxury wallpapers to durable vinyl coverings, our expert team ensures precise application for a flawless, long-lasting finish. Whether you're looking to create a bold statement or a subtle, sophisticated ambiance, we provide customized solutions for both residential and commercial interiors. Elevate your walls with high-quality materials and professional craftsmanship for a refined, stylish look.</p>
+            <p className="text-gray-600">Enhance your walls with premium wall coverings that add texture, elegance, and personality to any space. From luxury wallpapers to durable vinyl coverings, our expert team ensures precise application for a flawless, long-lasting finish. Whether you&apos;re looking to create a bold statement or a subtle, sophisticated ambiance, we provide customized solutions for both residential and commercial interiors. Elevate your walls with high-quality materials and professional craftsmanship for a refined, stylish look.</p>
           </div>
         </div>
       </div>
