@@ -12,6 +12,29 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <Head>
+                {/* Light Mode Favicon */}
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href="/assets/favicon-light.png"
+                    media="(prefers-color-scheme: light)"
+                />
+
+                {/* Dark Mode Favicon */}
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href="/assets/favicon-dark.png"
+                    media="(prefers-color-scheme: dark)"
+                />
+
+                {/* Fallback Favicon for browsers that don't support `prefers-color-scheme` */}
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href="/assets/fallback-favicon.png"
+                />
+
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
                 <meta name="apple-mobile-web-app-capable" content="yes" />
             </Head>

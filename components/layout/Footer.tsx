@@ -128,8 +128,10 @@ export default function Footer() {
                 </Link>
               </li>
               <li className="flex items-center text-gray-300">
-                <MapPin className="w-5 h-5 mr-2" />
-                <span>atlas-paint.com</span>
+                <MapPin className="w-5 h-5 mr-2 self-start" />
+                <span className="whitespace-pre-line">Greater Toronto Area<br />
+                Niagara Region<br />
+                Hamilton & More</span>
               </li>
             </ul>
           </div>

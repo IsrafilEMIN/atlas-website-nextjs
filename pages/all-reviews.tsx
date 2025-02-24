@@ -10,6 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useSWR from "swr";
+import Head from "next/head";
+import * as React from "react";
 
 // Define a fetcher function for SWR
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -90,6 +92,10 @@ export default function AllReviews() {
 
   return (
       <div className="min-h-screen bg-white pb-24 pt-24">
+        <Head>
+          <title>Customer Reviews | Trusted Residential & Commercial Painting</title>
+          <meta name="description" content="See what our clients say! Read real reviews about our premium residential & commercial painting services in the GTA, Niagara, and beyond. Quality you can trust!" />
+        </Head>
         <div className="container mx-auto px-6">
           <motion.div
               initial={{ opacity: 0, y: 20 }}

@@ -31,7 +31,7 @@ export default function Hero() {
                 transition={{ delay: 0.2 }}
                 className="inline-block px-4 py-1.5 mb-6 text-sm font-medium bg-gray-100 text-gray-900 rounded-full"
             >
-              Professional Painting Services
+              Premium Residential & Commercial Painting in the GTA
             </motion.span>
 
             <motion.h1
@@ -49,7 +49,7 @@ export default function Hero() {
                 transition={{ delay: 0.4 }}
                 className="text-lg md:text-xl text-gray-200 mb-10"
             >
-              Expert painting services for residential and commercial properties, delivering quality and excellence in every brushstroke.
+              Expert painting services for residential and commercial properties, delivering quality and excellence in every brushstroke. Contact us today for a free estimate!
             </motion.p>
 
             <motion.div
