@@ -127,9 +127,11 @@ export default function Booking() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent side="bottom" position="popper" className="bg-white text-gray-900 z-50">
-                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="residential">Residential Painting</SelectItem>
-                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="commercial">Commercial Painting</SelectItem>
-                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="exterior">Exterior Painting</SelectItem>
+                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Residential Painting">Residential Painting</SelectItem>
+                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Commercial Painting">Commercial Painting</SelectItem>
+                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Exterior Painting">Exterior Painting</SelectItem>
+                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Wall Covering">Wall Covering</SelectItem>
+                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Drywall & Plastering">Drywall & Plastering</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage className="text-red-500"/>
