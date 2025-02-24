@@ -97,18 +97,33 @@ export default async function handler(
       to: customerEmail,
       subject: "Your Booking is Confirmed - Atlas Painting",
       html: `<div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
-      <h2 style="color: #2c3e50;">Booking Confirmation</h2>
-      <p style="font-size: 16px; color: #444;">Hi <strong>${customerName}</strong>,</p>
-      <p style="font-size: 16px; color: #444;">
-        Thank you for booking with <strong>Atlas Painting</strong>! Your appointment for 
-        <span style="color: #3498db;"><strong>${serviceType}</strong></span> has been successfully scheduled.
+      <h1 style="color: #2c3e50; text-align: center;">Booking Confirmed!</h1>
+      <p style="font-size: 18px; color: #444; text-align: center;">
+        Hi <strong>${customerName}</strong>, your painting appointment is officially scheduled!
       </p>
-      <p style="font-size: 16px; color: #444;">
-        Our team will reach out to you shortly to finalize the details.
+      
+      <div style="background-color: #ffffff; padding: 15px; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); margin: 20px 0;">
+        <p style="text-align: center; font-size: 16px; color: #2c3e50;">
+          <strong>🖌Service:</strong> <span style="color: #3498db;">${serviceType}</span>
+        </p>
+        <p style="text-align: center; font-size: 16px; color: #2c3e50;">
+          <strong>Scheduled Time:</strong> <span style="color: #27ae60;">${availableTime}</span>
+        </p>
+      </div>
+      
+      <p style="font-size: 16px; color: #444; text-align: center;">
+        Our expert painters will ensure a flawless finish tailored to your vision. 
+        We'll be in touch soon to finalize any remaining details.
       </p>
-      <hr style="border: 1px solid #ddd;">
-      <p style="font-size: 14px; color: #777;">If you have any questions, feel free to <a href="mailto:${process.env.EMAIL_FROM}" style="color: #3498db; text-decoration: none;">contact us</a>.</p>
-      <p style="font-size: 14px; color: #777;"><em>We look forward to transforming your space!</em></p>
+
+      <hr style="border: 1px solid #ddd; margin: 20px 0;">
+      
+      <p style="font-size: 14px; color: #777; text-align: center;">
+        Need to reschedule or have any questions? 
+        <a href="mailto:atlas.homeservices@icloud.com" style="color: #3498db; text-decoration: none;">Contact us here</a>.
+      </p>
+      
+      <p style="font-size: 14px; color: #777; text-align: center;"><em>We can't wait to bring your space to life! 🎨✨</em></p>
     </div>`,
     });
 
