@@ -12,7 +12,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <Head>
-                {/* Fallback Favicon for browsers that don't support `prefers-color-scheme` */}
                 <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
                 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
                 <link rel="shortcut icon" href="/assets/favicon.ico" />
