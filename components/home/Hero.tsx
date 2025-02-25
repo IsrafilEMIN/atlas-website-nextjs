@@ -31,7 +31,7 @@ export default function Hero() {
                 transition={{ delay: 0.2 }}
                 className="inline-block px-4 py-1.5 mb-6 text-sm font-medium bg-gray-100 text-gray-900 rounded-full"
             >
-              Premium Residential & Commercial Painting in the GTA
+              Premium Residential & Commercial Painting in GTA
             </motion.span>
 
             <motion.h1
