@@ -42,6 +42,7 @@ export default function Home() {
                         "@type": "Painting Company",
                         "name": "Atlas Painting",
                         "@id": "https://atlas-paint.com/",
+                        "logo": "https://i.imgur.com/UTbaF2Q.png",
                         "url": "https://atlas-paint.com/",
                         "telephone": "+1-647-916-0826",
                         "priceRange": "$$",
