@@ -12,7 +12,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <Head>
-                {/* Fallback Favicon for browsers that don't support `prefers-color-scheme` */}
                 <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
                 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
                 <link rel="shortcut icon" href="/assets/favicon.ico" />
@@ -22,7 +21,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
                 <meta name="viewport"
                       content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
-                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
             </Head>
             <div className="min-h-screen flex flex-col">
                 <Header/>
