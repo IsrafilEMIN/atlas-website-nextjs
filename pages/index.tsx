@@ -59,7 +59,7 @@ export default function Home() {
                             "https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
                         ]
                     }) }} />
-                <title>Atlas Painting GTA - Premium Residential & Commercial Painting</title>
+                <title>Atlas - Premium Residential & Commercial Painting</title>
                 <meta name="description" content="Atlas Painting offers premium residential & commercial painting in the Greater Toronto Area, Niagara, Hamilton & more. Get a flawless finish—Call today!" />
             </Head>
             <Header />
