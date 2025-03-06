@@ -1,5 +1,6 @@
 // pages/_app.tsx
 import Head from "next/head";
+import Script from 'next/script';
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
@@ -24,6 +25,20 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 <meta name="apple-mobile-web-app-capable" content="yes" />
                 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
             </Head>
+            {/* Google Analytics gtag.js */}
+            <Script
+                strategy="afterInteractive"
+                src="https://www.googletagmanager.com/gtag/js?id=G-QBLLD7KWPN"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+                {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-QBLLD7KWPN');
+          `}
+            </Script>
             <div className="min-h-screen flex flex-col">
                 <Header/>
                 <div className="flex-grow">
