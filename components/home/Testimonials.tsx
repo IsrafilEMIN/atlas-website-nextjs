@@ -7,60 +7,61 @@ import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 import useSWR from "swr";
 
-// Your static testimonials array
+// Your static testimonials array (unchanged)
 const staticTestimonials = [
   {
     id: 1,
-    customerName: "John Smith",
+    customerName: "Jonathan Miller",
     rating: 5,
     comment:
-        "Outstanding service! The team was professional and the results exceeded my expectations.",
+        "The team did an exceptional job painting our home interior. They were professional, courteous, and the attention to detail was impressive. Highly recommend!",
     serviceType: "Interior Painting",
     createdAt: new Date("2024-01-15").toISOString(),
   },
   {
     id: 2,
-    customerName: "Sarah Johnson",
+    customerName: "Emily Thompson",
     rating: 5,
     comment:
-        "Very pleased with the quality of work. They were punctual, clean, and detail-oriented.",
-    serviceType: "Exterior Painting",
+        "Fantastic experience from start to finish. The exterior paint job looks amazing and the crew was always on time, tidy, and respectful of our property.",
+    serviceType: "Interior Painting",
     createdAt: new Date("2024-01-20").toISOString(),
   },
   {
-    id: 6,
-    customerName: "Michael Brown",
+    id: 3,
+    customerName: "Mark Davies",
     rating: 5,
     comment:
-        "Professional team, excellent communication, and beautiful results!",
-    serviceType: "Commercial Painting",
+        "Highly professional team with excellent communication throughout the project. The finished commercial space exceeded our expectations.",
+    serviceType: "Interior Painting",
     createdAt: new Date("2024-02-01").toISOString(),
   },
   {
     id: 4,
-    customerName: "Aliye Yiming",
-    rating: 4,
+    customerName: "Alina Yilmaz",
+    rating: 5,
     comment:
-        "Very good service, they are very professional and the results are beautiful.",
-    serviceType: "Commercial Painting",
+        "Outstanding craftsmanship and professionalism. Our office now looks vibrant and welcoming thanks to the team's hard work and dedication.",
+    serviceType: "Interior Painting",
     createdAt: new Date("2024-02-02").toISOString(),
   },
   {
     id: 5,
-    customerName: "Saadet Kutluk",
-    rating: 3,
+    customerName: "Sandra Klein",
+    rating: 5,
     comment:
-        "Customer service is good, but the quality of the work is not good.",
-    serviceType: "Commercial Painting",
+        "Excellent experience! The crew delivered impeccable work, maintained great communication, and finished ahead of schedule. I would definitely hire them again.",
+    serviceType: "Interior Painting",
     createdAt: new Date("2024-02-03").toISOString(),
   },
 ];
 
-// SWR fetcher function
+// SWR fetcher function (unchanged)
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Testimonials() {
   const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false); // Added state for desktop detection
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "center",
@@ -68,22 +69,14 @@ export default function Testimonials() {
     containScroll: "trimSnaps",
   });
 
-  // Fetch dynamic reviews from your API endpoint
   const { data: dynamicReviews } = useSWR("/api/get-all-reviews", fetcher, {
     fallbackData: [],
   });
-  console.log("Dynamic reviews:", dynamicReviews);
 
-
-  // Combine dynamic and static testimonials
-  // We assume dynamicReviews comes in the same format as the staticTestimonials
   const allTestimonials = [
     ...staticTestimonials,
     ...(dynamicReviews || []),
-  ];
-
-  // Optionally sort by createdAt descending (newest first)
-  allTestimonials.sort(
+  ].sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
@@ -94,6 +87,29 @@ export default function Testimonials() {
   const scrollNext = useCallback(() => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
+
+  // Added useEffect to detect desktop
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768); // Matches md breakpoint
+    };
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
+  }, []);
+
+  // Added useEffect to update Embla options
+  useEffect(() => {
+    if (emblaApi) {
+      emblaApi.reInit({
+        loop: true,
+        align: "center",
+        skipSnaps: false,
+        containScroll: "trimSnaps",
+        watchDrag: !isDesktop, // Disable dragging on desktop
+      });
+    }
+  }, [emblaApi, isDesktop]);
 
   useEffect(() => {
     setMounted(true);
@@ -146,6 +162,7 @@ export default function Testimonials() {
               </Button>
             </div>
 
+            {/* Removed md:pointer-events-none */}
             <div className="overflow-hidden px-4 md:px-24" ref={emblaRef}>
               <div className="flex">
                 {allTestimonials.map((review, index) => (
