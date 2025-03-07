@@ -93,9 +93,82 @@ export default function Booking() {
     }
   };
 
+    // Optional: reference your main LocalBusiness entity
+    const localBusinessSchema = {
+        "@type": "HomeAndConstructionBusiness",
+        "@id": "https://atlas-paint.com/#localBusiness",
+        "name": "Atlas HomeServices",
+        "url": "https://atlas-paint.com/",
+        "logo": "https://atlas-paint.com/logo.png",
+        "description": "Professional painting, drywall, and fencing services in Toronto and surrounding areas.",
+        "telephone": "+1-647-916-0826",
+        "priceRange": "$$",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "123 Main St",
+            "addressLocality": "Toronto",
+            "addressRegion": "ON",
+            "postalCode": "M4B 1B3",
+            "addressCountry": "CA"
+        }
+    };
+
+    // Represents the booking page itself
+    const bookingPageSchema = {
+        "@type": "WebPage",
+        "@id": "https://atlas-paint.com/booking",
+        "url": "https://atlas-paint.com/booking",
+        "name": "Booking - Atlas HomeServices",
+        "description": "Schedule your painting, drywall, or fencing service with Atlas HomeServices.",
+        "potentialAction": {
+            "@type": "ReserveAction",
+            "target": "https://atlas-paint.com/booking#bookingForm",
+            // Could point to a form anchor ID
+            "result": {
+                "@type": "Reservation",
+                "name": "Painting Service Booking"
+            }
+        }
+    };
+
+    // Optional FAQ if you have common booking questions
+    const faqSchema = {
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How do I schedule an appointment?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Simply fill out the form on this page or call us at +1-647-916-0826 to book a service time."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What if I need to cancel or reschedule?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Contact us at least 24 hours in advance to cancel or reschedule, and we’ll happily accommodate."
+                }
+            }
+        ]
+    };
+
+    // Combine everything in a single @graph
+    const schemaPayload = {
+        "@context": "https://schema.org",
+        "@graph": [localBusinessSchema, bookingPageSchema, faqSchema]
+    };
+
   return (
     <div className="min-h-screen bg-white">
         <Head>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(schemaPayload)
+                }}
+            />
             <link rel="canonical" href="https://www.atlas-paint.com/booking/" />
             <title>Book a Painting Service | Schedule Your Project | Atlas HomeServices</title>
             <meta name="description" content="Ready for a transformation? Book a premium residential or commercial painting service with Atlas HomeServices today. Easy scheduling & expert results!" />

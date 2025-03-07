@@ -103,6 +103,41 @@ export default function Pricing() {
 
   const estimate = calculateEstimate();
 
+  const webPageSchema = {
+    "@type": "WebPage",
+    "@id": "https://atlas-paint.com/pricing",
+    "url": "https://atlas-paint.com/pricing",
+    "name": "Pricing - Atlas HomeServices",
+    "description": "View pricing for our painting, drywall, and other services."
+  };
+
+  const faqSchema = {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do you determine pricing for drywall or plastering?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pricing is based on square footage, materials needed, and complexity of the project. Contact us for a free quote."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you offer discounts for larger projects?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, we provide volume discounts on bigger commercial or multi-room projects."
+        }
+      }
+    ]
+  };
+
+  const schemaPayload = {
+    "@context": "https://schema.org",
+    "@graph": [webPageSchema, faqSchema]
+  };
+
   return (
       <div className="min-h-screen bg-white">
         <Head>
@@ -111,6 +146,12 @@ export default function Pricing() {
           <meta
               name="description"
               content="Explore our competitive pricing for residential & commercial painting, drywall installation, plastering, and wall covering services. Get a free quote today and transform your space with premium craftsmanship!"
+          />
+          <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(schemaPayload)
+              }}
           />
         </Head>
         <Header />
