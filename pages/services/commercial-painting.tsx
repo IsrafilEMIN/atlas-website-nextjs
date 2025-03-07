@@ -1,3 +1,4 @@
+/*
 import {motion} from "framer-motion";
 import Head from "next/head";
 import React from "react";
@@ -144,3 +145,4 @@ const ServicePage: React.FC<ServicePageProps> = ({
 // />
 
 export default ServicePage;
+*/
