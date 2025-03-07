@@ -40,11 +40,11 @@ export default function Pricing() {
   const [squareFeet, setSquareFeet] = useState<string>("");
   const [rooms, setRooms] = useState<string>("");
 
-  // Rates object with defined rates for each service and sub-option
+  // Rates object with updated exterior painting rates
   const rates: Rates = {
     painting: {
       interior: { standard: 3.5, premium: 5, luxury: 7 },
-      exterior: { standard: 4, premium: 6, luxury: 8 },
+      exterior: { standard: 3.0, premium: 4.0, luxury: 5.0 }, // Updated rates
       commercial: { standard: 4.5, premium: 6.5, luxury: 9 }
     },
     drywall: {
