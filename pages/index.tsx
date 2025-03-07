@@ -60,7 +60,7 @@ export default function Home() {
                             "https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
                         ]
                     }) }} />
-                <title>Residential & Commercial Painting Services | Atlas Paint (Toronto, Ontario)</title>
+                <title>Atlas Painting | Residential & Commercial Painting Services (Toronto, Ontario)</title>
                 <meta name="description" content="Atlas Painting offers premium residential & commercial painting in the Greater Toronto Area, Niagara, Hamilton & more. Call for a free quote!" />
             </Head>
             <Header />
