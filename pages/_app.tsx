@@ -14,7 +14,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <Head>
-                <link rel="canonical" href="https://www.atlas-paint.com/" />
                 <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
                 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
                 <link rel="shortcut icon" href="/assets/favicon.ico" />
