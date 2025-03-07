@@ -49,14 +49,47 @@ const CommercialPainting: React.FC = () => {
                     name="description"
                     content="Atlas HomeServices offers expert commercial painting services for businesses in Toronto, Mississauga, Vaughan, and surrounding areas. Enhance your commercial space with our professional painting solutions."
                 />
-                <link rel="canonical" href="https://www.atlas-paint.com/services/commercial-painting" />
+                <link rel="canonical" href="https://www.atlas-paint.com/services/commercial-painting/" />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
                         __html: JSON.stringify({
-                            "@context": "https://schema.org",
-                            "@graph": [localBusinessSchema, serviceSchema]
-                        })
+                                "@context": "https://schema.org",
+                                "@graph": [
+                                    {
+                                        "@type": "HomeAndConstructionBusiness",
+                                        "@id": "https://atlas-paint.com/#localBusiness",
+                                        "name": "Atlas HomeServices",
+                                        "url": "https://atlas-paint.com/",
+                                        "logo": "https://atlas-paint.com/logo.png",
+                                        "description": "Professional painting, drywall, and fencing services in Toronto and surrounding areas.",
+                                        "telephone": "+1-647-916-0826",
+                                        "priceRange": "$$",
+                                        "address": {
+                                            "@type": "PostalAddress",
+                                            "streetAddress": "123 Main St",
+                                            "addressLocality": "Toronto",
+                                            "addressRegion": "ON",
+                                            "postalCode": "M4B 1B3",
+                                            "addressCountry": "CA"
+                                        }
+                                    },
+                                    {
+                                        "@type": "Service",
+                                        "@id": "https://atlas-paint.com/commercial-painting#service",
+                                        "serviceType": "Commercial Painting",
+                                        "provider": {
+                                            "@id": "https://atlas-paint.com/#localBusiness"
+                                        },
+                                        "areaServed": {
+                                            "@type": "Place",
+                                            "name": "Toronto, Mississauga, Vaughan, Hamilton, Niagara"
+                                        },
+                                        "description": "High-quality commercial painting services for offices, retail spaces, and industrial facilities."
+                                    }
+                                ]
+                            }
+                        )
                     }}
                 />
             </Head>

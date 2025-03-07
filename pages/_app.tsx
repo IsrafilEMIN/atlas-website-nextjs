@@ -14,7 +14,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <Head>
-                <link rel="canonical" href="https://www.atlas-paint.com" />
+                <link rel="canonical" href="https://www.atlas-paint.com/" />
                 <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
                 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
                 <link rel="shortcut icon" href="/assets/favicon.ico" />
@@ -26,6 +26,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                       content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
                 <meta name="apple-mobile-web-app-capable" content="yes" />
                 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+                <title>Residential & Commercial Painters in Toronto | Atlas HomeServices</title>
+                <meta name="description" content="Atlas HomeServices offers premium residential and commercial painting services in Toronto, Mississauga, Vaughan, Hamilton, Niagara, and surrounding areas. Call for a free quote!"/>
             </Head>
             {/* Google Analytics gtag.js */}
             <Script
