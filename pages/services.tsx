@@ -4,6 +4,95 @@ import * as React from "react";
 import Link from "next/link";
 
 export default function Services() {
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "description": "Professional painting services for residential and commercial properties in Toronto.",
+    "name": "Atlas HomeServices",
+    "@id": "https://atlas-paint.com/",
+    "logo": "https://atlas-paint.com/assets/apple-touch-icon.png",
+    "url": "https://atlas-paint.com/",
+    "telephone": "+1-647-916-0826",
+    "priceRange": "$$",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "08:00",
+        "closes": "20:00"
+      }
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "8001 Woodsview Crescent",
+      "addressLocality": "Niagara Falls",
+      "addressRegion": "ON",
+      "postalCode": "L2H 3E9",
+      "addressCountry": "CA"
+    },
+    "image": "https://atlas-paint.com/assets/apple-touch-icon.png",
+    "sameAs": [
+      "https://www.instagram.com/atlas_homeservices/",
+      "https://x.com/Atlas_Paint",
+      "https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
+    ]
+  };
+
+  // If you want to list multiple services in one go:
+  const commercialPaintingService = {
+    "@type": "Service",
+    "@id": "https://atlas-paint.com/services#commercial-painting",
+    "serviceType": "Commercial Painting",
+    "provider": { "@id": "https://atlas-paint.com/#localBusiness" },
+    "areaServed": {
+      "@type": "Place",
+      "name": "Toronto, Mississauga, Vaughan"
+    },
+    "description": "High-quality commercial painting solutions for offices and retail spaces."
+  };
+
+  const residentialPaintingService = {
+    "@type": "Service",
+    "@id": "https://atlas-paint.com/services#residential-painting",
+    "serviceType": "Residential Painting",
+    "provider": { "@id": "https://atlas-paint.com/#localBusiness" },
+    "description": "Interior and exterior house painting to revitalize your home."
+  };
+
+  const drywallPlasteringService = {
+    "@type": "Service",
+    "@id": "https://atlas-paint.com/services#drywall-plastering",
+    "serviceType": "Drywall & Plastering",
+    "provider": { "@id": "https://atlas-paint.com/#localBusiness" },
+    "areaServed": {
+      "@type": "Place",
+      "name": "Toronto, Mississauga, Vaughan, Hamilton, Niagara"
+    },
+    "description": "Expert drywall installation, repair, and plastering solutions for walls and ceilings."
+  };
+
+  const fencingService = {
+    "@type": "Service",
+    "@id": "https://atlas-paint.com/services#fencing",
+    "serviceType": "Fencing",
+    "provider": { "@id": "https://atlas-paint.com/#localBusiness" },
+    "description": "Durable fencing solutions for residential and commercial properties."
+  };
+
+  const wallCoveringService = {
+    "@type": "Service",
+    "@id": "https://atlas-paint.com/services#wall-covering",
+    "serviceType": "Wall Covering",
+    "provider": { "@id": "https://atlas-paint.com/#localBusiness" },
+    "description": "Decorative wall coverings and wallpaper installation to transform any interior."
+  };
+
+  // Combine them via @graph
+  const schemaPayload = {
+    "@context": "https://schema.org",
+    "@graph": [localBusinessSchema, commercialPaintingService, residentialPaintingService, drywallPlasteringService, fencingService, wallCoveringService]
+  };
+
   return (
       <div className="min-h-screen bg-white">
         <Head>
@@ -12,6 +101,10 @@ export default function Services() {
           <meta
               name="description"
               content="Atlas HomeServices offers premium residential & commercial painting in the Greater Toronto Area, Niagara, Hamilton & more. Get a flawless finish—Call today!"
+          />
+          <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }}
           />
         </Head>
         <div className="container mx-auto px-6 pt-32 pb-16">

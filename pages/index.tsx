@@ -41,11 +41,11 @@ export default function Home() {
                 <script type="application/ld+json" dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
-                        "@type": "HomeAndConstructionBusiness",
+                        "@type": "LocalBusiness",
                         "description": "Professional painting services for residential and commercial properties in Toronto.",
                         "name": "Atlas HomeServices",
                         "@id": "https://atlas-paint.com/",
-                        "logo": "https://i.imgur.com/UTbaF2Q.png",
+                        "logo": "https://atlas-paint.com/assets/apple-touch-icon.png",
                         "url": "https://atlas-paint.com/",
                         "telephone": "+1-647-916-0826",
                         "priceRange": "$$",

@@ -90,9 +90,92 @@ export default function AllReviews() {
       ratingFilter === "all" ? true : review.rating === parseInt(ratingFilter)
   );
 
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "HomeAndConstructionBusiness",
+        "@id": "https://atlas-paint.com/#localBusiness",
+        "name": "Atlas HomeServices",
+        "url": "https://atlas-paint.com/",
+        "logo": "https://atlas-paint.com/logo.png",
+        "description": "Professional painting, drywall, and fencing services in Toronto and surrounding areas.",
+        "telephone": "+1-647-916-0826",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "123 Main St",
+          "addressLocality": "Toronto",
+          "addressRegion": "ON",
+          "postalCode": "M4B 1B3",
+          "addressCountry": "CA"
+        }
+      },
+      {
+        "@type": "Service",
+        "@id": "https://atlas-paint.com/commercial-painting#service",
+        "serviceType": "Commercial Painting",
+        "provider": {
+          "@id": "https://atlas-paint.com/#localBusiness"
+        },
+        "areaServed": {
+          "@type": "Place",
+          "name": "Toronto, Mississauga, Vaughan, Hamilton, Niagara"
+        },
+        "description": "High-quality commercial painting services for offices, retail spaces, and industrial facilities."
+      }
+    ]
+  }
+
+  // 2) Transform `filteredReviews` into an ItemList of Review objects
+  const itemListElement = filteredReviews.map((review, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "item": {
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": review.customerName,
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": review.rating.toString(),
+        "bestRating": "5",
+        "worstRating": "1",
+      },
+      "reviewBody": review.comment,
+      // This date can indicate when the review was posted
+      "datePublished": review.createdAt,
+      // If you want to mention which service was reviewed,
+      // you can embed it in the reviewBody or as an extra field
+      "itemReviewed": {
+        "@type": "LocalBusiness",
+        "@id": "https://atlas-paint.com/#localBusiness"
+      }
+    }
+  }));
+
+  // 3) Wrap the reviews in an ItemList
+  const reviewsListSchema = {
+    "@type": "ItemList",
+    "@id": "https://atlas-paint.com/all-reviews#ItemList",
+    "itemListElement": itemListElement
+  };
+
+  // 4) Combine into one @graph
+  const schemaPayload = {
+    "@context": "https://schema.org",
+    "@graph": [localBusinessSchema, reviewsListSchema],
+  };
+
+
   return (
       <div className="min-h-screen bg-white pb-24 pt-24">
         <Head>
+          <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }}
+          />
           <link rel="canonical" href="https://www.atlas-paint.com/all-reviews/" />
           <title>Customer Reviews | Trusted Residential & Commercial Painting</title>
           <meta name="description" content="See what our clients say! Read real reviews about our premium residential & commercial painting services in the GTA, Niagara, and beyond. Quality you can trust!" />
