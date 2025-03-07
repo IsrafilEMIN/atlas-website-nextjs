@@ -10,20 +10,31 @@ export default function BackgroundVideo() {
     useEffect(() => {
         const video = videoRef.current;
         if (video) {
-            // Attempt to play the video and handle errors
-            video.play().catch(() => {
-                setVideoError(true); // Trigger fallback if autoplay fails
-            });
+            const handleCanPlay = () => {
+                video.play()
+                    .then(() => {
+                        console.log("Video started playing");
+                    })
+                    .catch((error) => {
+                        console.error("Play error:", error);
+                        setVideoError(true); // Trigger fallback if play fails
+                    });
+            };
 
-            // Check if the video is playing after 2 seconds
-            const checkPlaying = setTimeout(() => {
-                if (video.paused) {
-                    setVideoError(true); // Trigger fallback if video isn’t playing
-                }
-            }, 2000);
+            const handleError = (e: Event) => {
+                console.error("Video error:", e);
+                setVideoError(true); // Trigger fallback if video encounters an error
+            };
 
-            // Cleanup timeout on unmount
-            return () => clearTimeout(checkPlaying);
+            // Add event listeners
+            video.addEventListener('canplay', handleCanPlay);
+            video.addEventListener('error', handleError);
+
+            // Cleanup event listeners on unmount
+            return () => {
+                video.removeEventListener('canplay', handleCanPlay);
+                video.removeEventListener('error', handleError);
+            };
         }
     }, []);
 
@@ -51,8 +62,8 @@ export default function BackgroundVideo() {
             className="object-cover w-full h-full"
         >
             <source src="/assets/hero-background.mp4" type="video/mp4" />
-            {/* Optional: WebM format for broader browser support */}
-            <source src="/assets/hero-background.webm" type="video/webm" />
+            {/*/!* Optional: WebM format for broader browser support *!/*/}
+            {/*<source src="/assets/hero-background.webm" type="video/webm" />*/}
         </video>
     );
 }
