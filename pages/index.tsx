@@ -37,11 +37,12 @@ export default function Home() {
     return (
         <div className="bg-white min-h-screen">
             <Head>
+                <link rel="canonical" href="https://www.atlas-paint.com" />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "Painting Company",
-                        "name": "Atlas Painting",
+                        "name": "Atlas HomeServices",
                         "@id": "https://atlas-paint.com/",
                         "logo": "https://i.imgur.com/UTbaF2Q.png",
                         "url": "https://atlas-paint.com/",
@@ -62,8 +63,8 @@ export default function Home() {
                         ]
                     })
                 }}/>
-                <title>Residential & Commercial Painters in Toronto | Atlas</title>
-                <meta name="description" content="Atlas Painting offers premium residential and commercial painting services in Toronto, Mississauga, Vaughan, Hamilton, Niagara, and surrounding areas. Call for a free quote!"/>
+                <title>Residential & Commercial Painters in Toronto | Atlas HomeServices</title>
+                <meta name="description" content="Atlas HomeServices offers premium residential and commercial painting services in Toronto, Mississauga, Vaughan, Hamilton, Niagara, and surrounding areas. Call for a free quote!"/>
             </Head>
             <Header/>
 

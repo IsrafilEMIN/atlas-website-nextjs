@@ -6,6 +6,7 @@ export default function Fencing() {
     return (
         <div className="min-h-screen bg-white">
             <Head>
+                <link rel="canonical" href="https://www.atlas-paint.com/services/fencing" />
                 <title>
                     Fencing Services in Toronto, Mississauga, Vaughan, Hamilton, Markham, Oakville, Richmond Hill, Burlington, Niagara Falls, and St. Catharines
                 </title>

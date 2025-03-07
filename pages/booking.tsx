@@ -96,8 +96,9 @@ export default function Booking() {
   return (
     <div className="min-h-screen bg-white">
         <Head>
-            <title>Book a Painting Service | Schedule Your Project | Atlas Painting</title>
-            <meta name="description" content="Ready for a transformation? Book a premium residential or commercial painting service with Atlas Painting today. Easy scheduling & expert results!" />
+            <link rel="canonical" href="https://www.atlas-paint.com/booking" />
+            <title>Book a Painting Service | Schedule Your Project | Atlas HomeServices</title>
+            <meta name="description" content="Ready for a transformation? Book a premium residential or commercial painting service with Atlas HomeServices today. Easy scheduling & expert results!" />
         </Head>
       <div className="container mx-auto px-6 pt-32 pb-16 relative">
         <div className="max-w-4xl mx-auto">

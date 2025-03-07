@@ -20,9 +20,9 @@ const locations = [
 const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": "https://www.atlaspainting.com/#business",
-    "name": "Atlas Painting",
-    "url": "https://www.atlaspainting.com",
+    "@id": "https://www.atlas-paint.com/#business",
+    "name": "Atlas HomeServices",
+    "url": "https://www.atlas-paint.com/services/commercial-painting",
     "areaServed": locations,
     "telephone": "+1-123-456-7890",
     "description": "Professional painting services in the Greater Toronto and Niagara Region."
@@ -33,23 +33,23 @@ const serviceSchema = {
     "@type": "Service",
     "serviceType": "Commercial Painting",
     "provider": {
-        "@id": "https://www.atlaspainting.com/#business"
+        "@id": "https://www.atlas-paint.com/#business"
     },
     "areaServed": locations,
     "description": "Professional commercial painting services for businesses, including interior and exterior painting.",
-    "url": "https://www.atlaspainting.com/services/commercial-painting"
+    "url": "https://www.atlas-paint.com/services/commercial-painting"
 };
 
 const CommercialPainting: React.FC = () => {
     return (
         <div className="min-h-screen bg-white">
             <Head>
-                <title>Professional Commercial Painting Services | Atlas Painting</title>
+                <title>Professional Commercial Painting Services | Atlas HomeServices</title>
                 <meta
                     name="description"
-                    content="Atlas Painting offers expert commercial painting services for businesses in Toronto, Mississauga, Vaughan, and surrounding areas. Enhance your commercial space with our professional painting solutions."
+                    content="Atlas HomeServices offers expert commercial painting services for businesses in Toronto, Mississauga, Vaughan, and surrounding areas. Enhance your commercial space with our professional painting solutions."
                 />
-                <link rel="canonical" href="https://www.atlaspainting.com/services/commercial-painting" />
+                <link rel="canonical" href="https://www.atlas-paint.com/services/commercial-painting" />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
@@ -73,7 +73,7 @@ const CommercialPainting: React.FC = () => {
                     </h1>
                     <p className="text-gray-600 mb-6">
                         <Link href="/">
-                            <span className="text-blue-600 hover:underline">Atlas Painting</span>
+                            <span className="text-blue-600 hover:underline">Atlas HomeServices</span>
                         </Link> provides top-tier commercial painting services designed to meet the unique needs of businesses. Our skilled team delivers exceptional results with minimal disruption to your operations.
                     </p>
 
@@ -120,7 +120,7 @@ const CommercialPainting: React.FC = () => {
                     className="mt-12 text-gray-600"
                 >
                     <p>
-                        Ready to enhance your commercial space? <Link href="/pricing"><span className="text-blue-600 hover:underline">Get an estimate</span></Link> or <Link href="mailto:atlas.homeservices@icloud.com"><span className="text-blue-600 hover:underline">contact</span></Link> Atlas Painting directly for a complimentary consultation and quote.
+                        Ready to enhance your commercial space? <Link href="/pricing"><span className="text-blue-600 hover:underline">Get an estimate</span></Link> or <Link href="mailto:atlas.homeservices@icloud.com"><span className="text-blue-600 hover:underline">contact</span></Link> Atlas HomeServices directly for a complimentary consultation and quote.
                     </p>
                 </motion.div>
             </div>

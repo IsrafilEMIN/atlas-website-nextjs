@@ -21,9 +21,9 @@ const locations = [
 const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": "https://www.atlaspainting.com/#business",
-    "name": "Atlas Painting",
-    "url": "https://www.atlaspainting.com",
+    "@id": "https://www.atlas-paint.com/#business",
+    "name": "Atlas HomeServices",
+    "url": "https://www.atlas-paint.com",
     "areaServed": locations,
     "telephone": "+1-123-456-7890", // Replace with actual number
     "description": "Professional painting services in the Greater Toronto and Niagara Region."
@@ -45,10 +45,10 @@ const ResidentialPainting: React.FC = () => {
     return (
         <div className="min-h-screen bg-white">
             <Head>
-                <title>Professional Residential Painting Services | Atlas Painting</title>
+                <title>Professional Residential Painting Services | Atlas HomeServices</title>
                 <meta
                     name="description"
-                    content="Atlas Painting provides professional residential painting services across Toronto, Mississauga, Vaughan, Hamilton, and surrounding areas. Contact us today for exceptional quality and a free quote."
+                    content="Atlas HomeServices provides professional residential painting services across Toronto, Mississauga, Vaughan, Hamilton, and surrounding areas. Contact us today for exceptional quality and a free quote."
                 />
                 {/* Added canonical URL and schema markup */}
                 <link rel="canonical" href="https://www.atlas-paint.com/services/residential-painting" />
@@ -76,7 +76,7 @@ const ResidentialPainting: React.FC = () => {
                     {/* Added image */}
                     {/*<Image*/}
                     {/*    src="/images/residential-painting.jpg"*/}
-                    {/*    alt="Professional residential painting services by Atlas Painting"*/}
+                    {/*    alt="Professional residential painting services by Atlas HomeServices"*/}
                     {/*    width={800}*/}
                     {/*    height={400}*/}
                     {/*    className="mb-6 rounded-lg shadow-md"*/}
@@ -84,7 +84,7 @@ const ResidentialPainting: React.FC = () => {
                     {/* Added internal link to homepage */}
                     <p className="text-gray-600 mb-6">
                         <Link href="/">
-                            <span className="text-blue-600 hover:underline">Atlas Painting</span>
+                            <span className="text-blue-600 hover:underline">Atlas HomeServices</span>
                         </Link> offers premium residential painting services tailored specifically to your home&apos;s unique style and needs. Our experienced team ensures superior craftsmanship, from meticulous preparation to flawless finishes.
                     </p>
 
@@ -133,7 +133,7 @@ const ResidentialPainting: React.FC = () => {
                 >
                     {/* Added internal link to contact page */}
                     <p>
-                        Ready to enhance your home? <Link href="/pricing"><span className="text-blue-600 hover:underline">Get an estimate</span></Link> or <Link href="mailto:atlas.homeservices@icloud.com"><span className="text-blue-600 hover:underline">contact</span></Link> Atlas Painting directly for a complimentary consultation and quote.
+                        Ready to enhance your home? <Link href="/pricing"><span className="text-blue-600 hover:underline">Get an estimate</span></Link> or <Link href="mailto:atlas.homeservices@icloud.com"><span className="text-blue-600 hover:underline">contact</span></Link> Atlas HomeServices directly for a complimentary consultation and quote.
                     </p>
                 </motion.div>
             </div>

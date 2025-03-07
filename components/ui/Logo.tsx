@@ -8,7 +8,7 @@ export default function Logo() {
     <div className="flex items-center">
       <Image 
         src="/assets/logo.png"
-        alt="Atlas - Premium Residential & Commercial Painting"
+        alt="Atlas HomeServices - Premium Residential & Commercial Painting"
         width={48}
         height={48}
         style={{ 

@@ -93,6 +93,7 @@ export default function AllReviews() {
   return (
       <div className="min-h-screen bg-white pb-24 pt-24">
         <Head>
+          <link rel="canonical" href="https://www.atlas-paint.com/all-reviews" />
           <title>Customer Reviews | Trusted Residential & Commercial Painting</title>
           <meta name="description" content="See what our clients say! Read real reviews about our premium residential & commercial painting services in the GTA, Niagara, and beyond. Quality you can trust!" />
         </Head>
@@ -138,7 +139,7 @@ export default function AllReviews() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
-                  <Card className="p-6 h-full flex flex-col justify-between bg-white border border-gray-200">
+                  <Card className="p-6 h-full flex flex-col justify-between bg-white border hover:border-gray-300 border-gray-200">
                     <div>
                       <div className="flex mb-4">
                         {[...Array(review.rating)].map((_, i) => (

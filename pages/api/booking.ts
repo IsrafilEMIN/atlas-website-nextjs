@@ -97,7 +97,7 @@ export default async function handler(
     const customerEmailResponse = await resend.emails.send({
       from: process.env.EMAIL_FROM!,
       to: customerEmail,
-      subject: "Your Booking is Confirmed - Atlas Painting",
+      subject: "Your Booking is Confirmed - Atlas HomeServices",
       html: `<div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
       <h1 style="color: #2c3e50; text-align: center;">Booking Confirmed!</h1>
       <p style="font-size: 18px; color: #444; text-align: center;">
@@ -133,7 +133,7 @@ export default async function handler(
     const adminEmailResponse = await resend.emails.send({
       from: process.env.EMAIL_FROM!,
       to: process.env.ADMIN_EMAIL!,
-      subject: "📝 New Booking Received – Atlas Painting",
+      subject: "📝 New Booking Received – Atlas HomeServices",
       html: `<div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
       <h2 style="color: #e74c3c;">New Booking Received</h2>
       <p style="font-size: 16px; color: #444;">You have a new booking request from <strong>${customerName}</strong>.</p>
