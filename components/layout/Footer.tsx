@@ -89,14 +89,14 @@ export default function Footer() {
             <h3 className="text-lg font-semibold text-gray-300 mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="https://atlas-paint.com" passHref onClick={handleClick("https://atlas-paint.com")} className="text-gray-300 hover:underline">
+                <Link href="https://atlas-paint.com" passHref onClick={handleClick("/")} className="text-gray-300 hover:underline">
                   Home
                 </Link>
               </li>
               <li>
                 <Link
                   href="https://atlas-paint.com/services"
-                  onClick={handleClick("https://atlas-paint.com")}
+                  onClick={handleClick("/")}
                   className="text-gray-300 hover:underline"
                 >
                   Services
@@ -105,7 +105,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="https://atlas-paint.com/pricing"
-                  onClick={handleClick("https://atlas-paint.com/pricing")}
+                  onClick={handleClick("/pricing")}
                   className="text-gray-300 hover:underline"
                 >
                   Pricing
@@ -114,7 +114,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="https://atlas-paint.com/gallery"
-                  onClick={handleClick("https://atlas-paint.com/gallery")}
+                  onClick={handleClick("/gallery")}
                   className="text-gray-300 hover:underline"
                 >
                   Gallery
@@ -123,7 +123,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="https://atlas-paint.com/booking"
-                  onClick={handleClick("https://atlas-paint.com/booking")}
+                  onClick={handleClick("/booking")}
                   className="text-gray-300 hover:underline"
                 >
                   Book Now
