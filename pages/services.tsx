@@ -30,15 +30,12 @@ export default function Services() {
             </div>
           </Link>
 
-          <Link
-              href="/services/commercial-painting"
-              className="block transition-transform hover:scale-[1.02] duration-300 w-full"
-          >
+    
             <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Commercial Painting</h3>
               <p className="text-gray-600">Elevate your business with a professional, high-end finish. From corporate offices to luxury retail spaces, we provide seamless, durable coatings designed to impress clients and enhance productivity. Our team works efficiently to minimize downtime, ensuring a flawless application with premium-grade, long-lasting materials.</p>
             </div>
-          </Link>
+
 
           <Link
               href="/services/drywall-plastering"
