@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Head from "next/head";
-import Image from "next/image"; // Added for image
+// import Image from "next/image"; // Added for image
 import Link from "next/link";   // Added for internal linking
 import React from "react";
 
