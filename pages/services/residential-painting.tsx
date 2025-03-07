@@ -17,30 +17,6 @@ const locations = [
     "St. Catharines",
 ];
 
-// Define schema markup outside the component
-const localBusinessSchema = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": "https://www.atlas-paint.com/#business",
-    "name": "Atlas HomeServices",
-    "url": "https://www.atlas-paint.com",
-    "areaServed": locations,
-    "telephone": "+1-123-456-7890", // Replace with actual number
-    "description": "Professional painting services in the Greater Toronto and Niagara Region."
-};
-
-const serviceSchema = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "serviceType": "Residential Painting",
-    "provider": {
-        "@id": "https://www.atlas-paint.com/#business"
-    },
-    "areaServed": locations,
-    "description": "Professional residential painting services including interior and exterior painting.",
-    "url": "https://www.atlas-paint.com/services/residential-painting"
-};
-
 const ResidentialPainting: React.FC = () => {
     return (
         <div className="min-h-screen bg-white">
