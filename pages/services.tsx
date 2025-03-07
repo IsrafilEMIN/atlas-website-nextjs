@@ -7,7 +7,7 @@ export default function Services() {
   return (
       <div className="min-h-screen bg-white">
         <Head>
-          <link rel="canonical" href="https://www.atlas-paint.com/services" />
+          <link rel="canonical" href="https://www.atlas-paint.com/services/" />
           <title>Expert Painting & Wall Finishing Services | Atlas HomeServices</title>
           <meta
               name="description"

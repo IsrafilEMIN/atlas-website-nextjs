@@ -37,11 +37,12 @@ export default function Home() {
     return (
         <div className="bg-white min-h-screen">
             <Head>
-                <link rel="canonical" href="https://www.atlas-paint.com" />
+                <link rel="canonical" href="https://www.atlas-paint.com/" />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
-                        "@type": "Painting Company",
+                        "@type": "HomeAndConstructionBusiness",
+                        "description": "Professional painting services for residential and commercial properties in Toronto.",
                         "name": "Atlas HomeServices",
                         "@id": "https://atlas-paint.com/",
                         "logo": "https://i.imgur.com/UTbaF2Q.png",
@@ -56,6 +57,15 @@ export default function Home() {
                                 "closes": "20:00"
                             }
                         ],
+                        "address": {
+                            "@type": "PostalAddress",
+                            "streetAddress": "8001 Woodsview Crescent",
+                            "addressLocality": "Niagara Falls",
+                            "addressRegion": "ON",
+                            "postalCode": "L2H 3E9",
+                            "addressCountry": "CA"
+                        },
+                        "image": "https://atlas-paint.com/assets/apple-touch-icon.png",
                         "sameAs": [
                             "https://www.instagram.com/atlas_homeservices/",
                             "https://x.com/Atlas_Paint",

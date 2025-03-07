@@ -17,30 +17,6 @@ const locations = [
     "St. Catharines",
 ];
 
-// Define schema markup outside the component
-const localBusinessSchema = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": "https://www.atlas-paint.com/#business",
-    "name": "Atlas HomeServices",
-    "url": "https://www.atlas-paint.com",
-    "areaServed": locations,
-    "telephone": "+1-123-456-7890", // Replace with actual number
-    "description": "Professional painting services in the Greater Toronto and Niagara Region."
-};
-
-const serviceSchema = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "serviceType": "Residential Painting",
-    "provider": {
-        "@id": "https://www.atlas-paint.com/#business"
-    },
-    "areaServed": locations,
-    "description": "Professional residential painting services including interior and exterior painting.",
-    "url": "https://www.atlas-paint.com/services/residential-painting"
-};
-
 const ResidentialPainting: React.FC = () => {
     return (
         <div className="min-h-screen bg-white">
@@ -51,14 +27,47 @@ const ResidentialPainting: React.FC = () => {
                     content="Atlas HomeServices provides professional residential painting services across Toronto, Mississauga, Vaughan, Hamilton, and surrounding areas. Contact us today for exceptional quality and a free quote."
                 />
                 {/* Added canonical URL and schema markup */}
-                <link rel="canonical" href="https://www.atlas-paint.com/services/residential-painting" />
+                <link rel="canonical" href="https://www.atlas-paint.com/services/residential-painting/" />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
                         __html: JSON.stringify({
-                            "@context": "https://schema.org",
-                            "@graph": [localBusinessSchema, serviceSchema]
-                        })
+                                "@context": "https://schema.org",
+                                "@graph": [
+                                    {
+                                        "@type": "HomeAndConstructionBusiness",
+                                        "@id": "https://atlas-paint.com/#localBusiness",
+                                        "name": "Atlas HomeServices",
+                                        "url": "https://atlas-paint.com/",
+                                        "logo": "https://atlas-paint.com/logo.png",
+                                        "description": "Professional painting, drywall, and fencing services in Toronto and surrounding areas.",
+                                        "telephone": "+1-647-916-0826",
+                                        "priceRange": "$$",
+                                        "address": {
+                                            "@type": "PostalAddress",
+                                            "streetAddress": "123 Main St",
+                                            "addressLocality": "Toronto",
+                                            "addressRegion": "ON",
+                                            "postalCode": "M4B 1B3",
+                                            "addressCountry": "CA"
+                                        }
+                                    },
+                                    {
+                                        "@type": "Service",
+                                        "@id": "https://atlas-paint.com/residential-painting#service",
+                                        "serviceType": "Residential Painting",
+                                        "provider": {
+                                            "@id": "https://atlas-paint.com/#localBusiness"
+                                        },
+                                        "areaServed": {
+                                            "@type": "Place",
+                                            "name": "Toronto, Mississauga, Vaughan, Hamilton, Niagara"
+                                        },
+                                        "description": "Expert interior and exterior residential painting services to enhance your home's look and value."
+                                    }
+                                ]
+                            }
+                        )
                     }}
                 />
             </Head>

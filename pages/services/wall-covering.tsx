@@ -6,13 +6,55 @@ export default function WallCovering() {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <link rel="canonical" href="https://www.atlas-paint.com/services/wall-covering" />
+        <link rel="canonical" href="https://www.atlas-paint.com/services/wall-covering/" />
         <title>
           Wall Covering Services in Toronto, Mississauga, Vaughan, Hamilton, Markham, Oakville, Richmond Hill, Burlington, Niagara Falls, and St. Catharines
         </title>
         <meta
           name="description"
           content="Premium wall covering services—wallpaper, vinyl, and specialty installations—in Toronto, Mississauga, Vaughan, Hamilton, Markham, Oakville, Richmond Hill, Burlington, Niagara Falls, and St. Catharines."
+        />
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@graph": [
+                      {
+                        "@type": "HomeAndConstructionBusiness",
+                        "@id": "https://atlas-paint.com/#localBusiness",
+                        "name": "Atlas HomeServices",
+                        "url": "https://atlas-paint.com/",
+                        "logo": "https://atlas-paint.com/logo.png",
+                        "description": "Professional painting, drywall, and fencing services in Toronto and surrounding areas.",
+                        "telephone": "+1-647-916-0826",
+                        "priceRange": "$$",
+                        "address": {
+                          "@type": "PostalAddress",
+                          "streetAddress": "123 Main St",
+                          "addressLocality": "Toronto",
+                          "addressRegion": "ON",
+                          "postalCode": "M4B 1B3",
+                          "addressCountry": "CA"
+                        }
+                      },
+                      {
+                        "@type": "Service",
+                        "@id": "https://atlas-paint.com/wall-covering#service",
+                        "serviceType": "Wall Covering",
+                        "provider": {
+                          "@id": "https://atlas-paint.com/#localBusiness"
+                        },
+                        "areaServed": {
+                          "@type": "Place",
+                          "name": "Toronto, Mississauga, Vaughan, Hamilton, Niagara"
+                        },
+                        "description": "High-quality wallpaper installation, removal, and decorative wall coverings for any style."
+                      }
+                    ]
+                  }
+              )
+            }}
         />
       </Head>
 

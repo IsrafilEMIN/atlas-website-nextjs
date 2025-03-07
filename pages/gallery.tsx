@@ -6,7 +6,7 @@ export default function Gallery() {
   return (
       <div className="min-h-screen bg-white">
           <Head>
-              <link rel="canonical" href="https://www.atlas-paint.com/gallery" />
+              <link rel="canonical" href="https://www.atlas-paint.com/gallery/" />
               <title>Painting Portfolio | Stunning Residential & Commercial Projects</title>
               <meta name="description" content="See our past projects! Browse our gallery of premium residential & commercial painting, drywall, and wall finishes. Get inspired—Book your project today!" />
           </Head>
