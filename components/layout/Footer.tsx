@@ -1,12 +1,25 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { FaTiktok } from "react-icons/fa";
 import Logo from "@/components/ui/Logo";
 import { useRouter } from "next/router";
 
 export default function Footer() {
   const router = useRouter();
+
+  const XIcon = ({ className }: { className?: string }) => (
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className={className}
+      >
+        {/* Official X logo path - replace with actual path data */}
+        <path d="M18.205 2.25h3.308l-7.227 8.26 8.502 11.24h-6.64l-5.204-6.81-5.952 6.81H1.685l7.73-8.835-8.15-10.665h6.816l4.692 6.203 5.432-6.203zm-1.325 17.73h1.84L6.665 4.26H4.72l12.16 15.72z" />
+      </svg>
+  );
 
   // Set the current pathname on the client
   useEffect(() => {
@@ -37,28 +50,36 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4">
               <Link
-                href="https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
-                className="text-gray-300 hover:text-white/60"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Facebook className="w-5 h-5" />
-              </Link>
-              <Link
-                href="https://x.com/Atlas_Paint"
-                className="text-gray-300 hover:text-white/60"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Twitter className="w-5 h-5" />
-              </Link>
-              <Link
                 href="https://www.instagram.com/atlas_homeservices/"
                 className="text-gray-300 hover:text-white/60"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Instagram className="w-5 h-5" />
+              </Link>
+              <Link
+                  href="https://www.tiktok.com/@atlas_homeservices" // Replace with your TikTok URL
+                  className="text-gray-300 hover:text-white/60"
+                  target="_blank"
+                  rel="noopener noreferrer"
+              >
+                <FaTiktok className="w-5 h-5" />
+              </Link>
+              <Link
+                  href="https://x.com/Atlas_Paint"
+                  className="text-gray-300 hover:text-white/60"
+                  target="_blank"
+                  rel="noopener noreferrer"
+              >
+                <XIcon className="w-5 h-5" />
+              </Link>
+              <Link
+                  href="https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
+                  className="text-gray-300 hover:text-white/60"
+                  target="_blank"
+                  rel="noopener noreferrer"
+              >
+                <Facebook className="w-5 h-5" />
               </Link>
             </div>
           </div>
