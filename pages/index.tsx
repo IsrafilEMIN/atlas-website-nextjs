@@ -37,7 +37,8 @@ export default function Home() {
     return (
         <div className="bg-white min-h-screen">
             <Head>
-                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                <script type="application/ld+json" dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "Painting Company",
                         "name": "Atlas Painting",
@@ -59,17 +60,18 @@ export default function Home() {
                             "https://x.com/Atlas_Paint",
                             "https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
                         ]
-                    }) }} />
-                <title>Atlas Painting | Residential & Commercial Painting Services (Toronto, Ontario)</title>
-                <meta name="description" content="Atlas Painting offers premium residential & commercial painting in the Greater Toronto Area, Niagara, Hamilton & more. Call for a free quote!" />
+                    })
+                }}/>
+                <title>Residential & Commercial Painters in Toronto | Atlas</title>
+                <meta name="description" content="Atlas Painting offers premium residential and commercial painting services in Toronto, Mississauga, Vaughan, Hamilton, Niagara, and surrounding areas. Call for a free quote!"/>
             </Head>
-            <Header />
+            <Header/>
 
             <main className="w-full">
-                <Hero />
-                <Features />
-                <Testimonials />
-                <ProductShowcase />
+                <Hero/>
+                <Features/>
+                <Testimonials/>
+                <ProductShowcase/>
             </main>
         </div>
     );
