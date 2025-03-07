@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 export default function BackgroundVideo() {
     // Type the ref as HTMLVideoElement for video element access
@@ -41,7 +42,7 @@ export default function BackgroundVideo() {
     // Render fallback GIF if there’s an error
     if (videoError) {
         return (
-            <img
+            <Image
                 src="/assets/fallback-background.gif" // Replace with your fallback asset path
                 alt="Background Fallback"
                 className="object-cover w-full h-full"
