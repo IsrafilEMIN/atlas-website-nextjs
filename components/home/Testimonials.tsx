@@ -146,7 +146,7 @@ export default function Testimonials() {
                   variant="outline"
                   size="icon"
                   onClick={scrollPrev}
-                  className="rounded-full bg-white border border-gray-200 text-black hover:bg-gray-100 -translate-x-16 hover:text-black"
+                  className="rounded-full bg-white border border-gray-200 text-black hover:bg-gray-100 hover:border-gray-300 -translate-x-16 hover:text-black"
               >
                 <ChevronLeft className="h-6 w-6" />
               </Button>
@@ -156,7 +156,7 @@ export default function Testimonials() {
                   variant="outline"
                   size="icon"
                   onClick={scrollNext}
-                  className="rounded-full bg-white border border-gray-200 text-black hover:bg-gray-100 translate-x-16 hover:text-black"
+                  className="rounded-full bg-white border border-gray-200 text-black hover:bg-gray-100 hover:border-gray-300 translate-x-16 hover:text-black"
               >
                 <ChevronRight className="h-6 w-6" />
               </Button>

@@ -89,14 +89,14 @@ export default function Footer() {
             <h3 className="text-lg font-semibold text-gray-300 mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" passHref onClick={handleClick("/")} className="text-gray-300 hover:underline">
+                <Link href="https://atlas-paint.com" passHref onClick={handleClick("https://atlas-paint.com")} className="text-gray-300 hover:underline">
                   Home
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/services"
-                  onClick={handleClick("/services")}
+                  href="https://atlas-paint.com/services"
+                  onClick={handleClick("https://atlas-paint.com")}
                   className="text-gray-300 hover:underline"
                 >
                   Services
@@ -104,8 +104,8 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/pricing"
-                  onClick={handleClick("/pricing")}
+                  href="https://atlas-paint.com/pricing"
+                  onClick={handleClick("https://atlas-paint.com/pricing")}
                   className="text-gray-300 hover:underline"
                 >
                   Pricing
@@ -113,8 +113,8 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/gallery"
-                  onClick={handleClick("/gallery")}
+                  href="https://atlas-paint.com/gallery"
+                  onClick={handleClick("https://atlas-paint.com/gallery")}
                   className="text-gray-300 hover:underline"
                 >
                   Gallery
@@ -122,8 +122,8 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/booking"
-                  onClick={handleClick("/booking")}
+                  href="https://atlas-paint.com/booking"
+                  onClick={handleClick("https://atlas-paint.com/booking")}
                   className="text-gray-300 hover:underline"
                 >
                   Book Now

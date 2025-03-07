@@ -106,7 +106,8 @@ export default function Pricing() {
   return (
       <div className="min-h-screen bg-white">
         <Head>
-          <title>Get a Free Quote | Atlas Painting</title>
+          <link rel="canonical" href="https://www.atlas-paint.com/pricing" />
+          <title>Get a Free Quote | Atlas HomeServices</title>
           <meta
               name="description"
               content="Explore our competitive pricing for residential & commercial painting, drywall installation, plastering, and wall covering services. Get a free quote today and transform your space with premium craftsmanship!"

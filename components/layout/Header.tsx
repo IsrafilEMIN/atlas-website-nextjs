@@ -57,33 +57,33 @@ export default function Header() {
           }`}
       >
         <div className="mx-auto px-6 max-w-6xl flex items-center justify-between relative box-content">
-          <Link href="/" passHref onClick={handleClick("/")}>
+          <Link href="https://atlas-paint.com" passHref onClick={handleClick("https://atlas-paint.com")}>
             <Logo />
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-16">
-            <Link href="/" passHref>
-              <span onClick={handleClick("/")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Home</span>
+            <Link href="https://atlas-paint.com" passHref>
+              <span onClick={handleClick("https://atlas-paint.com")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Home</span>
             </Link>
-            <Link href="/services" passHref>
-              <span onClick={handleClick("/services")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Services</span>
+            <Link href="https://atlas-paint.com/services" passHref>
+              <span onClick={handleClick("https://atlas-paint.com/services")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Services</span>
             </Link>
-            <Link href="/pricing" passHref>
-              <span onClick={handleClick("/pricing")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Pricing</span>
+            <Link href="https://atlas-paint.com/pricing" passHref>
+              <span onClick={handleClick("https://atlas-paint.com/pricing")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Pricing</span>
             </Link>
-            <Link href="/gallery" passHref>
-              <span onClick={handleClick("/gallery")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Gallery</span>
+            <Link href="https://atlas-paint.com/gallery" passHref>
+              <span onClick={handleClick("https://atlas-paint.com/gallery")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Gallery</span>
             </Link>
           </nav>
 
           {/* Mobile Navigation */}
           <div className="flex items-center gap-4 md:hidden">
-            <Link href="/booking" passHref>
+            <Link href="https://atlas-paint.com/booking" passHref>
               <Button
                   variant="outline"
                   className="border-white text-white hover:bg-white hover:text-black"
-                  onClick={handleClick("/booking")}
+                  onClick={handleClick("https://atlas-paint.com/booking")}
               >
                 Book Now
               </Button>
@@ -129,17 +129,17 @@ export default function Header() {
                     className="absolute top-full left-0 right-0 bg-black md:hidden overflow-hidden z-50"
                 >
                   <nav className="flex flex-col px-6 py-4">
-                    <Link href="/" passHref>
-                      <span onClick={handleClick("/")} className={`${linkStyle("/")} block py-2`}>Home</span>
+                    <Link href="https://atlas-paint.com" passHref>
+                      <span onClick={handleClick("/")} className={`${linkStyle("https://atlas-paint.com")} block py-2`}>Home</span>
                     </Link>
-                    <Link href="/services" passHref>
-                      <span  onClick={handleClick("/services")} className={`${linkStyle("/services")} block py-2`}>Services</span>
+                    <Link href="https://atlas-paint.com/services" passHref>
+                      <span  onClick={handleClick("/services")} className={`${linkStyle("https://atlas-paint.com/services")} block py-2`}>Services</span>
                     </Link>
-                    <Link href="/pricing" passHref>
-                      <span onClick={handleClick("/pricing")} className={`${linkStyle("/pricing")} block py-2`}>Pricing</span>
+                    <Link href="https://atlas-paint.com/pricing" passHref>
+                      <span onClick={handleClick("/pricing")} className={`${linkStyle("https://atlas-paint.com/pricing")} block py-2`}>Pricing</span>
                     </Link>
-                    <Link href="/gallery" passHref>
-                      <span onClick={handleClick("/gallery")} className={`${linkStyle("/gallery")} block py-2`}>Gallery</span>
+                    <Link href="https://atlas-paint.com/gallery" passHref>
+                      <span onClick={handleClick("/gallery")} className={`${linkStyle("https://atlas-paint.com/gallery")} block py-2`}>Gallery</span>
                     </Link>
                   </nav>
                 </motion.div>
@@ -148,7 +148,7 @@ export default function Header() {
 
           {/* Desktop Book Now Button */}
           <div className="hidden md:block">
-            <Link href="/booking" onClick={handleClick("/booking")}>
+            <Link href="https://atlas-paint.com/booking" onClick={handleClick("https://atlas-paint.com/booking")}>
               <Button
                   variant="outline"
                   className="border-white text-white hover:bg-white hover:text-black"
