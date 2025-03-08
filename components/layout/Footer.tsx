@@ -1,4 +1,3 @@
-"use client";
 import { useEffect } from "react";
 import Link from "next/link";
 import { Facebook, Instagram, Mail, Phone, MapPin } from "lucide-react";
@@ -89,14 +88,14 @@ export default function Footer() {
             <h3 className="text-lg font-semibold text-gray-300 mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="https://atlas-paint.com" passHref onClick={handleClick("/")} className="text-gray-300 hover:underline">
+                <Link href="https://atlas-paint.com/" passHref onClick={handleClick("/")} className="text-gray-300 hover:underline">
                   Home
                 </Link>
               </li>
               <li>
                 <Link
-                  href="https://atlas-paint.com/services"
-                  onClick={handleClick("/")}
+                  href="https://atlas-paint.com/services/"
+                  onClick={handleClick("/services")}
                   className="text-gray-300 hover:underline"
                 >
                   Services
@@ -104,7 +103,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="https://atlas-paint.com/pricing"
+                  href="https://atlas-paint.com/pricing/"
                   onClick={handleClick("/pricing")}
                   className="text-gray-300 hover:underline"
                 >
@@ -113,7 +112,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="https://atlas-paint.com/gallery"
+                  href="https://atlas-paint.com/gallery/"
                   onClick={handleClick("/gallery")}
                   className="text-gray-300 hover:underline"
                 >
@@ -122,7 +121,16 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="https://atlas-paint.com/booking"
+                    href="https://atlas-paint.com/blog/"
+                    onClick={handleClick("/blog")}
+                    className="text-gray-300 hover:underline"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://atlas-paint.com/booking/"
                   onClick={handleClick("/booking")}
                   className="text-gray-300 hover:underline"
                 >

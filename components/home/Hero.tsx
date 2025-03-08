@@ -1,4 +1,5 @@
 "use client";
+
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ const BackgroundVideo = dynamic(() => import("@/components/ui/BackgroundVideo"),
 export default function Hero() {
   return (
       <section className="relative h-[100dvh] flex items-center pt-20 overflow-hidden bg-white">
-      {/* Background Video Component */}
+        {/* Background Video Component */}
         <div className="absolute inset-0 w-full h-full z-0">
           <BackgroundVideo />
           <div className="absolute inset-0 bg-black/40" />
@@ -19,12 +20,8 @@ export default function Hero() {
         <GridPattern className="text-gray-100" />
 
         <div className="container mx-auto px-6 relative z-10">
-          <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="max-w-4xl mx-auto text-center"
-          >
+          <div className="max-w-4xl mx-auto text-center">
+            {/* You can still animate smaller text or badges if you want */}
             <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -34,29 +31,26 @@ export default function Hero() {
               Premium Residential & Commercial Painting in GTA
             </motion.span>
 
-            <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight"
-            >
+            {/* Remove animation from the <h1> to reduce LCP */}
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
               Transform Your Space with Premium Paint Solutions
-            </motion.h1>
+            </h1>
 
             <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.3 }}
                 className="text-lg md:text-xl text-gray-200 mb-10"
             >
-              Expert painting services for residential and commercial properties, delivering quality and excellence in every brushstroke.<br />
+              Expert painting services for residential and commercial properties, delivering
+              quality and excellence in every brushstroke.<br />
               Contact us today for a free quote!
             </motion.p>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.4 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center"
             >
               <Button
@@ -74,7 +68,7 @@ export default function Hero() {
                 Book now
               </Button>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </section>
   );
