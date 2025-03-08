@@ -121,6 +121,15 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                    href="https://atlas-paint.com/blog/"
+                    onClick={handleClick("/blog")}
+                    className="text-gray-300 hover:underline"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="https://atlas-paint.com/booking/"
                   onClick={handleClick("/booking")}
                   className="text-gray-300 hover:underline"

@@ -57,23 +57,26 @@ export default function Header() {
           }`}
       >
         <div className="mx-auto px-6 max-w-6xl flex items-center justify-between relative box-content">
-          <Link href="https://atlas-paint.com" passHref onClick={handleClick("/")}>
+          <Link href="https://atlas-paint.com/" passHref onClick={handleClick("/")}>
             <Logo />
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-16">
-            <Link href="https://atlas-paint.com" passHref>
+            <Link href="https://atlas-paint.com/" passHref>
               <span onClick={handleClick("/")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Home</span>
             </Link>
-            <Link href="https://atlas-paint.com/services" passHref>
+            <Link href="https://atlas-paint.com/services/" passHref>
               <span onClick={handleClick("/services")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Services</span>
             </Link>
-            <Link href="https://atlas-paint.com/pricing" passHref>
+            <Link href="https://atlas-paint.com/pricing/" passHref>
               <span onClick={handleClick("/pricing")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Pricing</span>
             </Link>
-            <Link href="https://atlas-paint.com/gallery" passHref>
+            <Link href="https://atlas-paint.com/gallery/" passHref>
               <span onClick={handleClick("/gallery")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Gallery</span>
+            </Link>
+            <Link href="https://atlas-paint.com/blog/" passHref>
+              <span onClick={handleClick("/blog")} className={`${linkStyle("/")} ${isActive("/") ? "active" : ""}`}>Blog</span>
             </Link>
           </nav>
 
@@ -129,17 +132,20 @@ export default function Header() {
                     className="absolute top-full left-0 right-0 bg-black md:hidden overflow-hidden z-50"
                 >
                   <nav className="flex flex-col px-6 py-4">
-                    <Link href="https://atlas-paint.com" passHref>
+                    <Link href="https://atlas-paint.com/" passHref>
                       <span onClick={handleClick("/")} className={`${linkStyle("/")} block py-2`}>Home</span>
                     </Link>
-                    <Link href="https://atlas-paint.com/services" passHref>
+                    <Link href="https://atlas-paint.com/services/" passHref>
                       <span  onClick={handleClick("/services")} className={`${linkStyle("/services")} block py-2`}>Services</span>
                     </Link>
-                    <Link href="https://atlas-paint.com/pricing" passHref>
+                    <Link href="https://atlas-paint.com/pricing/" passHref>
                       <span onClick={handleClick("/pricing")} className={`${linkStyle("/pricing")} block py-2`}>Pricing</span>
                     </Link>
-                    <Link href="https://atlas-paint.com/gallery" passHref>
+                    <Link href="https://atlas-paint.com/gallery/" passHref>
                       <span onClick={handleClick("/gallery")} className={`${linkStyle("/gallery")} block py-2`}>Gallery</span>
+                    </Link>
+                    <Link href="https://atlas-paint.com/blog/" passHref>
+                      <span onClick={handleClick("/blog")} className={`${linkStyle("/blog")} block py-2`}>Blog</span>
                     </Link>
                   </nav>
                 </motion.div>
@@ -148,7 +154,7 @@ export default function Header() {
 
           {/* Desktop Book Now Button */}
           <div className="hidden md:block">
-            <Link href="https://atlas-paint.com/booking" onClick={handleClick("/booking")}>
+            <Link href="https://atlas-paint.com/booking/" onClick={handleClick("/booking")}>
               <Button
                   variant="outline"
                   className="border-white text-white hover:bg-white hover:text-black"
