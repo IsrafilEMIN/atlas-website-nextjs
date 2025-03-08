@@ -65,7 +65,7 @@ export default function DrywallPlastering() {
             <Head>
                 <link rel="canonical" href="https://www.atlas-paint.com/services/drywall-plastering/" />
                 <title>
-                    Drywall & Plastering Services in Toronto, Mississauga, Vaughan, Hamilton, Markham, Oakville, Richmond Hill, Burlington, Niagara Falls, and St. Catharines
+                    Professional Drywall & Plastering Services in Toronto | Atlas HomeServices
                 </title>
                 <meta
                     name="description"

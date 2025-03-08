@@ -76,7 +76,7 @@ const CommercialPainting: React.FC = () => {
     return (
         <div className="min-h-screen bg-white">
             <Head>
-                <title>Professional Commercial Painting Services | Atlas HomeServices</title>
+                <title>Professional Commercial Painting Services in Toronto | Atlas HomeServices</title>
                 <meta
                     name="description"
                     content="Atlas HomeServices offers expert commercial painting services for businesses in Toronto, Mississauga, Vaughan, and surrounding areas. Enhance your commercial space with our professional painting solutions."
