@@ -78,12 +78,11 @@ const ResidentialPainting: React.FC = () => {
     return (
         <div className="min-h-screen bg-white">
             <Head>
-                <title>Professional Residential Painting Services | Atlas HomeServices</title>
+                <title>Professional Residential Painting Services in Toronto | Atlas HomeServices</title>
                 <meta
                     name="description"
-                    content="Atlas HomeServices provides professional residential painting services across Toronto, Mississauga, Vaughan, Hamilton, and surrounding areas. Contact us today for exceptional quality and a free quote."
+                    content="Premium residential painting services in Toronto, Mississauga, Vaughan, Hamilton, and surrounding areas. Interior & exterior painting by professional painting contractors."
                 />
-                {/* Added canonical URL and schema markup */}
                 <link rel="canonical" href="https://www.atlas-paint.com/services/residential-painting/" />
                 <script
                     type="application/ld+json"

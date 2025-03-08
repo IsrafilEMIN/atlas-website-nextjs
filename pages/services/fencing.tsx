@@ -65,7 +65,7 @@ export default function Fencing() {
             <Head>
                 <link rel="canonical" href="https://www.atlas-paint.com/services/fencing/" />
                 <title>
-                    Fencing Services in Toronto, Mississauga, Vaughan, Hamilton, Markham, Oakville, Richmond Hill, Burlington, Niagara Falls, and St. Catharines
+                    Professional Fencing Services in Toronto | Atlas HomeServices
                 </title>
                 <meta
                     name="description"

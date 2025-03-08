@@ -65,7 +65,7 @@ export default function WallCovering() {
       <Head>
         <link rel="canonical" href="https://www.atlas-paint.com/services/wall-covering/" />
         <title>
-          Wall Covering Services in Toronto, Mississauga, Vaughan, Hamilton, Markham, Oakville, Richmond Hill, Burlington, Niagara Falls, and St. Catharines
+          Professional Wall Covering Services in Toronto | Atlas HomeServices
         </title>
         <meta
           name="description"
