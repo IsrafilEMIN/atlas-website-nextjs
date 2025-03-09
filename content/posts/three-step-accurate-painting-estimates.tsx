@@ -1,6 +1,3 @@
-import React from "react";
-import ReactMarkdown, {Components} from "react-markdown";
-
 export const metadata = {
     slug: "three-step-accurate-painting-estimates",
     title: "3 Steps You MUST Take To Accurate Estimate Painting Projects",
@@ -37,37 +34,3 @@ By following this structured approach—calculating reliable production rates, c
     dateISO: "2025-03-09T00:00:00Z",
     category: "Painting Estimate",
 };
-
-// Define custom components with explicit types
-const customComponents: Partial<Components> = {
-    h2: ({children, ...props}) => (
-        <h2 className="text-3xl font-bold text-gray-900 mt-8 mb-4" {...props}>
-            {children}
-        </h2>
-    ),
-    h3: ({children, ...props}) => (
-        <h3 className="text-2xl font-bold text-gray-900 mt-6 mb-3" {...props}>
-            {children}
-        </h3>
-    ),
-};
-
-export default function PaintingEstimatesPost() {
-    return (
-        <div className="min-h-screen bg-white">
-            <div className="container mx-auto px-6 pt-32 pb-16">
-                <div className="max-w-4xl mx-auto">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-8">{metadata.title}</h1>
-                    <p className="text-sm text-gray-500 mb-10 italic">
-                        By {metadata.author} on {metadata.date}
-                    </p>
-                    <div className="prose prose-lg max-w-none leading-relaxed text-gray-800">
-                        <ReactMarkdown components={customComponents}>
-                            {metadata.content}
-                        </ReactMarkdown>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
