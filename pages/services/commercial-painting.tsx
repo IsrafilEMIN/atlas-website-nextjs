@@ -81,7 +81,7 @@ const CommercialPainting: React.FC = () => {
                     name="description"
                     content="Atlas HomeServices offers expert commercial painting services for businesses in Toronto, Mississauga, Vaughan, and surrounding areas. Enhance your commercial space with our professional painting solutions."
                 />
-                <link rel="canonical" href="https://www.atlas-paint.com/services/commercial-painting/" />
+                <link rel="canonical" href="https://www.atlas-paint.com/services/commercial-painting/" hrefLang="en" />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{

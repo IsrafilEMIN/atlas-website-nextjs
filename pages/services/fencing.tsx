@@ -63,7 +63,7 @@ export default function Fencing() {
     return (
         <div className="min-h-screen bg-white">
             <Head>
-                <link rel="canonical" href="https://www.atlas-paint.com/services/fencing/" />
+                <link rel="canonical" href="https://www.atlas-paint.com/services/fencing/" hrefLang="en" />
                 <title>
                     Professional Fencing Services in Toronto | Atlas HomeServices
                 </title>
