@@ -24,9 +24,9 @@ export async function getStaticPaths() {
     // Build an array of possible slugs
     const slugs = [];
     for (const filename of filenames) {
-        if (filename.endsWith(".ts")) {
+        if (filename.endsWith(".tsx")) {
             // e.g. "my-first-post.ts" => slug = "my-first-post"
-            slugs.push(filename.replace(/\.ts$/, ""));
+            slugs.push(filename.replace(/\.tsx$/, ""));
         }
     }
 
