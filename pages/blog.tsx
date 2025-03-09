@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import path from "path";
 import fs from "fs/promises";
+import * as React from "react";
 
 interface Post {
   slug: string;
@@ -80,8 +81,9 @@ export default function Blog({ posts }: { posts: Post[] }) {
   return (
       <div className="min-h-screen bg-white">
         <Head>
-          <title>Latest Updates | Blog</title>
-          <meta name="description" content="Insights, news, and expert perspectives" />
+          <link rel="canonical" href="https://www.atlas-paint.com/blog/" hrefLang="en" />
+          <title>Latest Updates | Atlas HomeServices</title>
+          <meta name="description" content="Discover expert tips on residential and commercial painting from trusted painting contractors in Toronto, Mississauga, Vaughan, and beyond. Enhance your home and business with quality interior painting services today!" />
         </Head>
         <Header />
         <div className="container mx-auto px-6 pt-32 pb-16">

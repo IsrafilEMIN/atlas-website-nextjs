@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import Head from "next/head";
 import Header from "@components/layout/Header";
 import ReactMarkdown, { Components } from "react-markdown";
+import * as React from "react";
 
 interface Post {
     slug: string;
@@ -64,7 +65,12 @@ export default function SinglePostPage({ post }: { post: Post }) {
     return (
         <>
             <Head>
-                <title>{post.title} | My Blog</title>
+                <title>{post.title} | Atlas HomeServices</title>
+                <link rel="canonical" href={`https://www.atlas-paint.com/blog/${post.slug}/`} hrefLang="en" />
+                <meta
+                    name="description"
+                    content={`Explore "${post.title}" – expert insights on residential & commercial painting by professional painting contractors serving Toronto, Mississauga, Vaughan, and nearby areas. Get inspired today!`}
+                />
             </Head>
 
             {/* Your global site header */}

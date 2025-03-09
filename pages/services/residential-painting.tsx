@@ -83,7 +83,7 @@ const ResidentialPainting: React.FC = () => {
                     name="description"
                     content="Premium residential painting services in Toronto, Mississauga, Vaughan, Hamilton, and surrounding areas. Interior & exterior painting by professional painting contractors."
                 />
-                <link rel="canonical" href="https://www.atlas-paint.com/services/residential-painting/" />
+                <link rel="canonical" href="https://www.atlas-paint.com/services/residential-painting/" hrefLang="en" />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{

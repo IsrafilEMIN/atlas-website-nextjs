@@ -169,8 +169,8 @@ export default function Booking() {
                     __html: JSON.stringify(schemaPayload)
                 }}
             />
-            <link rel="canonical" href="https://www.atlas-paint.com/booking/" />
-            <title>Book a Painting Service | Schedule Your Project | Atlas HomeServices</title>
+            <link rel="canonical" href="https://www.atlas-paint.com/booking/" hrefLang="en" />
+            <title>Book a Painting Service | Atlas HomeServices</title>
             <meta name="description" content="Ready for a transformation? Book a premium residential or commercial painting service with Atlas HomeServices today. Easy scheduling & expert results!" />
         </Head>
       <div className="container mx-auto px-6 pt-32 pb-16 relative">
