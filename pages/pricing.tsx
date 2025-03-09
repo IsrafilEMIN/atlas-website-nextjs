@@ -141,7 +141,7 @@ export default function Pricing() {
   return (
       <div className="min-h-screen bg-white">
         <Head>
-          <link rel="canonical" href="https://www.atlas-paint.com/pricing/" hrefLang="en" />
+          <link rel="canonical" href="https://atlas-paint.com/pricing/" hrefLang="en" />
           <title>Get a Free Quote | Atlas HomeServices</title>
           <meta
               name="description"

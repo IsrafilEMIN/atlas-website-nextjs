@@ -63,7 +63,7 @@ export default function WallCovering() {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <link rel="canonical" href="https://www.atlas-paint.com/services/wall-covering/" hrefLang="en" />
+        <link rel="canonical" href="https://atlas-paint.com/services/wall-covering/" hrefLang="en" />
         <title>
           Professional Wall Covering Services in Toronto | Atlas HomeServices
         </title>

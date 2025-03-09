@@ -63,7 +63,7 @@ export default function DrywallPlastering() {
     return (
         <div className="min-h-screen bg-white">
             <Head>
-                <link rel="canonical" href="https://www.atlas-paint.com/services/drywall-plastering/" hrefLang="en" />
+                <link rel="canonical" href="https://atlas-paint.com/services/drywall-plastering/" hrefLang="en" />
                 <title>
                     Professional Drywall & Plastering Services in Toronto | Atlas HomeServices
                 </title>
