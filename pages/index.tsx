@@ -37,7 +37,7 @@ export default function Home() {
     return (
         <div className="bg-white min-h-screen">
             <Head>
-                <link rel="canonical" href="https://www.atlas-paint.com/" hrefLang="en" />
+                <link rel="canonical" href="https://atlas-paint.com/" hrefLang="en" />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         "@context": "https://schema.org",

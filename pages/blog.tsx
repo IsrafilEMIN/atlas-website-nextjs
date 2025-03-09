@@ -81,7 +81,7 @@ export default function Blog({ posts }: { posts: Post[] }) {
   return (
       <div className="min-h-screen bg-white">
         <Head>
-          <link rel="canonical" href="https://www.atlas-paint.com/blog/" hrefLang="en" />
+          <link rel="canonical" href="https://atlas-paint.com/blog/" hrefLang="en" />
           <title>Latest Updates | Atlas HomeServices</title>
           <meta name="description" content="Discover expert tips on residential and commercial painting from trusted painting contractors in Toronto, Mississauga, Vaughan, and beyond. Enhance your home and business with quality interior painting services today!" />
         </Head>

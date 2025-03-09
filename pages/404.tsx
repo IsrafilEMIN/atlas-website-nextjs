@@ -12,7 +12,7 @@ export default function NotFound() {
               name="description"
               content="Oops! The page you're looking for doesn't exist. Visit Atlas HomeServices homepage for expert residential and commercial painting services in Toronto & GTA."
           />
-          <link rel="canonical" href="https://www.atlas-paint.com/404" />
+          <link rel="canonical" href="https://atlas-paint.com/404" />
           <meta name="robots" content="noindex, nofollow" />
         </Head>
         <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">

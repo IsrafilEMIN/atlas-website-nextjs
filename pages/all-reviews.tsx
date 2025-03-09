@@ -176,7 +176,7 @@ export default function AllReviews() {
               type="application/ld+json"
               dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }}
           />
-          <link rel="canonical" href="https://www.atlas-paint.com/all-reviews/" />
+          <link rel="canonical" href="https://atlas-paint.com/all-reviews/" />
           <title>Customer Reviews | Residential & Commercial Painting | Atlas HomeServices</title>
           <meta name="description" content="See what our clients say! Read real reviews about our premium residential & commercial painting services in the GTA, Niagara, and beyond. Quality you can trust!" />
         </Head>

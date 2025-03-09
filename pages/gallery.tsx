@@ -46,7 +46,7 @@ export default function Gallery() {
                       __html: JSON.stringify(schemaPayload)
                   }}
               />
-              <link rel="canonical" href="https://www.atlas-paint.com/gallery/" hrefLang="en" />
+              <link rel="canonical" href="https://atlas-paint.com/gallery/" hrefLang="en" />
               <title>Residential & Commercial Painting Portfolio | Atlas HomeServices</title>
               <meta name="description" content="See our past projects! Browse our gallery of premium residential & commercial painting, drywall, and wall finishes. Get inspired—Book your project today!" />
           </Head>
