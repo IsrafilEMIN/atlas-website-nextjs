@@ -137,8 +137,8 @@ export default function AllReviews() {
         "@type": "Person",
         "name": review.customerName,
       },
-      "reviewRating": {
-        "@type": "Rating",
+      "aggregateRating": {
+        "@type": "AggregateRating",
         "ratingValue": review.rating.toString(),
         "bestRating": "5",
         "worstRating": "1",
