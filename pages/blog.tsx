@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { CalendarDays, User, ArrowRight, Filter } from "lucide-react";
 import Header from "@/components/layout/Header";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Select,
   SelectContent,
@@ -57,39 +57,45 @@ export async function getStaticProps() {
 }
 
 export default function Blog({ posts }: { posts: Post[] }) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("recent");
 
   // Filter posts based on the search query
-  const filteredPosts = posts.filter((post) => {
-    const q = searchQuery.toLowerCase();
-    return (
-        q === "" ||
-        post.title.toLowerCase().includes(q) ||
-        post.excerpt.toLowerCase().includes(q)
-    );
-  });
+  const filteredPosts = useMemo(() => {
+    return posts.filter((post) => {
+      const q = searchQuery.toLowerCase();
+      return (
+          q === "" ||
+          post.title.toLowerCase().includes(q) ||
+          post.excerpt.toLowerCase().includes(q)
+      );
+    });
+  }, [posts, searchQuery]);
 
   // Sort posts by date
-  const sortedPosts = [...filteredPosts].sort((a, b) => {
-    if (sortOrder === "recent") {
-      return b.dateISO.localeCompare(a.dateISO);
-    }
-    return a.dateISO.localeCompare(b.dateISO);
-  });
+  const sortedPosts = useMemo(() => {
+    return [...filteredPosts].sort((a, b) => {
+      const dateA = new Date(a.dateISO);
+      const dateB = new Date(b.dateISO);
+      return sortOrder === "recent"
+          ? dateB.getTime() - dateA.getTime() // Newest first
+          : dateA.getTime() - dateB.getTime(); // Oldest first
+    });
+  }, [filteredPosts, sortOrder]);
 
   return (
       <div className="min-h-screen bg-white">
         <Head>
           <link rel="canonical" href="https://atlas-paint.com/blog/" hrefLang="en" />
           <title>Latest Updates | Atlas HomeServices</title>
-          <meta name="description" content="Discover expert tips on residential and commercial painting from trusted painting contractors in Toronto, Mississauga, Vaughan, and beyond. Enhance your home and business with quality interior painting services today!" />
+          <meta
+              name="description"
+              content="Discover expert tips on residential and commercial painting from trusted painting contractors in Toronto, Mississauga, Vaughan, and beyond. Enhance your home and business with quality interior painting services today!"
+          />
         </Head>
         <Header />
         <div className="container mx-auto px-6 pt-32 pb-16">
-          {/* Limit the width to match single-post page styling */}
           <div className="max-w-4xl mx-auto">
-            {/* Intro Heading */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -109,7 +115,9 @@ export default function Blog({ posts }: { posts: Post[] }) {
                     type="text"
                     placeholder="Search posts..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setSearchQuery(e.target.value)
+                    }
                     className="w-full p-2 border border-gray-300 rounded"
                 />
               </div>
@@ -118,7 +126,7 @@ export default function Blog({ posts }: { posts: Post[] }) {
                   <Filter className="w-5 h-5 text-gray-500" />
                   <Select
                       value={sortOrder}
-                      onValueChange={(value) => setSortOrder(value as SortOrder)}
+                      onValueChange={(value: string) => setSortOrder(value as SortOrder)}
                   >
                     <SelectTrigger className="w-[180px] bg-white text-black border-gray-200 hover:border-gray-200 focus:border-gray-200">
                       <SelectValue placeholder="Sort by" />
