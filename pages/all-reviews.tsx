@@ -9,92 +9,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useSWR from "swr";
 import Head from "next/head";
 import * as React from "react";
-
-// Define a fetcher function for SWR
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-// Your static testimonials array
-const staticTestimonials = [
-  {
-    id: 1,
-    customerName: "John Smith",
-    rating: 5,
-    comment:
-        "Outstanding service! The team was professional and the results exceeded my expectations.",
-    serviceType: "Interior Painting",
-    createdAt: new Date("2024-01-15").toISOString(),
-  },
-  {
-    id: 2,
-    customerName: "Sarah Johnson",
-    rating: 5,
-    comment:
-        "Very pleased with the quality of work. They were punctual, clean, and detail-oriented.",
-    serviceType: "Exterior Painting",
-    createdAt: new Date("2024-01-20").toISOString(),
-  },
-  {
-    id: 3,
-    customerName: "Michael Brown",
-    rating: 5,
-    comment:
-        "Professional team, excellent communication, and beautiful results!",
-    serviceType: "Commercial Painting",
-    createdAt: new Date("2024-02-01").toISOString(),
-  },
-  {
-    id: 4,
-    customerName: "Aliye Yiming",
-    rating: 4,
-    comment:
-        "Very good service, they are very professional and the results are beautiful.",
-    serviceType: "Commercial Painting",
-    createdAt: new Date("2024-02-02").toISOString(),
-  },
-  {
-    id: 5,
-    customerName: "Saadet Kutluk",
-    rating: 3,
-    comment:
-        "Customer service is good, but the quality of the work is not good.",
-    serviceType: "Commercial Painting",
-    createdAt: new Date("2024-02-03").toISOString(),
-  },
-];
+import { useTestimonials } from "@/lib/useTestimonials";
 
 export default function AllReviews() {
   const [ratingFilter, setRatingFilter] = useState<string>("all");
-
-  // Fetch dynamic reviews from your API endpoint.
-  // Make sure that your API returns an array of review objects with matching fields.
-  const { data: dynamicReviews } = useSWR("/api/get-all-reviews", fetcher, {
-    fallbackData: [],
-  });
-
-  // Merge static and dynamic reviews
-  const allReviews = [
-    ...staticTestimonials,
-    ...(Array.isArray(dynamicReviews) ? dynamicReviews : []),
-  ];
+  const { testimonials, totalReviews, averageRating } = useTestimonials();
 
   // Optionally, sort all reviews by createdAt (newest first)
-  allReviews.sort(
+  testimonials.sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
   // Filter reviews by rating if a specific filter is selected
-  const filteredReviews = allReviews.filter((review) =>
+  const filteredReviews = testimonials.filter((review) =>
       ratingFilter === "all" ? true : review.rating === parseInt(ratingFilter)
   );
-
-  const totalReviews = allReviews.length;
-  const averageRating =
-      totalReviews > 0
-          ? allReviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
-          : 0;
 
   const localBusinessSchema = {
     "@context": "https://schema.org",
