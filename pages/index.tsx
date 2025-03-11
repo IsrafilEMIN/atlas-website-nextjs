@@ -1,7 +1,7 @@
-
 import * as React from "react";
 import dynamic from "next/dynamic";
 import Head from 'next/head';
+import { useTestimonials } from "@/lib/useTestimonials";
 
 const Hero = dynamic(() => import("@/components/home/Hero"), {
     ssr: false,
@@ -25,6 +25,7 @@ const Header = dynamic(() => import("@/components/layout/Header"), {
 
 export default function Home() {
     const [mounted, setMounted] = React.useState(false);
+    const { totalReviews, averageRating } = useTestimonials(); // Use the hook
 
     React.useEffect(() => {
         setMounted(true);
@@ -64,6 +65,11 @@ export default function Home() {
                             "addressRegion": "ON",
                             "postalCode": "L2H 3E9",
                             "addressCountry": "CA"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": averageRating.toFixed(1),
+                            "reviewCount": totalReviews.toString(),
                         },
                         "image": "https://atlas-paint.com/assets/apple-touch-icon.png",
                         "sameAs": [
