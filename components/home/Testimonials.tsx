@@ -111,7 +111,7 @@ export default function Testimonials() {
                 What Our Clients Say
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Real experiences from our valued customers
+                Real experiences from our valued customers who trusted us for their residential and commercial painting needs.
               </p>
               <Link href="/all-reviews" className="text-black hover:underline mt-2 inline-block">
                 See all reviews →

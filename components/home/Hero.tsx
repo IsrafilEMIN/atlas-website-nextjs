@@ -21,19 +21,9 @@ export default function Hero() {
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            {/* You can still animate smaller text or badges if you want */}
-            <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="inline-block px-4 py-1.5 mb-6 text-sm font-medium bg-gray-100 text-gray-900 rounded-full"
-            >
-              Premium Residential & Commercial Painting in GTA
-            </motion.span>
-
             {/* Remove animation from the <h1> to reduce LCP */}
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Transform Your Space with Premium Paint Solutions
+            <h1 className="text-4xl md:text-4xl font-bold text-white mb-6 leading-tight">
+              Professional Painting Services in Toronto<br />Atlas HomeServices
             </h1>
 
             <motion.p
@@ -42,8 +32,7 @@ export default function Hero() {
                 transition={{ delay: 0.3 }}
                 className="text-lg md:text-xl text-gray-200 mb-10"
             >
-              Expert painting services for residential and commercial properties, delivering
-              quality and excellence in every brushstroke.<br />
+              Your trusted partner for home improvement.<br />
               Contact us today for a free quote!
             </motion.p>
 

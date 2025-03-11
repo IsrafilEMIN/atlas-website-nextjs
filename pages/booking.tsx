@@ -171,6 +171,9 @@ export default function Booking() {
             />
             <link rel="canonical" href="https://atlas-paint.com/booking/" hrefLang="en" />
             <title>Book a Painting Service | Atlas HomeServices</title>
+            <meta name="keywords" content="book house painting, schedule commercial painting, painting contractors, painting consultation, Toronto painters, Niagara painters" />
+            <meta property="og:url" content="https://atlas-paint.com/booking/" />
+            <meta property="og:type" content="website" />
             <meta name="description" content="Ready for a transformation? Book a premium residential or commercial painting service with Atlas HomeServices today. Easy scheduling & expert results!" />
         </Head>
       <div className="container mx-auto px-6 pt-32 pb-16 relative">
