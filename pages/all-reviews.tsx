@@ -90,6 +90,12 @@ export default function AllReviews() {
       ratingFilter === "all" ? true : review.rating === parseInt(ratingFilter)
   );
 
+  const totalReviews = allReviews.length;
+  const averageRating =
+      totalReviews > 0
+          ? allReviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
+          : 0;
+
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -109,6 +115,11 @@ export default function AllReviews() {
           "addressRegion": "ON",
           "postalCode": "M4B 1B3",
           "addressCountry": "CA"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": averageRating.toFixed(1),
+          "reviewCount": totalReviews.toString()
         }
       },
       {
@@ -137,8 +148,8 @@ export default function AllReviews() {
         "@type": "Person",
         "name": review.customerName,
       },
-      "aggregateRating": {
-        "@type": "AggregateRating",
+      "reviewRating": {
+        "@type": "Rating",
         "ratingValue": review.rating.toString(),
         "bestRating": "5",
         "worstRating": "1",
