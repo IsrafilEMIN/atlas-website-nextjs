@@ -141,18 +141,24 @@ export default function Pricing() {
   return (
       <div className="min-h-screen bg-white">
         <Head>
-          <link rel="canonical" href="https://atlas-paint.com/pricing/" hrefLang="en" />
-          <title>Get a Free Quote | Atlas HomeServices</title>
-          <meta
-              name="description"
-              content="Explore our competitive pricing for residential & commercial painting, drywall installation, plastering, and wall covering services. Get a free quote today and transform your space with premium craftsmanship!"
-          />
           <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{
                 __html: JSON.stringify(schemaPayload)
               }}
           />
+          <link rel="canonical" href="https://atlas-paint.com/pricing/" hrefLang="en" />
+          <title>Get a Free Quote for House Painting & Commercial Painting | Atlas HomeServices</title>
+          <meta
+              name="description"
+              content="Explore competitive pricing for house painting, home painting, commercial painting, drywall, and wall covering services. Get a free quote today!"
+          />
+          <meta name="keywords" content="house painting pricing, commercial painting cost, interior painting estimate, exterior painting rates, Toronto painters, Mississauga painting services" />
+          <meta property="og:title" content="House Painting & Commercial Painting Pricing | Atlas HomeServices" />
+          <meta property="og:description" content="Find affordable pricing for house painting, commercial painting, and drywall services in Toronto and beyond. Get an estimate today!" />
+          <meta property="og:url" content="https://atlas-paint.com/pricing/" />
+          <meta property="og:type" content="website" />
+          <meta property="og:image" content="/assets/og-pricing.jpg" />
         </Head>
         <Header />
         <div className="container mx-auto px-6 pt-32 pb-16 relative">

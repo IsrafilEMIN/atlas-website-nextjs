@@ -97,11 +97,17 @@ export default function Services() {
       <div className="min-h-screen bg-white">
         <Head>
           <link rel="canonical" href="https://atlas-paint.com/services/" hrefLang="en" />
-          <title>Expert Painting & Wall Finishing Services | Atlas HomeServices</title>
+          <title>House Painting, Commercial Painting & Wall Covering Services | Atlas HomeServices</title>
           <meta
               name="description"
               content="Atlas HomeServices offers premium residential & commercial painting in the Greater Toronto Area, Niagara, Hamilton & more. Get a flawless finish—Call today!"
           />
+          <meta name="keywords" content="house painting services, commercial painting, drywall installation, plastering, wall covering, Toronto painters, Niagara painting experts" />
+          <meta property="og:title" content="Professional House & Commercial Painting Services | Atlas HomeServices" />
+          <meta property="og:description" content="Looking for expert house painting or commercial painting services? Atlas HomeServices offers top-tier painting, drywall, and wall covering solutions in Toronto and nearby areas!" />
+          <meta property="og:url" content="https://atlas-paint.com/services/" />
+          <meta property="og:type" content="website" />
+          <meta property="og:image" content="/assets/og-services.jpg" />
           <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }}

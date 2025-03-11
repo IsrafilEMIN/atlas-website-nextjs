@@ -45,7 +45,7 @@ export default function Footer() {
               <Logo />
             </div>
             <p className="text-gray-300 mb-4">
-              Professional painting services for residential and commercial properties.
+              Professional house painting, home painting, and commercial painting services for residential and commercial properties.
             </p>
             <div className="flex space-x-4">
               <Link
