@@ -41,7 +41,7 @@ const localBusinessSchema = {
         },
         {
             '@type': 'Service',
-            '@id': 'https://atlas-paint.com/commercial-painting#service',
+            '@id': 'https://atlas-paint.com/services/commercial-painting#service',
             'serviceType': 'Commercial Painting',
             'provider': {
                 '@id': 'https://atlas-paint.com/#localBusiness',
@@ -57,7 +57,7 @@ const localBusinessSchema = {
 
 const serviceSchema = {
     '@type': 'Service',
-    '@id': 'https://atlas-paint.com/commercial-painting#service',
+    '@id': 'https://atlas-paint.com/services/commercial-painting#service',
     'serviceType': 'Commercial Painting',
     'provider': {
         '@id': 'https://atlas-paint.com/#localBusiness',

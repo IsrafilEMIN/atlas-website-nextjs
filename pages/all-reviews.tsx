@@ -55,7 +55,7 @@ export default function AllReviews() {
       },
       {
         "@type": "Service",
-        "@id": "https://atlas-paint.com/commercial-painting#service",
+        "@id": "https://atlas-paint.com/services/commercial-painting#service",
         "serviceType": "Commercial Painting",
         "provider": {
           "@id": "https://atlas-paint.com/#localBusiness"
