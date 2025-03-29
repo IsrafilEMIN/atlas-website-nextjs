@@ -2,6 +2,9 @@ import * as React from "react";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useTestimonials } from "@/lib/useTestimonials";
+import ServicesOverview from "@/components/home/ServiceOverview";
+import ServiceAreas from "@/components/home/ServiceAreas";
+import FAQ from "@/components/home/FAQ";
 
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
 const Features = dynamic(() => import("@/components/home/Features"), { ssr: false });
@@ -76,8 +79,11 @@ export default function Home() {
                     <main className="w-full">
                         <Hero />
                         <Features />
+                        <ServicesOverview />
                         <Testimonials />
                         <ProductShowcase />
+                        <FAQ />
+                        <ServiceAreas   />
                     </main>
                 </div>
             )}
