@@ -39,7 +39,7 @@ const localBusinessSchema = {
         },
         {
             '@type': 'Service',
-            '@id': 'https://atlas-paint.com/drywall-plastering#service',
+            '@id': 'https://atlas-paint.com/services/drywall-plastering#service',
             'serviceType': 'Drywall & Plastering Services',
             'provider': {
                 '@id': 'https://atlas-paint.com/#localBusiness',
@@ -64,7 +64,7 @@ const DrywallPlastering: React.FC = () => {
             <Head>
                 <title>Professional Drywall & Plastering Services in Toronto | Atlas HomeServices</title>
                 <meta name="description" content="Expert drywall installation, repair, and plastering services in Toronto, Mississauga, and surrounding areas. Trust our team for high-quality finishes." />
-                <link rel="canonical" href="https://atlas-paint.com/drywall-plastering/" />
+                <link rel="canonical" href="https://atlas-paint.com/services/drywall-plastering/" />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }} />
             </Head>
             <div className="container mx-auto px-6 pt-32 pb-16">

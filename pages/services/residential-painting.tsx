@@ -39,7 +39,7 @@ const localBusinessSchema = {
         },
         {
             '@type': 'Service',
-            '@id': 'https://atlas-paint.com/residential-painting#service',
+            '@id': 'https://atlas-paint.com/services/residential-painting#service',
             'serviceType': 'Residential Painting',
             'provider': {
                 '@id': 'https://atlas-paint.com/#localBusiness',
@@ -64,7 +64,7 @@ const ResidentialPainting: React.FC = () => {
             <Head>
                 <title>Expert House Painters in Toronto | Atlas HomeServices</title>
                 <meta name="description" content="Top-rated house painters in Toronto offering high-quality residential painting services. Transform your home with our expert team." />
-                <link rel="canonical" href="https://atlas-paint.com/residential-painting/" />
+                <link rel="canonical" href="https://atlas-paint.com/services/residential-painting/" />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }} />
             </Head>
             <div className="container mx-auto px-6 pt-32 pb-16">

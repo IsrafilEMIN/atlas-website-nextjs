@@ -39,7 +39,7 @@ const localBusinessSchema = {
         },
         {
             '@type': 'Service',
-            '@id': 'https://atlas-paint.com/fencing#service',
+            '@id': 'https://atlas-paint.com/services/fencing#service',
             'serviceType': 'Fencing Services',
             'provider': {
                 '@id': 'https://atlas-paint.com/#localBusiness',
@@ -64,7 +64,7 @@ const Fencing: React.FC = () => {
             <Head>
                 <title>Professional Fencing Services in Toronto | Atlas HomeServices</title>
                 <meta name="description" content="Expert fence installation, repair, and maintenance services in Toronto, Mississauga, and surrounding areas. We offer a variety of fence types to suit your needs." />
-                <link rel="canonical" href="https://atlas-paint.com/fencing/" />
+                <link rel="canonical" href="https://atlas-paint.com/services/fencing/" />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }} />
             </Head>
             <div className="container mx-auto px-6 pt-32 pb-16">

@@ -41,7 +41,7 @@ const localBusinessSchema = {
     },
     {
       '@type': 'Service',
-      '@id': 'https://atlas-paint.com/wall-covering#service',
+      '@id': 'https://atlas-paint.com/services/wall-covering#service',
       'serviceType': 'Wall Covering',
       'provider': {
         '@id': 'https://atlas-paint.com/#localBusiness',
