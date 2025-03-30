@@ -5,51 +5,48 @@ import { useInView } from "react-intersection-observer";
 import WavePattern from "../ui/patterns/WavePattern";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const SERVICES = [
   {
     slug: "residential-painting",
     title: "Residential Painting Services",
     description:
-      "Premium home painting with clean lines, lasting finishes, and minimal disruption. Interior and exterior house painting across Southern Ontario.",
-    image: "/assets/projects/modern-interior.jpg",
+      "Interior and exterior house painting services in Toronto, Mississauga, and surrounding areas. Clean lines, vibrant color, minimal disruption.",
+    image: "/assets/projects/residential-painted-room.jpg",
   },
   {
     slug: "commercial-painting",
     title: "Commercial Painting Contractors",
     description:
-      "Experienced commercial painters for offices, retail spaces, and developments. Fast, professional results with long-term durability.",
+      "High-performance commercial painting for offices, retail units, and new developments — completed on time with lasting results.",
     image: "/assets/projects/commercial-office.jpg",
   },
   {
     slug: "drywall-plastering",
     title: "Drywall & Plastering",
     description:
-      "Flawless drywall repairs and smooth plaster finishing for walls and ceilings. Perfect prep for any paint job.",
+      "Wall prep done right — from patching holes and fixing cracks to smooth plaster surfaces, ready for a flawless paint job.",
     image: "/assets/projects/drywall-plastering.jpg",
   },
   {
     slug: "wall-covering",
-    title: "Wall Covering Installation",
+    title: "Wallpaper & Wall Coverings",
     description:
-      "Custom wallpaper and decorative wall coverings installed with precision. Add texture and personality to any space.",
-    image: "/assets/projects/commercial-office.jpg",
+      "Custom wallpaper installation and textured wall coverings to elevate your interior design. Precision guaranteed.",
+    image: "/assets/projects/wall-covering.jpg",
   },
   {
     slug: "fencing",
     title: "Fencing & Painting Services",
     description:
-      "Wood, vinyl, or metal fencing — built or refreshed with high-quality paint/stain finishes for outdoor durability and style.",
-    image: "/assets/projects/commercial-office.jpg",
+      "Fence painting, staining, and construction that adds curb appeal and weather protection. Wood, vinyl, and custom designs.",
+    image: "/assets/projects/fencing.jpg",
   },
 ];
 
-
 export default function ProductShowcase() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
     <section ref={ref} className="relative py-24 bg-gray-50 overflow-hidden">
@@ -59,15 +56,14 @@ export default function ProductShowcase() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="max-w-3xl mx-auto text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Our Core Painting & Finishing Services
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Full-Service House Painting & Wall Finishing
           </h2>
-          <p className="text-gray-600 text-lg">
-            Explore our full range of professional painting, drywall, wall treatment, and fencing solutions built for both residential and commercial clients.
+          <p className="text-lg text-gray-600">
+            We provide residential and commercial painting, drywall, and wall finishing services across the Greater Toronto Area — from Burlington to Niagara.
           </p>
         </motion.div>
 
@@ -75,39 +71,59 @@ export default function ProductShowcase() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
           className="relative mx-auto max-w-6xl"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
             {SERVICES.map((service) => (
               <Link
                 key={service.slug}
-                href={`/services/${service.slug}`}
-                className="block transition-transform hover:scale-[1.02] duration-300 w-full"
+                href={`https://atlas-paint.com/services/${service.slug}/`}
+                hrefLang="en"
+                className="block transition-transform hover:scale-[1.015] duration-300 w-full"
               >
-                <div className="bg-white rounded-lg overflow-hidden shadow-lg h-full">
+                <div className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition-all h-full">
                   <div className="relative aspect-video bg-gray-100">
                     <Image
                       src={service.image}
-                      alt={service.title}
+                      alt={`Atlas - ${service.title}`}
                       fill
                       className="object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = "/placeholder.jpg";
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      onError={() => {
                         console.error(`Failed to load image: ${service.image}`);
                       }}
                     />
                   </div>
-                  <div className="p-6 flex flex-col">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
                       {service.title}
                     </h3>
-                    <p className="text-gray-600">{service.description}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {service.description}
+                    </p>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-center mt-12"
+        >
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            Explore our professional painting solutions
+          </h3>
+          <p className="text-gray-600 mb-6">
+            From interior painting to drywall repairs and fence staining — we’ve got your property covered.
+          </p>
+          <Link href="https://atlas-paint.com/services/" hrefLang="en">
+            <Button size="lg" className="bg-primary text-white hover:bg-primary/80">
+              View All Painting Services
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </section>

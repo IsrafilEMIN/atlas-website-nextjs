@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Card } from "@/components/ui/card";
 import { PaintBucket, Palette, Shield, Award } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const features = [
   {
@@ -46,13 +48,14 @@ export default function Features() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Why Choose Atlas for Your Painting Needs?
+            Professional Home & Commercial Painters You Can Count On
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            From residential interiors to commercial exteriors, Atlas Painting delivers exceptional quality, expert craftsmanship, and dependable service across the GTA. Trusted by homeowners and businesses alike.
+          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+            Atlas Painting delivers expert craftsmanship and long-lasting results for homes, offices, and retail spaces across Toronto, Vaughan, Mississauga, and beyond. Whether you need interior painting, exterior painting, drywall repair, or fence staining — our team is here to help.
           </p>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -71,6 +74,26 @@ export default function Features() {
             </motion.div>
           ))}
         </div>
+
+        {/* CTA Row */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-center"
+        >
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            Ready to transform your space?
+          </h3>
+          <p className="text-gray-600 mb-6">
+            Book a free quote with one of our professional painters today.
+          </p>
+          <Link href="https://atlas-paint.com/booking/" hrefLang="en">
+            <Button size="lg" className="bg-primary text-white hover:bg-primary/80">
+              Get a Free Painting Estimate
+            </Button>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );
