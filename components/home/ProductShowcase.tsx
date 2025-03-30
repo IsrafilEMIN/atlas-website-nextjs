@@ -59,6 +59,7 @@ export default function ProductShowcase() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="max-w-3xl mx-auto text-center mb-16"
         >
@@ -74,6 +75,7 @@ export default function ProductShowcase() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
           className="relative mx-auto max-w-6xl"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">

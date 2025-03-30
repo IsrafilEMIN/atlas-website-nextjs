@@ -43,6 +43,7 @@ export default function FAQ() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
+          viewport={{ once: true }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -60,6 +61,7 @@ export default function FAQ() {
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
+              viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
               <details className="group bg-gray-50 border border-gray-200 p-6 rounded-lg cursor-pointer transition-all hover:shadow-md">
