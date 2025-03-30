@@ -6,6 +6,9 @@ import ServicesOverview from "@/components/home/ServiceOverview";
 import ServiceAreas from "@/components/home/ServiceAreas";
 import FAQ from "@/components/home/FAQ";
 import BlogTeaser from "@/components/home/BlogTeaser";
+import HowItWorks from "@/components/home/HowItWorks";
+import ServiceComparison from "@/components/home/ServiceComparison";
+import WhoWeServe from "@/components/home/WhoWeServe";
 
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
 const Features = dynamic(() => import("@/components/home/Features"), { ssr: false });
@@ -81,8 +84,11 @@ export default function Home() {
                         <Hero />
                         <Features />
                         <ServicesOverview />
+                        <ServiceComparison  />
+                        <HowItWorks /> 
                         <Testimonials />
                         <ProductShowcase />
+                        <WhoWeServe />
                         <BlogTeaser />
                         <FAQ />
                         <ServiceAreas   />

@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
@@ -5,10 +7,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
-import Head from "next/head";  // Import Head to inject JSON-LD
+import Head from "next/head";
 import { useTestimonials } from "@/lib/useTestimonials";
-
-// ... All your imports remain unchanged ...
 
 export default function Testimonials() {
   const [mounted, setMounted] = useState(false);
@@ -22,7 +22,32 @@ export default function Testimonials() {
 
   const { testimonials, totalReviews, averageRating } = useTestimonials();
 
-  // JSON-LD Schema (same as yours, excellent setup!)
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
+  }, []);
+
+  useEffect(() => {
+    if (emblaApi) {
+      emblaApi.reInit({
+        loop: true,
+        align: "center",
+        skipSnaps: false,
+        containScroll: "trimSnaps",
+        watchDrag: !isDesktop,
+      });
+    }
+  }, [emblaApi, isDesktop]);
+
+  useEffect(() => setMounted(true), [emblaApi]);
+
+  if (!mounted) return null;
+
   const schemaPayload = {
     "@context": "https://schema.org",
     "@graph": [
@@ -52,32 +77,6 @@ export default function Testimonials() {
     ]
   };
 
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
-
-  useEffect(() => {
-    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
-    checkDesktop();
-    window.addEventListener("resize", checkDesktop);
-    return () => window.removeEventListener("resize", checkDesktop);
-  }, []);
-
-  useEffect(() => {
-    if (emblaApi) {
-      emblaApi.reInit({
-        loop: true,
-        align: "center",
-        skipSnaps: false,
-        containScroll: "trimSnaps",
-        watchDrag: !isDesktop,
-      });
-    }
-  }, [emblaApi, isDesktop]);
-
-  useEffect(() => setMounted(true), [emblaApi]);
-
-  if (!mounted) return null;
-
   return (
     <>
       <Head>
@@ -87,28 +86,36 @@ export default function Testimonials() {
         />
       </Head>
 
-      <section className="py-24 bg-white relative overflow-hidden">
+      <section className="py-24 bg-gray-50 relative overflow-hidden">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Painting Reviews & Client Testimonials
+              Trusted House Painters with 5-Star Reviews
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Hear from real homeowners and business owners across Toronto, Mississauga, Niagara, and beyond who trusted Atlas Painting with their spaces.
+              Discover why homeowners and business owners across the GTA, Mississauga, and Niagara region recommend Atlas Painting.
             </p>
-            <Link href="/all-reviews" className="text-black hover:underline mt-2 inline-block">
-              See all reviews →
+            <div className="mt-4 flex items-center justify-center gap-2 text-yellow-500 text-xl font-semibold">
+              {[...Array(Math.round(averageRating))].map((_, i) => (
+                <Star key={i} className="w-5 h-5 fill-current" />
+              ))}
+              <span className="text-gray-800 text-base">
+                {averageRating.toFixed(1)} ({totalReviews} reviews)
+              </span>
+            </div>
+            <Link href="https://atlas-paint.com/all-reviews/" hrefLang="en" className="text-black hover:underline mt-2 inline-block">
+              Read all testimonials →
             </Link>
           </motion.div>
 
           <div className="relative max-w-6xl mx-auto">
-            {/* Navigation buttons */}
+            {/* Navigation Arrows */}
             <div className="absolute top-1/2 -translate-y-1/2 left-0 z-10 hidden md:block">
               <Button onClick={scrollPrev} variant="outline" size="icon" className="rounded-full bg-white border border-gray-200 hover:bg-gray-100 hover:border-gray-300 -translate-x-16">
                 <ChevronLeft className="h-6 w-6" />
@@ -123,7 +130,7 @@ export default function Testimonials() {
             {/* Carousel */}
             <div className="overflow-hidden px-4 md:px-24" ref={emblaRef}>
               <div className="flex">
-                {testimonials.map((review, index) => (
+                {testimonials.slice(0, 9).map((review, index) => (
                   <div
                     key={review.id}
                     className="flex-[0_0_85%] min-w-0 sm:flex-[0_0_45%] lg:flex-[0_0_30%] pl-4"
@@ -136,22 +143,18 @@ export default function Testimonials() {
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
-                      <Card className="p-6 h-full flex flex-col justify-between bg-white border border-gray-200 hover:border-gray-300 transition-colors duration-200">
+                      <Card className="p-6 h-full flex flex-col justify-between bg-white border border-gray-200 hover:border-primary transition-all duration-200">
                         <div>
-                        <div className="flex mb-4" itemProp="reviewRating" itemScope itemType="https://schema.org/Rating">
-                          {[...Array(review.rating)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="w-5 h-5 text-yellow-400 fill-current"
-                              aria-label="Star"
-                            />
-                          ))}
-                          <meta itemProp="ratingValue" content={review.rating.toString()} />
-                        </div>
-                          <p className="text-gray-700 mb-4" itemProp="reviewBody">
+                          <div className="flex mb-4" itemProp="reviewRating" itemScope itemType="https://schema.org/Rating">
+                            {[...Array(review.rating)].map((_, i) => (
+                              <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                            ))}
+                            <meta itemProp="ratingValue" content={review.rating.toString()} />
+                          </div>
+                          <p className="text-gray-700 mb-4 line-clamp-5" itemProp="reviewBody">
                             {review.comment}
                           </p>
-                          <p className="text-sm text-gray-500 mb-2">
+                          <p className="text-sm text-gray-500">
                             Service: {review.serviceType}
                           </p>
                         </div>
@@ -170,6 +173,25 @@ export default function Testimonials() {
               </div>
             </div>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-center mt-12"
+          >
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              Trusted by Homeowners & Businesses Alike
+            </h3>
+            <p className="text-gray-600 mb-6">
+              See why property owners across Toronto and Niagara choose Atlas Painting for quality and reliability.
+            </p>
+            <Link href="https://atlas-paint.com/booking/" hrefLang="en">
+              <Button size="lg" className="bg-primary text-white hover:bg-primary/80">
+                Book For Your Free Quote
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
     </>

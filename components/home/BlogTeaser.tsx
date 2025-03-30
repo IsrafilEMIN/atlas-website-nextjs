@@ -31,32 +31,34 @@ export default function BlogTeaser() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} // ✅ ensures it animates only once
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="text-center mb-14"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Latest Blog Posts
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Painting Tips & Industry Insights
           </h2>
-          <p className="text-gray-600 text-lg">
-            Expert insights and helpful advice on painting, service quality, sustainability, and more.
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Browse our latest articles covering house painting, color selection, interior trends, commercial projects, and how to choose the right painting contractor.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <Link href={`/blog/${post.slug}`} key={post.slug}>
-              <Card className="p-6 bg-white border border-gray-200 hover:border-gray-300 transition-all duration-300 group cursor-pointer">
-                <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-                  <span className="px-2 py-1 rounded-full bg-gray-100 text-gray-700">
-                    {post.category}
-                  </span>
+            <Link href={`https://atlas-paint.com/blog/${post.slug}/`} hrefLang="en" key={post.slug} className="group">
+              <Card className="p-6 bg-white border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                    <span className="px-2 py-1 rounded-full bg-gray-100 text-gray-700">
+                      {post.category}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-gray-700">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mt-3">{post.excerpt}</p>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 group-hover:text-gray-700">
-                  {post.title}
-                </h3>
-                <p className="text-gray-600 text-sm mt-3">{post.excerpt}</p>
-                <div className="flex items-center justify-between text-sm text-gray-500 mt-6">
+                <div className="flex items-center justify-between text-sm text-gray-500 mt-6 pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-4">
                     <span className="flex items-center">
                       <User className="w-4 h-4 mr-1" />
@@ -73,13 +75,15 @@ export default function BlogTeaser() {
             </Link>
           ))}
         </div>
-        <div className="mt-12 text-center">
-        <Link
+
+        <div className="mt-14 text-center">
+          <Link
             href="https://atlas-paint.com/blog/"
+            hrefLang="en"
             className="inline-block bg-black text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-gray-900 transition-all duration-300"
-        >
+          >
             View All Blog Posts
-        </Link>
+          </Link>
         </div>
       </div>
     </section>
