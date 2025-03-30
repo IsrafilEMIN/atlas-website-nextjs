@@ -34,7 +34,7 @@ export default function Hero() {
           >
             Trusted by homeowners and businesses for interior and exterior painting, our skilled team delivers premium results.
             <br />
-            From Burlington to Niagara Falls, we've got your painting project covered.
+            From Burlington to Niagara Falls, we&apos;ve got your painting project covered.
           </motion.p>
 
           <motion.div
