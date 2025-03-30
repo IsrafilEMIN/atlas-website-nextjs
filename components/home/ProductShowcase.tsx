@@ -89,7 +89,7 @@ export default function ProductShowcase() {
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      onError={(e) => {
+                      onError={() => {
                         console.error(`Failed to load image: ${service.image}`);
                       }}
                     />

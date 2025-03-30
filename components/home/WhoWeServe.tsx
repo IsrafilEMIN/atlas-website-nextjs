@@ -53,7 +53,7 @@ export default function WhoWeServe() {
             Who We Serve
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Whether you're a homeowner, builder, or business owner — our painting services are designed to meet your needs.
+            Whether you&apos;re a homeowner, builder, or business owner — our painting services are designed to meet your needs.
           </p>
         </motion.div>
 

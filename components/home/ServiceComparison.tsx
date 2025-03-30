@@ -81,10 +81,10 @@ export default function ServiceComparison() {
           className="text-center mt-12"
         >
           <h3 className="text-2xl font-bold text-gray-800 mb-4">
-            Residential or Commercial — We've Got It Covered
+            Residential or Commercial — We&apos;ve Got It Covered
           </h3>
           <p className="text-gray-600 mb-6">
-            Whether you're a homeowner or a business manager, Atlas Painting offers tailored painting solutions for your space.
+            Whether you&apos;re a homeowner or a business manager, Atlas Painting offers tailored painting solutions for your space.
           </p>
           <Link href="https://atlas-paint.com/services/" hrefLang="en">
             <Button size="lg" className="bg-primary text-white hover:bg-primary/80">
