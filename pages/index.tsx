@@ -1,7 +1,10 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import { useTestimonials } from "@/lib/useTestimonials";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+
 import ServicesOverview from "@/components/home/ServiceOverview";
 import ServiceAreas from "@/components/home/ServiceAreas";
 import FAQ from "@/components/home/FAQ";
@@ -10,91 +13,143 @@ import HowItWorks from "@/components/home/HowItWorks";
 import ServiceComparison from "@/components/home/ServiceComparison";
 import WhoWeServe from "@/components/home/WhoWeServe";
 
+import { useTestimonials } from "@/lib/useTestimonials";
+
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
 const Features = dynamic(() => import("@/components/home/Features"), { ssr: false });
 const ProductShowcase = dynamic(() => import("@/components/home/ProductShowcase"), { ssr: false });
 const Testimonials = dynamic(() => import("@/components/home/Testimonials"), { ssr: false });
 const Header = dynamic(() => import("@/components/layout/Header"), { ssr: false });
 
-export default function Home() {
-    const [mounted, setMounted] = React.useState(false);
-    const { totalReviews, averageRating } = useTestimonials();
-
-    React.useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    const schemaPayload = {
-        "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        "description": "Professional painting services for residential and commercial properties in Toronto.",
-        "name": "Atlas HomeServices",
-        "@id": "https://atlas-paint.com/",
-        "logo": "https://atlas-paint.com/assets/apple-touch-icon.png",
-        "url": "https://atlas-paint.com/",
-        "telephone": "+1-647-916-0826",
-        "priceRange": "$$",
-        "openingHoursSpecification": [
-            {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                "opens": "08:00",
-                "closes": "20:00"
-            }
-        ],
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "8001 Woodsview Crescent",
-            "addressLocality": "Niagara Falls",
-            "addressRegion": "ON",
-            "postalCode": "L2H 3E9",
-            "addressCountry": "CA"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": averageRating.toFixed(1),
-            "reviewCount": totalReviews.toString(),
-        },
-        "image": "https://atlas-paint.com/assets/apple-touch-icon.png",
-        "sameAs": [
-            "https://www.instagram.com/atlas_homeservices/",
-            "https://x.com/Atlas_Paint",
-            "https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
-        ]
-    };
-
-    return (
-        <>
-            <Head>
-                <link rel="canonical" href="https://atlas-paint.com/" hrefLang="en" />
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }}
-                />
-                <title>Residential & Commercial Painters in Toronto | Atlas HomeServices</title>
-                <meta
-                    name="description"
-                    content="Atlas HomeServices offers premium residential and commercial painting services in Toronto, Mississauga, Vaughan, Hamilton, Niagara, and surrounding areas. Call for a free quote!"
-                />
-            </Head>
-            {mounted && (
-                <div className="bg-white min-h-screen">
-                    <Header />
-                    <main className="w-full">
-                        <Hero />
-                        <Features />
-                        <ServicesOverview />
-                        <ServiceComparison  />
-                        <HowItWorks /> 
-                        <Testimonials />
-                        <ProductShowcase />
-                        <WhoWeServe />
-                        <BlogTeaser />
-                        <FAQ />
-                        <ServiceAreas   />
-                    </main>
-                </div>
-            )}
-        </>
-    );
+interface Post {
+  slug: string;
+  title: string;
+  excerpt: string;
+  author: string;
+  date: string;
+  dateISO: string;
+  category: string;
 }
+
+export default function Home({ posts }: { posts: Post[] }) {
+  const [mounted, setMounted] = React.useState(false);
+  const { totalReviews, averageRating } = useTestimonials();
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const schemaPayload = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "description": "Professional painting services for residential and commercial properties in Toronto.",
+    "name": "Atlas HomeServices",
+    "@id": "https://atlas-paint.com/",
+    "logo": "https://atlas-paint.com/assets/apple-touch-icon.png",
+    "url": "https://atlas-paint.com/",
+    "telephone": "+1-647-916-0826",
+    "priceRange": "$$",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "08:00",
+        "closes": "20:00"
+      }
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "8001 Woodsview Crescent",
+      "addressLocality": "Niagara Falls",
+      "addressRegion": "ON",
+      "postalCode": "L2H 3E9",
+      "addressCountry": "CA"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": averageRating.toFixed(1),
+      "reviewCount": totalReviews.toString()
+    },
+    "image": "https://atlas-paint.com/assets/apple-touch-icon.png",
+    "sameAs": [
+      "https://www.instagram.com/atlas_homeservices/",
+      "https://x.com/Atlas_Paint",
+      "https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
+    ]
+  };
+
+  return (
+    <>
+      <Head>
+        <link rel="canonical" href="https://atlas-paint.com/" hrefLang="en" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }}
+        />
+        <title>Residential & Commercial Painters in Toronto | Atlas HomeServices</title>
+        <meta
+          name="description"
+          content="Atlas HomeServices offers premium residential and commercial painting services in Toronto, Mississauga, Vaughan, Hamilton, Niagara, and surrounding areas. Call for a free quote!"
+        />
+      </Head>
+
+      {mounted && (
+        <div className="bg-white min-h-screen">
+          <Header />
+          <main className="w-full">
+            <Hero />
+            <Features />
+            <ServicesOverview />
+            <ServiceComparison />
+            <HowItWorks />
+            <Testimonials />
+            <ProductShowcase />
+            <WhoWeServe />
+            <BlogTeaser posts={posts} />
+            <FAQ />
+            <ServiceAreas />
+          </main>
+        </div>
+      )}
+    </>
+  );
+}
+
+export async function getStaticProps() {
+    const postsDir = path.join(process.cwd(), "content/posts");
+    const filenames = fs.readdirSync(postsDir);
+  
+    const posts = filenames
+      .filter((name) => name.endsWith(".mdx"))
+      .map((filename) => {
+        const filePath = path.join(postsDir, filename);
+        const fileContent = fs.readFileSync(filePath, "utf8");
+        const { data } = matter(fileContent);
+  
+        return {
+          slug: filename.replace(/\.mdx$/, ""),
+          title: data.title || "",
+          excerpt: data.excerpt || "",
+          author: data.author || "",
+          date: data.date || "",
+          dateISO: data.dateISO || "",
+          category: data.category || "",
+        };
+      })
+      .sort((a, b) => new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime())
+      .slice(0, 3); // Get only latest 3
+  
+    return {
+      props: {
+        posts,
+      },
+    };
+  }

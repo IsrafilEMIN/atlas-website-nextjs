@@ -1,10 +1,7 @@
-"use client";
-
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CalendarDays, User, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { useEffect, useState } from "react";
 
 interface Post {
   slug: string;
@@ -16,15 +13,7 @@ interface Post {
   category: string;
 }
 
-export default function BlogTeaser() {
-  const [posts, setPosts] = useState<Post[]>([]);
-
-  useEffect(() => {
-    fetch("/api/latest-posts")
-      .then((res) => res.json())
-      .then((data) => setPosts(data.posts));
-  }, []);
-
+export default function BlogTeaser({ posts }: { posts: Post[] }) {
   return (
     <section className="bg-white py-24">
       <div className="container mx-auto px-6">
@@ -45,7 +34,7 @@ export default function BlogTeaser() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <Link href={`https://atlas-paint.com/blog/${post.slug}/`} hrefLang="en" key={post.slug} className="group">
+            <Link href={`/blog/${post.slug}/`} key={post.slug} className="group">
               <Card className="p-6 bg-white border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
@@ -78,8 +67,7 @@ export default function BlogTeaser() {
 
         <div className="mt-14 text-center">
           <Link
-            href="https://atlas-paint.com/blog/"
-            hrefLang="en"
+            href="/blog/"
             className="inline-block bg-black text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-gray-900 transition-all duration-300"
           >
             View All Blog Posts
