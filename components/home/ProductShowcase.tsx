@@ -67,7 +67,7 @@ export default function ProductShowcase() {
         >
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Portfolio</h2>
           <p className="text-gray-600 max-w-xl mx-auto">
-            Click a service below to explore the results we've delivered.
+            Click a service below to explore the results we&apos;ve delivered.
           </p>
         </motion.div>
 

@@ -3,19 +3,13 @@ import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import Link from "next/link";
 import Head from "next/head";
+import type { Testimonial } from "@/types/testimonials";
 
 interface TestimonialsProps {
-  testimonials: {
-    id: string;
-    customerName: string;
-    comment: string;
-    serviceType: string;
-    rating: number;
-    createdAt: string;
-  }[];
+  testimonials: Testimonial[];
   averageRating: number;
   totalReviews: number;
 }
@@ -123,7 +117,6 @@ export default function Testimonials({
               <div className="flex">
                 {testimonials.map((review, index) => (
                   <div
-                    key={review.id}
                     className="flex-[0_0_85%] min-w-0 sm:flex-[0_0_45%] lg:flex-[0_0_30%] pl-4"
                     itemScope
                     itemType="https://schema.org/Review"

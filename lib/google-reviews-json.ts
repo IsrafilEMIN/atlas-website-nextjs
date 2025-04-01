@@ -4,6 +4,7 @@ dotenv.config({ path: ".env.local" }); // 👈 explicitly load local env
 import fs from "fs";
 import path from "path";
 import fetch from "node-fetch";
+import type { Testimonial } from "@/types/testimonials";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY!;
 const PLACE_ID = process.env.GOOGLE_PLACE_ID!;
@@ -19,8 +20,17 @@ async function fetchReviews() {
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=review&key=${GOOGLE_API_KEY}`
     );
 
-    const data = (await res.json()) as { result?: { reviews?: any[] } };
-    const newReviews =
+    const data = (await res.json()) as {
+      result?: {
+        reviews?: {
+          author_name: string;
+          text: string;
+          rating: number;
+          time: number;
+        }[];
+      };
+    };
+    const newReviews: Testimonial[] =
       data.result?.reviews?.map((r: any) => ({
         customerName: r.author_name,
         comment: r.text,

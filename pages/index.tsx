@@ -6,6 +6,7 @@ import path from "path";
 import matter from "gray-matter";
 import { getStaticTestimonials } from "@/lib/getStaticTestimonials";
 import Testimonials from "@/components/home/Testimonials";
+import { Testimonial } from "@/types/testimonials";
 
 import ServicesOverview from "@/components/home/ServiceOverview";
 import ServiceAreas from "@/components/home/ServiceAreas";
@@ -32,7 +33,7 @@ interface Post {
 
 interface HomeProps {
   posts: Post[];
-  testimonials: any[]; // Replace `any` with your Testimonial type if defined
+  testimonials: Testimonial[]; // Replace `any` with your Testimonial type if defined
   averageRating: number;
   totalReviews: number;
 }
