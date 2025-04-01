@@ -1,7 +1,4 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import { Card } from "@/components/ui/card";
 import { Home, Building2, Layers, Wallpaper, Ruler } from "lucide-react";
 import Link from "next/link";
@@ -30,7 +27,7 @@ const services = [
     description:
       "Whether you're repairing cracks or prepping for a full paint job, our drywall repair and plastering services ensure smooth, paint-ready surfaces with no bumps, seams, or flaws.",
     href: "https://atlas-paint.com/services/drywall-plastering/",
-  hrefLang: "en",
+    hrefLang: "en",
   },
   {
     icon: Wallpaper,
@@ -38,7 +35,7 @@ const services = [
     description:
       "Accent your walls with luxury wallpaper, custom coverings, and designer finishes. We offer professional wallpaper installation across the GTA with precision and care.",
     href: "https://atlas-paint.com/services/wall-covering/",
-  hrefLang: "en",
+    hrefLang: "en",
   },
   {
     icon: Ruler,
@@ -51,26 +48,21 @@ const services = [
 ];
 
 export default function ServicesOverview() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
   return (
-    <section ref={ref} className="py-24 bg-white">
+    <section className="py-24 bg-white">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Painting Services Across Toronto & Surrounding Areas
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-            Atlas Painting offers full-service solutions for home and business owners — from expert interior painters to drywall finishing, fence painting, and wallpaper installation.
-            Serving Toronto, Mississauga, Oakville, Hamilton, Niagara, and the entire GTA.
+            Atlas Painting offers full-service solutions for home and business owners — from expert interior painters to drywall finishing, fence painting, and wallpaper installation. Serving Toronto, Mississauga, Oakville, Hamilton, Niagara, and the entire GTA.
           </p>
         </motion.div>
 
@@ -79,11 +71,11 @@ export default function ServicesOverview() {
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
             >
-              <Link href={service.href} hrefLang="en" className="block h-full group">
+              <Link href={service.href} hrefLang={service.hrefLang} className="block h-full group">
                 <Card className="p-6 h-full bg-gray-50 border border-gray-200 hover:shadow-lg transition-all duration-300 group-hover:border-primary">
                   <service.icon className="w-12 h-12 text-primary mb-4" />
                   <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary">
@@ -101,7 +93,8 @@ export default function ServicesOverview() {
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ delay: 0.3 }}
           className="text-center mt-12"
         >

@@ -1,10 +1,7 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import { ClipboardList, Paintbrush2, CheckCircle2, CalendarCheck2 } from "lucide-react";
 import Link from "next/link";
-import { Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 const steps = [
   {
@@ -34,15 +31,14 @@ const steps = [
 ];
 
 export default function HowItWorks() {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
   return (
-    <section ref={ref} className="py-24 bg-gray-100">
+    <section className="py-24 bg-gray-100">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -58,7 +54,7 @@ export default function HowItWorks() {
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="flex gap-4 items-start"
@@ -75,9 +71,11 @@ export default function HowItWorks() {
             </motion.div>
           ))}
         </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ delay: 0.3 }}
           className="text-center mt-12"
         >

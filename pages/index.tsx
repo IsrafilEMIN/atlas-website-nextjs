@@ -4,6 +4,8 @@ import Head from "next/head";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { getStaticTestimonials } from "@/lib/getStaticTestimonials";
+import Testimonials from "@/components/home/Testimonials";
 
 import ServicesOverview from "@/components/home/ServiceOverview";
 import ServiceAreas from "@/components/home/ServiceAreas";
@@ -13,12 +15,9 @@ import HowItWorks from "@/components/home/HowItWorks";
 import ServiceComparison from "@/components/home/ServiceComparison";
 import WhoWeServe from "@/components/home/WhoWeServe";
 
-import { useTestimonials } from "@/lib/useTestimonials";
-
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
 const Features = dynamic(() => import("@/components/home/Features"), { ssr: false });
 const ProductShowcase = dynamic(() => import("@/components/home/ProductShowcase"), { ssr: false });
-const Testimonials = dynamic(() => import("@/components/home/Testimonials"), { ssr: false });
 const Header = dynamic(() => import("@/components/layout/Header"), { ssr: false });
 
 interface Post {
@@ -31,9 +30,15 @@ interface Post {
   category: string;
 }
 
-export default function Home({ posts }: { posts: Post[] }) {
+interface HomeProps {
+  posts: Post[];
+  testimonials: any[]; // Replace `any` with your Testimonial type if defined
+  averageRating: number;
+  totalReviews: number;
+}
+
+export default function Home({ posts, testimonials, averageRating, totalReviews }: HomeProps) {
   const [mounted, setMounted] = React.useState(false);
-  const { totalReviews, averageRating } = useTestimonials();
 
   React.useEffect(() => {
     setMounted(true);
@@ -52,15 +57,7 @@ export default function Home({ posts }: { posts: Post[] }) {
     "openingHoursSpecification": [
       {
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday"
-        ],
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         "opens": "08:00",
         "closes": "20:00"
       }
@@ -110,7 +107,11 @@ export default function Home({ posts }: { posts: Post[] }) {
             <ServicesOverview />
             <ServiceComparison />
             <HowItWorks />
-            <Testimonials />
+            <Testimonials
+              testimonials={testimonials}
+              averageRating={averageRating}
+              totalReviews={totalReviews}
+            />
             <ProductShowcase />
             <WhoWeServe />
             <BlogTeaser posts={posts} />
@@ -124,32 +125,37 @@ export default function Home({ posts }: { posts: Post[] }) {
 }
 
 export async function getStaticProps() {
-    const postsDir = path.join(process.cwd(), "content/posts");
-    const filenames = fs.readdirSync(postsDir);
-  
-    const posts = filenames
-      .filter((name) => name.endsWith(".mdx"))
-      .map((filename) => {
-        const filePath = path.join(postsDir, filename);
-        const fileContent = fs.readFileSync(filePath, "utf8");
-        const { data } = matter(fileContent);
-  
-        return {
-          slug: filename.replace(/\.mdx$/, ""),
-          title: data.title || "",
-          excerpt: data.excerpt || "",
-          author: data.author || "",
-          date: data.date || "",
-          dateISO: data.dateISO || "",
-          category: data.category || "",
-        };
-      })
-      .sort((a, b) => new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime())
-      .slice(0, 3); // Get only latest 3
-  
-    return {
-      props: {
-        posts,
-      },
-    };
-  }
+  const postsDir = path.join(process.cwd(), "content/posts");
+  const filenames = fs.readdirSync(postsDir);
+
+  const posts = filenames
+    .filter((name) => name.endsWith(".mdx"))
+    .map((filename) => {
+      const filePath = path.join(postsDir, filename);
+      const fileContent = fs.readFileSync(filePath, "utf8");
+      const { data } = matter(fileContent);
+
+      return {
+        slug: filename.replace(/\.mdx$/, ""),
+        title: data.title || "",
+        excerpt: data.excerpt || "",
+        author: data.author || "",
+        date: data.date || "",
+        dateISO: data.dateISO || "",
+        category: data.category || ""
+      };
+    })
+    .sort((a, b) => new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime())
+    .slice(0, 3);
+
+  const { testimonials, averageRating, totalReviews } = await getStaticTestimonials();
+
+  return {
+    props: {
+      posts,
+      testimonials,
+      averageRating,
+      totalReviews
+    }
+  };
+}

@@ -1,20 +1,16 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function ServiceComparison() {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
   return (
-    <section ref={ref} className="py-24 bg-white">
+    <section className="py-24 bg-white">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -76,7 +72,8 @@ export default function ServiceComparison() {
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ delay: 0.3 }}
           className="text-center mt-12"
         >

@@ -1,130 +1,165 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import WavePattern from "../ui/patterns/WavePattern";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const SERVICES = [
   {
-    slug: "residential-painting",
-    title: "Residential Painting Services",
-    description:
-      "Interior and exterior house painting services in Toronto, Mississauga, and surrounding areas. Clean lines, vibrant color, minimal disruption.",
-    image: "/assets/projects/residential-painted-room.jpg",
+    slug: "residential",
+    title: "Residential Painting",
+    description: "Interior and exterior painting for homes and condos.",
+    image: "/images/gallery/commercial/04.jpg",
+    gallery: [],
   },
   {
-    slug: "commercial-painting",
-    title: "Commercial Painting Contractors",
-    description:
-      "High-performance commercial painting for offices, retail units, and new developments — completed on time with lasting results.",
-    image: "/assets/projects/commercial-office.jpg",
+    slug: "commercial",
+    title: "Commercial Painting",
+    description: "Painting for offices, shops, and commercial spaces.",
+    image: "/images/gallery/commercial/04.jpg",
+    gallery: [
+      "/images/gallery/commercial/01.jpg",
+      "/images/gallery/commercial/02.jpg",
+      "/images/gallery/commercial/03.jpg",
+      "/images/gallery/commercial/04.jpg",
+    ],
   },
   {
-    slug: "drywall-plastering",
+    slug: "drywall",
     title: "Drywall & Plastering",
-    description:
-      "Wall prep done right — from patching holes and fixing cracks to smooth plaster surfaces, ready for a flawless paint job.",
-    image: "/assets/projects/drywall-plastering.jpg",
+    description: "Crack repair, taping, and seamless wall finishes.",
+    image: "/images/gallery/commercial/04.jpg",
+    gallery: [],
   },
   {
-    slug: "wall-covering",
-    title: "Wallpaper & Wall Coverings",
-    description:
-      "Custom wallpaper installation and textured wall coverings to elevate your interior design. Precision guaranteed.",
-    image: "/assets/projects/wall-covering.jpg",
-  },
-  {
-    slug: "fencing",
-    title: "Fencing & Painting Services",
-    description:
-      "Fence painting, staining, and construction that adds curb appeal and weather protection. Wood, vinyl, and custom designs.",
-    image: "/assets/projects/fencing.jpg",
+    slug: "wallcovering",
+    title: "Wall Coverings",
+    description: "Wallpaper and luxury wall finish installation.",
+    image: "/images/gallery/commercial/04.jpg",
+    gallery: [],
   },
 ];
 
+type Service = (typeof SERVICES)[number];
+
 export default function ProductShowcase() {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+
+  const handleSelect = (service: Service) => {
+    if (selectedService?.slug === service.slug) {
+      setSelectedService(null);
+    } else {
+      setSelectedService(service);
+    }
+  };
 
   return (
-    <section ref={ref} className="relative py-24 bg-gray-50 overflow-hidden">
-      <WavePattern className="text-white/5" />
-
+    <section className="py-24 bg-gray-50">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          className="text-center mb-12"
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Full-Service House Painting & Wall Finishing
-          </h2>
-          <p className="text-lg text-gray-600">
-            We provide residential and commercial painting, drywall, and wall finishing services across the Greater Toronto Area — from Burlington to Niagara.
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Portfolio</h2>
+          <p className="text-gray-600 max-w-xl mx-auto">
+            Click a service below to explore the results we've delivered.
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.8 }}
-          className="relative mx-auto max-w-6xl"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+        {/* Horizontal Service Card Row */}
+        <div className="overflow-x-auto pb-6 -mx-4 px-4">
+          <div className="flex space-x-6 w-max">
             {SERVICES.map((service) => (
-              <Link
+              <div
                 key={service.slug}
-                href={`https://atlas-paint.com/services/${service.slug}/`}
-                hrefLang="en"
-                className="block transition-transform hover:scale-[1.015] duration-300 w-full"
+                onClick={() => handleSelect(service)}
+                className={`cursor-pointer bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all min-w-[280px] max-w-[320px] ${
+                  selectedService?.slug === service.slug
+                    ? "border-primary ring-1 ring-primary"
+                    : ""
+                }`}
               >
-                <div className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition-all h-full">
-                  <div className="relative aspect-video bg-gray-100">
-                    <Image
-                      src={service.image}
-                      alt={`Atlas - ${service.title}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      onError={() => {
-                        console.error(`Failed to load image: ${service.image}`);
-                      }}
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      {service.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {service.description}
-                    </p>
-                  </div>
+                <div className="relative w-full aspect-[16/9] rounded-t-xl overflow-hidden bg-gray-100">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
                 </div>
-              </Link>
+                <div className="p-5">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm">{service.description}</p>
+                </div>
+              </div>
             ))}
           </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-center mt-12"
-        >
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">
-            Explore our professional painting solutions
-          </h3>
-          <p className="text-gray-600 mb-6">
-            From interior painting to drywall repairs and fence staining — we’ve got your property covered.
-          </p>
-          <Link href="https://atlas-paint.com/services/" hrefLang="en">
-            <Button size="lg" className="bg-primary text-white hover:bg-primary/80">
-              View All Painting Services
-            </Button>
-          </Link>
-        </motion.div>
+        </div>
+
+        {/* Expanded Gallery Below Cards */}
+        {selectedService && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="mt-10 max-w-6xl mx-auto"
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-2xl font-bold text-gray-800">
+                {selectedService.title} Gallery
+              </h3>
+              <Button
+                variant="ghost"
+                onClick={() => setSelectedService(null)}
+                className="text-gray-500 hover:text-black"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+
+            {selectedService.gallery.length === 0 ? (
+              <div className="text-center text-gray-500 text-lg py-8">
+                Coming soon...
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {selectedService.gallery.slice(0, 3).map((src, i) => (
+                    <div
+                      key={i}
+                      className="relative aspect-[16/9] rounded-lg overflow-hidden shadow-md bg-gray-100"
+                    >
+                      <Image
+                        src={src}
+                        alt={`${selectedService.title} ${i + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
+                  ))}
+                </div>
+                {selectedService.gallery.length > 3 && (
+                  <div className="text-center mt-6">
+                    <Link href={`/gallery#${selectedService.slug}`}>
+                      <Button className="bg-primary text-white hover:bg-primary/80">
+                        See More
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </>
+            )}
+          </motion.div>
+        )}
       </div>
     </section>
   );

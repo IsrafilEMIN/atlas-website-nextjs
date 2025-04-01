@@ -1,18 +1,30 @@
-"use client";
-
-import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
-import { useTestimonials } from "@/lib/useTestimonials";
 
-export default function Testimonials() {
-  const [mounted, setMounted] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+interface TestimonialsProps {
+  testimonials: {
+    id: string;
+    customerName: string;
+    comment: string;
+    serviceType: string;
+    rating: number;
+    createdAt: string;
+  }[];
+  averageRating: number;
+  totalReviews: number;
+}
+
+export default function Testimonials({
+  testimonials,
+  averageRating,
+  totalReviews,
+}: TestimonialsProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "center",
@@ -20,33 +32,8 @@ export default function Testimonials() {
     containScroll: "trimSnaps",
   });
 
-  const { testimonials, totalReviews, averageRating } = useTestimonials();
-
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
-
-  useEffect(() => {
-    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
-    checkDesktop();
-    window.addEventListener("resize", checkDesktop);
-    return () => window.removeEventListener("resize", checkDesktop);
-  }, []);
-
-  useEffect(() => {
-    if (emblaApi) {
-      emblaApi.reInit({
-        loop: true,
-        align: "center",
-        skipSnaps: false,
-        containScroll: "trimSnaps",
-        watchDrag: !isDesktop,
-      });
-    }
-  }, [emblaApi, isDesktop]);
-
-  useEffect(() => setMounted(true), [emblaApi]);
-
-  if (!mounted) return null;
 
   const schemaPayload = {
     "@context": "https://schema.org",
@@ -57,7 +44,8 @@ export default function Testimonials() {
         "name": "Atlas HomeServices",
         "url": "https://atlas-paint.com/",
         "logo": "https://atlas-paint.com/logo.png",
-        "description": "Professional house and commercial painting services in Toronto, Mississauga, Niagara Falls, and surrounding areas.",
+        "description":
+          "Professional house and commercial painting services in Toronto, Mississauga, Niagara Falls, and surrounding areas.",
         "telephone": "+1-647-916-0826",
         "priceRange": "$$",
         "address": {
@@ -66,15 +54,15 @@ export default function Testimonials() {
           "addressLocality": "Toronto",
           "addressRegion": "ON",
           "postalCode": "M4B 1B3",
-          "addressCountry": "CA"
+          "addressCountry": "CA",
         },
         "aggregateRating": {
           "@type": "AggregateRating",
           "ratingValue": averageRating.toFixed(1),
-          "reviewCount": totalReviews.toString()
-        }
-      }
-    ]
+          "reviewCount": totalReviews.toString(),
+        },
+      },
+    ],
   };
 
   return (
@@ -109,13 +97,16 @@ export default function Testimonials() {
                 {averageRating.toFixed(1)} ({totalReviews} reviews)
               </span>
             </div>
-            <Link href="https://atlas-paint.com/all-reviews/" hrefLang="en" className="text-black hover:underline mt-2 inline-block">
+            <Link
+              href="https://atlas-paint.com/all-reviews/"
+              className="text-black hover:underline mt-2 inline-block"
+            >
               Read all testimonials →
             </Link>
           </motion.div>
 
           <div className="relative max-w-6xl mx-auto">
-            {/* Navigation Arrows */}
+            {/* Arrows */}
             <div className="absolute top-1/2 -translate-y-1/2 left-0 z-10 hidden md:block">
               <Button onClick={scrollPrev} variant="outline" size="icon" className="rounded-full bg-white border border-gray-200 hover:bg-gray-100 hover:border-gray-300 -translate-x-16">
                 <ChevronLeft className="h-6 w-6" />
@@ -130,7 +121,7 @@ export default function Testimonials() {
             {/* Carousel */}
             <div className="overflow-hidden px-4 md:px-24" ref={emblaRef}>
               <div className="flex">
-                {testimonials.slice(0, 9).map((review, index) => (
+                {testimonials.map((review, index) => (
                   <div
                     key={review.id}
                     className="flex-[0_0_85%] min-w-0 sm:flex-[0_0_45%] lg:flex-[0_0_30%] pl-4"
@@ -174,9 +165,11 @@ export default function Testimonials() {
             </div>
           </div>
 
+          {/* CTA */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ delay: 0.3 }}
             className="text-center mt-12"
           >
@@ -186,7 +179,7 @@ export default function Testimonials() {
             <p className="text-gray-600 mb-6">
               See why property owners across Toronto and Niagara choose Atlas Painting for quality and reliability.
             </p>
-            <Link href="https://atlas-paint.com/booking/" hrefLang="en">
+            <Link href="https://atlas-paint.com/booking/">
               <Button size="lg" className="bg-primary text-white hover:bg-primary/80">
                 Book For Your Free Quote
               </Button>

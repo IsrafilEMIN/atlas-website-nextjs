@@ -1,7 +1,4 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import { Briefcase, Home, Building2, Wrench } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -34,18 +31,13 @@ const audiences = [
 ];
 
 export default function WhoWeServe() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
   return (
-    <section ref={ref} className="py-24 bg-white">
+    <section className="py-24 bg-white">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
@@ -53,7 +45,7 @@ export default function WhoWeServe() {
             Who We Serve
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Whether you&apos;re a homeowner, builder, or business owner — our painting services are designed to meet your needs.
+            Whether you're a homeowner, builder, or business owner — our painting services are designed to meet your needs.
           </p>
         </motion.div>
 
@@ -62,8 +54,8 @@ export default function WhoWeServe() {
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              viewport={{ once: true }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <div className="p-6 bg-gray-50 border border-gray-200 hover:shadow-md rounded-lg transition-all text-center h-full flex flex-col justify-between">
@@ -71,9 +63,7 @@ export default function WhoWeServe() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   {audience.title}
                 </h3>
-                <p className="text-gray-600 text-sm">
-                  {audience.description}
-                </p>
+                <p className="text-gray-600 text-sm">{audience.description}</p>
               </div>
             </motion.div>
           ))}
@@ -81,7 +71,8 @@ export default function WhoWeServe() {
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 0.3 }}
           className="text-center mt-12"
         >

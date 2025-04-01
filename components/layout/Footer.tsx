@@ -1,35 +1,30 @@
-"use client";
-
-import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Facebook, Instagram, Mail, Phone, MapPin } from "lucide-react";
 import { FaTiktok } from "react-icons/fa";
 import Logo from "@/components/ui/Logo";
-import { useRouter } from "next/router";
+
+const XIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-label="X (Twitter)"
+  >
+    <path d="M18.205 2.25h3.308l-7.227 8.26 8.502 11.24h-6.64l-5.204-6.81-5.952 6.81H1.685l7.73-8.835-8.15-10.665h6.816l4.692 6.203 5.432-6.203zm-1.325 17.73h1.84L6.665 4.26H4.72l12.16 15.72z" />
+  </svg>
+);
 
 export default function Footer() {
   const router = useRouter();
 
-  const XIcon = ({ className }: { className?: string }) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-      aria-label="X (Twitter)"
-    >
-      <path d="M18.205 2.25h3.308l-7.227 8.26 8.502 11.24h-6.64l-5.204-6.81-5.952 6.81H1.685l7.73-8.835-8.15-10.665h6.816l4.692 6.203 5.432-6.203zm-1.325 17.73h1.84L6.665 4.26H4.72l12.16 15.72z" />
-    </svg>
-  );
-
-  useEffect(() => {
-    console.log("Path changed:", router.pathname);
-  }, [router.pathname]);
-
   const handleClick = (path: string) => (e: React.MouseEvent) => {
     if (router.pathname === path) {
       e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     } else {
       router.push(path);
     }
@@ -46,36 +41,16 @@ export default function Footer() {
               Atlas HomeServices provides expert house painting, drywall, wall covering, and fencing solutions across Toronto, Niagara, and the GTA.
             </p>
             <div className="flex space-x-4">
-              <Link
-                href="https://www.instagram.com/atlas_homeservices/"
-                className="text-gray-300 hover:text-white/70"
-                target="_blank"
-                aria-label="Instagram"
-              >
+              <Link href="https://www.instagram.com/atlas_homeservices/" target="_blank" aria-label="Instagram" className="text-gray-300 hover:text-white/70">
                 <Instagram className="w-5 h-5" />
               </Link>
-              <Link
-                href="https://www.tiktok.com/@atlas_homeservices"
-                className="text-gray-300 hover:text-white/70"
-                target="_blank"
-                aria-label="TikTok"
-              >
+              <Link href="https://www.tiktok.com/@atlas_homeservices" target="_blank" aria-label="TikTok" className="text-gray-300 hover:text-white/70">
                 <FaTiktok className="w-5 h-5" />
               </Link>
-              <Link
-                href="https://x.com/Atlas_Paint"
-                className="text-gray-300 hover:text-white/70"
-                target="_blank"
-                aria-label="Twitter"
-              >
+              <Link href="https://x.com/Atlas_Paint" target="_blank" aria-label="Twitter" className="text-gray-300 hover:text-white/70">
                 <XIcon className="w-5 h-5" />
               </Link>
-              <Link
-                href="https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/"
-                className="text-gray-300 hover:text-white/70"
-                target="_blank"
-                aria-label="Facebook"
-              >
+              <Link href="https://www.facebook.com/people/Atlas-HomeServices-Inc/61572733726450/" target="_blank" aria-label="Facebook" className="text-gray-300 hover:text-white/70">
                 <Facebook className="w-5 h-5" />
               </Link>
             </div>

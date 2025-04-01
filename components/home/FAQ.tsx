@@ -1,7 +1,4 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -59,28 +56,27 @@ const faqs = [
 ];
 
 export default function FAQ() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
   return (
-    <section ref={ref} className="py-24 bg-white">
+    <section className="py-24 bg-white">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Frequently Asked Questions
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Everything you need to know about our residential and commercial painting services.  
-            If your question isn’t here,{" "}
-            <a href="https://atlas-paint.com/booking/" hrefLang="en" className="text-primary underline">
-              get in touch with our team.
+            Everything you need to know about our residential and commercial painting services.{" "}
+            <a
+              href="https://atlas-paint.com/booking/"
+              hrefLang="en"
+              className="text-primary underline"
+            >
+              Contact us if you don’t see your question.
             </a>
           </p>
         </motion.div>
@@ -90,9 +86,9 @@ export default function FAQ() {
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
             >
               <details className="group bg-gray-50 border border-gray-200 p-6 rounded-lg cursor-pointer transition-all hover:shadow-md">
                 <summary className="font-semibold text-gray-900 text-lg flex justify-between items-center">
@@ -104,9 +100,10 @@ export default function FAQ() {
             </motion.div>
           ))}
         </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className="text-center mt-12"
         >

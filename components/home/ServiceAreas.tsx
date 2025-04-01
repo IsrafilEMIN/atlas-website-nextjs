@@ -1,7 +1,4 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import { Card } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,16 +18,15 @@ const locations = [
 ];
 
 export default function ServiceAreas() {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
   return (
-    <section ref={ref} className="py-24 bg-gray-50">
+    <section className="py-24 bg-gray-50">
       <div className="container mx-auto px-6">
         {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -47,7 +43,7 @@ export default function ServiceAreas() {
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.05 }}
             >
@@ -60,9 +56,11 @@ export default function ServiceAreas() {
           ))}
         </div>
 
+        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ delay: 0.3 }}
           className="text-center mt-12"
         >
@@ -79,12 +77,11 @@ export default function ServiceAreas() {
           </Link>
         </motion.div>
 
-        {/* Google Map + Get Directions */}
+        {/* Google Map */}
         <div className="mt-16 max-w-5xl mx-auto text-center">
           <h3 className="text-2xl font-bold text-gray-900 mb-6">
             Find Us in Niagara Falls
           </h3>
-
           <div className="flex justify-center">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2913.597134531424!2d-79.13283622346793!3d43.09196438854836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89d34523ec362df5%3A0x378165b3b1c55b74!2sAtlas%20HomeServices!5e0!3m2!1sen!2sca!4v1743279952829!5m2!1sen!2sca"
@@ -101,9 +98,9 @@ export default function ServiceAreas() {
           <div className="mt-6">
             <a
               href="https://www.google.com/maps/dir/?api=1&destination=Atlas+HomeServices,+Niagara+Falls+ON"
-              hrefLang="en"
               target="_blank"
               rel="noopener noreferrer"
+              hrefLang="en"
               className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/80 transition"
             >
               <ArrowRight className="w-4 h-4" />

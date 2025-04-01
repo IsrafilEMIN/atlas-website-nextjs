@@ -1,11 +1,7 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import GridPattern from "../ui/patterns/GridPattern";
-
-const BackgroundVideo = dynamic(() => import("@/components/ui/BackgroundVideo"), { ssr: false });
+import { Button } from "@/components/ui/button";
+import BackgroundVideo from "@/components/ui/BackgroundVideo";
 
 export default function Hero() {
   return (
