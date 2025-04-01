@@ -19,11 +19,11 @@ export default function GalleryPage() {
           },
           {
             src: "/images/gallery/commercial/02.jpg",
-            alt: "Retail shop painting project in Richmond Hill",
+            alt: "Retail shop painting project in Toronto",
           },
           {
             src: "/images/gallery/commercial/03.jpg",
-            alt: "Retail shop painting project in Richmond Hill",
+            alt: "Condo project in Mississauga",
           },
           {
             src: "/images/gallery/commercial/01.jpg",
