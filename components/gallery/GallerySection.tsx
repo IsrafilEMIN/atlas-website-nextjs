@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 interface ImageType {
   src: string;
