@@ -41,7 +41,7 @@ export default function Hero() {
               md:text-5xl         /* original desktop size */
             "
           >
-            Make Your Home Look Magazine‑Worthy — Without Lifting a Finger
+            Make Your Home Look Magazine‑Worthy  Without Lifting a Finger
           </h1>
 
           <p
