@@ -3,17 +3,22 @@ import { Button } from "@/components/ui/button";
 
 export default function Hero() {
   return (
-    <section className="relative h-screen w-full overflow-hidden">
-      {/* Background image */}
-      <Image
-        src="/images/hero-luxury-white-glove.png"
-        alt="Atlas HomeServices – luxury white‑glove painting"
-        fill
-        priority
-        sizes="100vw"
-        quality={90}
-        className="object-cover object-top"
-      />
+    <section className="
+    relative flex items-end overflow-hidden
+    h-[45vh]            /* ↓ change this value */
+    md:h-[40vh]         /* desktops can see more content */
+    lg:h-[80vh]         /* (adjust to taste) */
+  "
+>
+  <Image
+    src="/images/hero-luxury-white-glove.png"
+    alt="Atlas HomeServices – luxury white‑glove painting"
+    fill
+    priority
+    sizes="100vw"
+    quality={90}
+    className="object-cover object-top"
+  />
 
       {/* Optional dark tint */}
       <div className="absolute inset-0 bg-black/10" />
