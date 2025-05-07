@@ -20,7 +20,8 @@ const GrandSlamOffer: React.FC<GrandSlamOfferProps> = ({ reviews }) => {
         {/* Left: Offer Value Stack */}
         <div>
           <h2 className="text-2xl md:text-3xl font-serif text-[#162733] mb-6 uppercase tracking-wide drop-shadow-sm">
-            🏆 The Atlas Grand Slam Offer – Designed for Luxury Homes
+            🏆 The Atlas Grand Slam Offer<br/>
+            Designed for Luxury Homes
           </h2>
 
           <ul className="text-[#2c3e50] space-y-4 text-base md:text-lg font-light">
