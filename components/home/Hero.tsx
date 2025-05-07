@@ -41,7 +41,8 @@ export default function Hero() {
               md:text-5xl         /* original desktop size */
             "
           >
-            Make Your Home Look Magazine‑Worthy  Without Lifting a Finger
+            Make Your Home Look Magazine‑Worthy<br/>
+            Without Lifting a Finger
           </h1>
 
           <p
@@ -86,7 +87,7 @@ export default function Hero() {
 
           {/* trust badges */}
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#2e3e4e] font-medium tracking-wide">
-            <span>🎯 Free Quote → No Final Payment Until You're Thrilled</span>
+            <span>🎯 Free Quote → No Final Payment Until You&apos;re Thrilled</span>
             <span>🚚 We Handle Everything → You Sit Back</span>
             <span className="basis-full w-full">📸 Optional Progress Updates</span>
             <span>🛡️ 5‑Year Free Touch‑up Warranty</span>
