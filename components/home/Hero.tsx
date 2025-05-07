@@ -12,7 +12,7 @@ export default function Hero() {
         priority
         sizes="100vw"
         quality={90}
-        className="object-cover object-[50%_30%]"
+        className="object-cover object-top"
       />
 
       {/* Optional dark tint */}
