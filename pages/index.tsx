@@ -5,20 +5,11 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { getStaticTestimonials } from "@/lib/getStaticTestimonials";
-import Testimonials from "@/components/home/Testimonials";
 import { Testimonial } from "@/types/testimonials";
 
-import ServicesOverview from "@/components/home/ServiceOverview";
-import ServiceAreas from "@/components/home/ServiceAreas";
-import FAQ from "@/components/home/FAQ";
-import BlogTeaser from "@/components/home/BlogTeaser";
-import HowItWorks from "@/components/home/HowItWorks";
-import ServiceComparison from "@/components/home/ServiceComparison";
-import WhoWeServe from "@/components/home/WhoWeServe";
-
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
-const Features = dynamic(() => import("@/components/home/Features"), { ssr: false });
-const ProductShowcase = dynamic(() => import("@/components/home/ProductShowcase"), { ssr: false });
+const GrandSlamOffer = dynamic(() => import("@/components/home/GrandSlamOffer"), { ssr: false });
+const GallerySection = dynamic(() => import("@/components/gallery/GallerySection"), { ssr: false });
 const Header = dynamic(() => import("@/components/layout/Header"), { ssr: false });
 
 interface Post {
@@ -104,20 +95,8 @@ export default function Home({ posts, testimonials, averageRating, totalReviews 
           <Header />
           <main className="w-full">
             <Hero />
-            <Features />
-            <ServicesOverview />
-            <ServiceComparison />
-            <HowItWorks />
-            <Testimonials
-              testimonials={testimonials}
-              averageRating={averageRating}
-              totalReviews={totalReviews}
-            />
-            <ProductShowcase />
-            <WhoWeServe />
-            <BlogTeaser posts={posts} />
-            <FAQ />
-            <ServiceAreas />
+            <GrandSlamOffer reviews={testimonials} />
+            <GallerySection />
           </main>
         </div>
       )}
