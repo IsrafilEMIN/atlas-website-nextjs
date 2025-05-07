@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 type Review = {
   customerName: string;
@@ -89,12 +90,12 @@ const GrandSlamOffer: React.FC<GrandSlamOfferProps> = ({ reviews }) => {
           </div>
 
           {/* CTA Button */}
-          <a
-            href="#booking"
+          <Link
+            href="/booking"
             className="inline-block w-full text-center bg-[#e6d4b5] hover:bg-[#ddc8a5] text-[#162733] font-semibold py-3 px-6 rounded-xl shadow-md transition-all duration-300 uppercase tracking-wide text-sm md:text-base"
           >
             Book My White-Glove Consultation
-          </a>
+          </Link>
 
           {/* Scarcity Note */}
           <p className="text-xs text-gray-500 italic">
