@@ -1,31 +1,48 @@
 // lib/getStaticTestimonials.ts
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import type { Testimonial } from "@/types/testimonials";
 
-// Replace this with actual DB query if needed
-export async function getStaticTestimonials() {
-  // Simulate a local data file (e.g., JSON or Markdown frontmatter)
-  const filePath = path.join(process.cwd(), "data", "testimonials.json");
-  const fileContent = fs.readFileSync(filePath, "utf-8");
-  const rawTestimonials = JSON.parse(fileContent);
+/** Raw shape of each record as it comes from the JSON file */
+interface RawTestimonial {
+  customerName: string;
+  comment: string;
+  rating: number;
+  serviceType?: string;
+  createdAt: string;
+}
 
-  const testimonials: Testimonial[] = rawTestimonials.map((item: any) => ({
+type GetStaticTestimonialsResult = {
+  testimonials: Testimonial[];
+  averageRating: number;
+  totalReviews: number;
+};
+
+/**
+ * Reads the local JSON file and returns typed testimonial data.
+ * Swap this out for a real DB call when needed.
+ */
+export async function getStaticTestimonials(): Promise<GetStaticTestimonialsResult> {
+  const filePath = path.join(process.cwd(), "data", "testimonials.json");
+
+  // Read & parse JSON
+  const fileContent = await fs.readFile(filePath, "utf-8");
+  const rawTestimonials: RawTestimonial[] = JSON.parse(fileContent);
+
+  // Map raw records ➜ typed Testimonial objects
+  const testimonials: Testimonial[] = rawTestimonials.map((item) => ({
     customerName: item.customerName,
     comment: item.comment,
     rating: item.rating,
-    serviceType: item.serviceType,
+    serviceType: item.serviceType ?? "", // fallback to empty string
     createdAt: item.createdAt,
   }));
 
   const totalReviews = testimonials.length;
   const averageRating =
-  testimonials.reduce((sum, t) => sum + t.rating, 0)
-  totalReviews;
+    totalReviews > 0
+      ? testimonials.reduce((sum, t) => sum + t.rating, 0) / totalReviews
+      : 0;
 
-  return {
-    testimonials,
-    averageRating,
-    totalReviews,
-  };
+  return { testimonials, averageRating, totalReviews };
 }
