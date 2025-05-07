@@ -10,7 +10,7 @@ export async function getStaticTestimonials() {
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const rawTestimonials = JSON.parse(fileContent);
 
-  const testimonials: Testimonial[] = rawTestimonials.map((item: any, index: number) => ({
+  const testimonials: Testimonial[] = rawTestimonials.map((item: any) => ({
     customerName: item.customerName,
     comment: item.comment,
     rating: item.rating,

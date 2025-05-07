@@ -30,7 +30,7 @@ const GrandSlamOffer: React.FC<GrandSlamOfferProps> = ({ reviews }) => {
               ✅ <strong>White-Glove Care:</strong> We move, cover, and protect everything — zero mess
             </li>
             <li>
-              ✅ <strong>Video Updates (Optional):</strong> Stay in the loop, even when you're away
+              ✅ <strong>Video Updates (Optional):</strong> Stay in the loop, even when you&apos;re away
             </li>
             <li>
               ✅ <strong>5-Year Warranty:</strong> Confidence in quality that lasts

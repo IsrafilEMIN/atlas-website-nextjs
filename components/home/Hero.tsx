@@ -46,7 +46,7 @@ export default function Hero() {
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#2e3e4e] font-medium tracking-wide">
             <span>🎯 5-Year Warranty</span>
             <span>🎥 Optional Video Updates</span>
-            <span>💸 No Final Payment Until You're Thrilled</span>
+            <span>💸 No Final Payment Until You&apos;re Thrilled</span>
           </div>
         </div>
       </div>

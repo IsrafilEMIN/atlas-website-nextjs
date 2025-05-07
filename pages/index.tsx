@@ -29,7 +29,7 @@ interface HomeProps {
   totalReviews: number;
 }
 
-export default function Home({ posts, testimonials, averageRating, totalReviews }: HomeProps) {
+export default function Home({ testimonials, averageRating, totalReviews }: HomeProps) {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
