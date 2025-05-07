@@ -19,5 +19,12 @@
     "rating": 5,
     "serviceType": "Google Review",
     "createdAt": "2025-03-29T18:35:27.000Z"
+  },
+  {
+    "customerName": "devrim",
+    "comment": "Very satisfied with the quality. Great service👍",
+    "rating": 5,
+    "serviceType": "Google Review",
+    "createdAt": "2025-05-06T22:58:49.000Z"
   }
 ]
