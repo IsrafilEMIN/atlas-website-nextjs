@@ -1,312 +1,187 @@
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { useState } from "react";
-import Header from "@/components/layout/Header";
-import Head from "next/head";
-import * as React from "react";
+/* pages/pricing.tsx  –  quick‑fix version that ONLY handles
+   interior‑painting estimates (standard / premium / luxury)   */
 
-// Define the Rates interface for type safety
-interface Rates {
-  painting: {
-    interior: { standard: number; premium: number; luxury: number };
-    exterior: { standard: number; premium: number; luxury: number };
-    commercial: { standard: number; premium: number; luxury: number };
-  };
-  drywall: {
-    standard: number;
-    fireResistant: number;
-    moistureResistant: number;
-  };
-  plastering: {
-    standard: number;
-    decorative: number;
-  };
-  wallCovering: {
-    standardWallpaper: number;
-    premiumWallpaper: number;
-    vinyl: number;
-  };
-}
-
-export default function Pricing() {
-  // State variables with type annotations
-  const [service, setService] = useState<"painting" | "drywall" | "plastering" | "wallCovering" | "">("");
-  const [subOption, setSubOption] = useState<string>("");
-  const [paintQuality, setPaintQuality] = useState<"standard" | "premium" | "luxury" | "">("");
-  const [squareFeet, setSquareFeet] = useState<string>("");
-  const [rooms, setRooms] = useState<string>("");
-
-  // Rates object with updated exterior painting rates
-  const rates: Rates = {
-    painting: {
-      interior: { standard: 3.5, premium: 5, luxury: 7 },
-      exterior: { standard: 3.0, premium: 4.0, luxury: 5.0 }, // Updated rates
-      commercial: { standard: 4.5, premium: 6.5, luxury: 9 }
-    },
-    drywall: {
-      standard: 3.0,
-      fireResistant: 3.5,
-      moistureResistant: 4.0
-    },
-    plastering: {
-      standard: 2.75,
-      decorative: 15.0
-    },
-    wallCovering: {
-      standardWallpaper: 4.6,
-      premiumWallpaper: 6.0,
-      vinyl: 5.0
-    }
-  };
-
-  // Helper function to check if all required fields are filled
-  const isEstimateReady = (): boolean => {
-    if (!service || !subOption) return false;
-    if (service === "painting" && (!paintQuality || !squareFeet || parseFloat(squareFeet) <= 0 || !rooms || parseInt(rooms) < 0)) {
-      return false;
-    }
-    if (service !== "painting" && (!squareFeet || parseFloat(squareFeet) <= 0)) {
-      return false;
-    }
-    return true;
-  };
-
-  // Calculate estimate based on selected service, sub-option, and inputs
-  const calculateEstimate = (): number => {
-    if (!isEstimateReady()) return 0;
-
-    const sqft = parseFloat(squareFeet) || 0;
-    const numRooms = parseInt(rooms) || 0;
-
-    let baseRate: number;
-    if (service === "painting") {
-      const paintingSubOptions = rates.painting;
-      const subOptionKey = subOption as keyof typeof paintingSubOptions;
-      const qualityOptions = paintingSubOptions[subOptionKey];
-      const qualityKey = paintQuality as keyof typeof qualityOptions;
-      baseRate = qualityOptions[qualityKey];
-    } else {
-      const serviceRates = rates[service as keyof Rates];
-      const subOptionKey = subOption as keyof typeof serviceRates;
-      baseRate = serviceRates[subOptionKey];
-    }
-
-    const basePrice = sqft * baseRate;
-    const roomComplexityFactor = service === "painting" ? numRooms * 100 : 0;
-
-    return basePrice + roomComplexityFactor;
-  };
-
-  const estimate = calculateEstimate();
-
-  const webPageSchema = {
-    "@type": "WebPage",
-    "@id": "https://atlas-paint.com/pricing",
-    "url": "https://atlas-paint.com/pricing",
-    "name": "Pricing - Atlas HomeServices",
-    "description": "View pricing for our painting, drywall, and other services."
-  };
-
-  const faqSchema = {
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do you determine pricing for drywall or plastering?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Pricing is based on square footage, materials needed, and complexity of the project. Contact us for a free quote."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Do you offer discounts for larger projects?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, we provide volume discounts on bigger commercial or multi-room projects."
-        }
-      }
-    ]
-  };
-
-  const schemaPayload = {
-    "@context": "https://schema.org",
-    "@graph": [webPageSchema, faqSchema]
-  };
-
-  return (
-      <div className="min-h-screen bg-white">
-        <Head>
-          <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify(schemaPayload)
-              }}
-          />
-          <link rel="canonical" href="https://atlas-paint.com/pricing/" hrefLang="en" />
-          <title>Get a Free Quote for House Painting & Commercial Painting | Atlas HomeServices</title>
-          <meta
-              name="description"
-              content="Explore competitive pricing for house painting, home painting, commercial painting, drywall, and wall covering services. Get a free quote today!"
-          />
-          <meta name="keywords" content="house painting pricing, commercial painting cost, interior painting estimate, exterior painting rates, Toronto painters, Mississauga painting services" />
-          <meta property="og:title" content="House Painting & Commercial Painting Pricing | Atlas HomeServices" />
-          <meta property="og:description" content="Find affordable pricing for house painting, commercial painting, and drywall services in Toronto and beyond. Get an estimate today!" />
-          <meta property="og:url" content="https://atlas-paint.com/pricing/" />
-          <meta property="og:type" content="website" />
-          <meta property="og:image" content="/assets/og-pricing.jpg" />
-        </Head>
-        <Header />
-        <div className="container mx-auto px-6 pt-32 pb-16 relative">
-          <div className="max-w-4xl mx-auto">
-            <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-4xl font-bold text-gray-900 mb-8"
-            >
-              Project Cost Calculator
-            </motion.h1>
-
-            <div className="space-y-6">
-              <Card className="p-6 bg-white shadow-lg border border-gray-200">
-                <div className="space-y-6">
-                  {/* Service Selection */}
-                  <div className="space-y-2">
-                    <Label htmlFor="service" className="text-gray-900">Select Service</Label>
-                    <Select onValueChange={(value) => {
-                      setService(value as typeof service);
-                      setSubOption("");
-                      setPaintQuality("");
-                    }} value={service}>
-                      <SelectTrigger className="bg-white text-gray-900 border-gray-300">
-                        <SelectValue placeholder="Select a service" />
-                      </SelectTrigger>
-                      <SelectContent side="bottom" position="popper" className="bg-white text-gray-900 z-50">
-                        <SelectItem className="rounded-md hover:bg-black hover:text-white" value="painting">Painting</SelectItem>
-                        <SelectItem className="rounded-md hover:bg-black hover:text-white" value="drywall">Drywall Installation</SelectItem>
-                        <SelectItem className="rounded-md hover:bg-black hover:text-white" value="plastering">Plastering</SelectItem>
-                        <SelectItem className="rounded-md hover:bg-black hover:text-white" value="wallCovering">Wall Covering</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Sub-Option Selection */}
-                  {service && (
-                      <div className="space-y-2">
-                        <Label htmlFor="subOption" className="text-gray-900">Select Sub-Option</Label>
-                        <Select onValueChange={setSubOption} value={subOption}>
-                          <SelectTrigger className="bg-white text-gray-900 border-gray-300">
-                            <SelectValue placeholder="Select a sub-option" />
-                          </SelectTrigger>
-                          <SelectContent side="bottom" position="popper" className="bg-white text-gray-900 z-50">
-                            {service === "painting" && (
-                                <>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="interior">Interior Painting</SelectItem>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="exterior">Exterior Painting</SelectItem>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="commercial">Commercial Painting</SelectItem>
-                                </>
-                            )}
-                            {service === "drywall" && (
-                                <>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="standard">Standard Drywall</SelectItem>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="fireResistant">Fire-Resistant Drywall</SelectItem>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="moistureResistant">Moisture-Resistant Drywall</SelectItem>
-                                </>
-                            )}
-                            {service === "plastering" && (
-                                <>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="standard">Standard Plastering</SelectItem>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="decorative">Decorative Plastering</SelectItem>
-                                </>
-                            )}
-                            {service === "wallCovering" && (
-                                <>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="standardWallpaper">Standard Wallpaper</SelectItem>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="premiumWallpaper">Premium Wallpaper</SelectItem>
-                                  <SelectItem className="rounded-md hover:bg-black hover:text-white" value="vinyl">Vinyl Wall Covering</SelectItem>
-                                </>
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                  )}
-
-                  {/* Inputs for Square Footage and Rooms */}
-                  {service && subOption && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <Label htmlFor="sqft" className="text-gray-900">Square Footage</Label>
-                          <Input
-                              id="sqft"
-                              type="number"
-                              placeholder="Enter total square feet"
-                              value={squareFeet}
-                              onChange={(e) => setSquareFeet(e.target.value)}
-                              className="bg-white text-gray-900 border-gray-300"
-                          />
-                        </div>
-                        {service === "painting" && (
-                            <div className="space-y-2">
-                              <Label htmlFor="rooms" className="text-gray-900">Number of Rooms</Label>
-                              <Input
-                                  id="rooms"
-                                  type="number"
-                                  placeholder="Number of rooms"
-                                  value={rooms}
-                                  onChange={(e) => setRooms(e.target.value)}
-                                  className="bg-white text-gray-900 border-gray-300"
-                              />
-                            </div>
-                        )}
-                      </div>
-                  )}
-
-                  {/* Paint Quality Selection */}
-                  {service === "painting" && subOption && (
-                      <div className="space-y-2">
-                        <Label htmlFor="quality" className="text-gray-900">Paint Quality</Label>
-                        <Select
-                            onValueChange={(value) => setPaintQuality(value as "standard" | "premium" | "luxury")}
-                            value={paintQuality || ""}
-                        >
-                          <SelectTrigger className="bg-white text-gray-900 border-gray-300">
-                            <SelectValue placeholder="Select paint quality" />
-                          </SelectTrigger>
-                          <SelectContent side="bottom" position="popper" className="bg-white text-gray-900 z-50">
-                            <SelectItem className="rounded-md hover:bg-black hover:text-white" value="standard">Standard</SelectItem>
-                            <SelectItem className="rounded-md hover:bg-black hover:text-white" value="premium">Premium</SelectItem>
-                            <SelectItem className="rounded-md hover:bg-black hover:text-white" value="luxury">Luxury</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                  )}
-
-                  {/* Estimate Display */}
-                  {isEstimateReady() && (
-                      <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-4">Estimated Cost</h3>
-                        <p className="text-3xl font-bold text-gray-900">${estimate.toFixed(2)}</p>
-                        <p className="text-sm text-gray-500 mt-2">
-                          This is a rough estimate. Final price may vary based on project specifics.
-                        </p>
-                      </div>
-                  )}
-
-                  <Button
-                      className="w-full bg-black hover:bg-black/80 text-white mt-6"
-                      onClick={() => window.location.href = "/booking"}
-                  >
-                    Schedule a Consultation
-                  </Button>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </div>
-  );
-}
+   import { motion } from "framer-motion";
+   import { Card } from "@/components/ui/card";
+   import { Button } from "@/components/ui/button";
+   import { Input } from "@/components/ui/input";
+   import { Label } from "@/components/ui/label";
+   import {
+     Select,
+     SelectTrigger,
+     SelectValue,
+     SelectContent,
+     SelectItem
+   } from "@/components/ui/select";
+   import { useState } from "react";
+   import Header from "@/components/layout/Header";
+   import Head from "next/head";
+   
+   /* ────────────────────────────────────────────────────────── */
+   /*  Data & helpers                                           */
+   /* ────────────────────────────────────────────────────────── */
+   
+   const rates = {
+     standard: 3,
+     premium: 4,
+     luxury: 5
+   } as const; // interior‑painting $/sq ft
+   
+   type Quality = keyof typeof rates;
+   
+   const isPositiveNumber = (value: string) => parseFloat(value) > 0;
+   
+   /* ────────────────────────────────────────────────────────── */
+   /*  Component                                                */
+   /* ────────────────────────────────────────────────────────── */
+   
+   export default function Pricing() {
+     /* form state */
+     const [paintQuality, setPaintQuality] = useState<Quality | "">("");
+     const [squareFeet, setSquareFeet] = useState("");
+     const [rooms, setRooms] = useState("");
+   
+     /* is everything filled in? */
+     const ready =
+       paintQuality &&
+       isPositiveNumber(squareFeet) &&
+       isPositiveNumber(rooms);
+   
+     /* estimate calc */
+     const estimate = (() => {
+       if (!ready) return 0;
+       const sqft = parseFloat(squareFeet);
+       const numRooms = parseInt(rooms);
+       const basePrice = sqft * rates[paintQuality as Quality];
+       const roomComplexity = numRooms * 100; // flat $100 / room
+       return basePrice + roomComplexity;
+     })();
+   
+     /* schema for SEO (unchanged) */
+     const schemaPayload = {
+       "@context": "https://schema.org",
+       "@graph": [
+         {
+           "@type": "WebPage",
+           "@id": "https://atlas-paint.com/pricing",
+           url: "https://atlas-paint.com/pricing",
+           name: "Pricing - Atlas HomeServices",
+           description:
+             "View pricing for our interior painting services and get an instant estimate."
+         }
+       ]
+     };
+   
+     /* ─────────────────────────────────────────────────────── */
+   
+     return (
+       <div className="min-h-screen bg-white">
+         <Head>
+           <script
+             type="application/ld+json"
+             dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPayload) }}
+           />
+           <link rel="canonical" href="https://atlas-paint.com/pricing/" />
+           <title>
+             Interior Painting Estimate | Atlas HomeServices – Get a Free Quote
+           </title>
+           <meta
+             name="description"
+             content="Instantly calculate the cost of interior painting for your home. Standard, premium, or luxury finishes – see your estimate in seconds."
+           />
+         </Head>
+   
+         <Header />
+   
+         <div className="container mx-auto px-6 pt-32 pb-16">
+           <div className="max-w-4xl mx-auto">
+             <motion.h1
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               className="text-4xl font-bold text-gray-900 mb-8"
+             >
+               Interior Painting Cost Calculator
+             </motion.h1>
+   
+             <Card className="p-6 bg-white shadow-lg border border-gray-200">
+               <div className="space-y-6">
+                 {/* inputs */}
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="space-y-2">
+                     <Label htmlFor="sqft" className="text-gray-900">
+                       Square Footage
+                     </Label>
+                     <Input
+                       id="sqft"
+                       type="number"
+                       min="0"
+                       placeholder="Enter total square feet"
+                       value={squareFeet}
+                       onChange={(e) => setSquareFeet(e.target.value)}
+                       className="bg-white text-gray-900 border-gray-300"
+                     />
+                   </div>
+   
+                   <div className="space-y-2">
+                     <Label htmlFor="rooms" className="text-gray-900">
+                       Number of Rooms
+                     </Label>
+                     <Input
+                       id="rooms"
+                       type="number"
+                       min="0"
+                       placeholder="Number of rooms"
+                       value={rooms}
+                       onChange={(e) => setRooms(e.target.value)}
+                       className="bg-white text-gray-900 border-gray-300"
+                     />
+                   </div>
+                 </div>
+   
+                 {/* paint quality */}
+                 <div className="space-y-2">
+                   <Label className="text-gray-900">Paint Quality</Label>
+                   <Select
+                     value={paintQuality}
+                     onValueChange={(v) => setPaintQuality(v as Quality)}
+                   >
+                     <SelectTrigger className="bg-white text-gray-900 border-gray-300">
+                       <SelectValue placeholder="Select paint quality" />
+                     </SelectTrigger>
+                     <SelectContent className="bg-white text-gray-900 z-50">
+                       <SelectItem value="standard">Standard</SelectItem>
+                       <SelectItem value="premium">Premium</SelectItem>
+                       <SelectItem value="luxury">Luxury</SelectItem>
+                     </SelectContent>
+                   </Select>
+                 </div>
+   
+                 {/* estimate */}
+                 <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                     Estimated Cost
+                   </h3>
+                   <p className="text-3xl font-bold text-gray-900">
+                     ${estimate.toFixed(2)}
+                   </p>
+                   <p className="text-sm text-gray-500 mt-2">
+                     This is a rough estimate. Final price may vary based on
+                     project specifics.
+                   </p>
+                 </div>
+   
+                 <Button
+                   disabled={!ready}
+                   className="w-full bg-[#162733] hover:bg-[#162733]/80 text-[#D8C6A1]"
+                   onClick={() => (window.location.href = "/booking")}
+                 >
+                   Schedule a Consultation
+                 </Button>
+               </div>
+             </Card>
+           </div>
+         </div>
+       </div>
+     );
+   }
+   

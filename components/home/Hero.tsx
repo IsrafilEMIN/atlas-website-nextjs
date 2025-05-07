@@ -1,62 +1,53 @@
-"use client";
-
-import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import GridPattern from "../ui/patterns/GridPattern";
-
-const BackgroundVideo = dynamic(() => import("@/components/ui/BackgroundVideo"), { ssr: false });
 
 export default function Hero() {
   return (
-    <section className="relative h-[100dvh] flex items-center pt-20 overflow-hidden bg-white">
-      {/* Background Video Component */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <BackgroundVideo />
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+    <section className="relative h-screen w-full overflow-hidden">
+      {/* Background image */}
+      <Image
+        src="/images/hero-luxury-white-glove.png"
+        alt="Atlas HomeServices – luxury white‑glove painting"
+        fill
+        priority
+        sizes="100vw"
+        quality={90}
+        className="object-cover object-[50%_30%]"
+      />
 
-      <GridPattern className="text-gray-100" />
+      {/* Optional dark tint */}
+      <div className="absolute inset-0 bg-black/10" />
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-4xl font-bold text-white mb-6 leading-tight">
-            Trusted Home Painters & Commercial Painting Contractors in Toronto, Mississauga & the GTA
-            <br />Atlas Painting Services You Can Rely On
+      {/* Overlay content */}
+      <div className="absolute inset-0 flex items-center">
+        <div className="ml-6 md:ml-24 max-w-[34rem]">
+          {/* Headline */}
+          <h1 className="font-serif text-[clamp(1.8rem,4.5vw,3rem)] leading-tight tracking-wide text-[#162733] drop-shadow-md uppercase">
+            Toronto’s First White-Glove Painting Service
           </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-lg md:text-xl text-gray-200 mb-10"
-          >
-            From residential interior painting in Vaughan to commercial repainting projects in Niagara Falls, our licensed painting professionals deliver clean lines, premium finishes, and guaranteed results.
-            <br />
-            Serving homeowners, property managers, and businesses across Southern Ontario.
-          </motion.p>
+          {/* Divider */}
+          <div className="mt-8 h-px w-full bg-[#162733]" />
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
+          {/* CTA */}
+          <div className="mt-10">
             <Button
               size="lg"
-              className="bg-primary text-white border-2 border-white/30 hover:bg-primary/80"
-              onClick={() => window.location.href = 'https://atlas-paint.com/services/'}
+              className="px-10 py-5 text-lg md:text-xl font-semibold
+                         bg-[#cdb898] text-[#162733] border-2 border-[#162733]
+                         hover:bg-[#162733] hover:text-white transition"
+              onClick={() => (window.location.href = 'https://atlas-paint.com/booking/')}
             >
-              Explore Our Services
+              Book Your Free Quote Now
             </Button>
-            <Button
-              size="lg"
-              className="bg-white text-black border-2 border-black hover:bg-primary hover:text-white"
-              onClick={() => window.location.href = 'https://atlas-paint.com/booking/'}
-            >
-              Book a Free Quote
-            </Button>
-          </motion.div>
+          </div>
+
+           {/* Trust badge bar */}
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#2e3e4e] font-medium tracking-wide">
+            <span>🎯 5-Year Warranty</span>
+            <span>🎥 Optional Video Updates</span>
+            <span>💸 No Final Payment Until You&apos;re Thrilled</span>
+          </div>
         </div>
       </div>
     </section>

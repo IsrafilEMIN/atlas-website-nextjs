@@ -23,7 +23,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
                 <meta name="viewport"
                       content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
-                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="mobile-web-app-capable" content="yes" />
                 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
                 <title>House Painting & Commercial Painting Services | Atlas HomeServices</title>
                 <meta name="description" content="Atlas HomeServices provides expert house painting, home painting, and commercial painting solutions in Toronto, Mississauga, Vaughan, Hamilton, and Niagara. Contact us for a free quote today!"/>
@@ -53,6 +53,19 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                     <Component {...pageProps} />
                 </div>
                 <Footer />
+            </div>
+
+            {/* Sticky CTA for mobile only */}
+            <div className="fixed bottom-0 w-full z-50 md:hidden bg-[#162733] px-4 py-3 flex justify-between items-center shadow-lg">
+            <span className="text-white text-sm font-medium">
+                🎯 Free White-Glove Quote
+            </span>
+            <a
+                href="#booking"
+                className="bg-[#cdb898] text-[#162733] font-semibold px-4 py-2 rounded-lg text-sm shadow hover:bg-[#bba784] transition"
+            >
+                Book Now
+            </a>
             </div>
             <Toaster />
         </QueryClientProvider>

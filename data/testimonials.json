@@ -1,0 +1,30 @@
+[
+  {
+    "customerName": "Gülziye Emin",
+    "comment": "Extremely pleased with the quality of work. Everything was completed on time and to a high standard. Would highly recommend your services to anyone looking for reliable work.",
+    "rating": 5,
+    "serviceType": "Google Review",
+    "createdAt": "2025-03-13T20:57:29.000Z"
+  },
+  {
+    "customerName": "umid maierdan",
+    "comment": "very quick and quality service, whole process was hassle free.",
+    "rating": 5,
+    "serviceType": "Google Review",
+    "createdAt": "2025-03-18T18:42:55.000Z"
+  },
+  {
+    "customerName": "ye",
+    "comment": "I was really pleased  I got the result exactly as I imagined, I definitely recommend it!! Also the team consists of extremely kind people. I did not experience any problems throughout the process. I also need to renew the walls of my workplace and i have already made an appointment😇",
+    "rating": 5,
+    "serviceType": "Google Review",
+    "createdAt": "2025-03-29T18:35:27.000Z"
+  },
+  {
+    "customerName": "devrim",
+    "comment": "Very satisfied with the quality. Great service👍",
+    "rating": 5,
+    "serviceType": "Google Review",
+    "createdAt": "2025-05-06T22:58:49.000Z"
+  }
+]

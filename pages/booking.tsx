@@ -5,13 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Form,
   FormControl,
   FormField,
@@ -181,7 +174,7 @@ export default function Booking() {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl font-bold text-gray-900 mb-8"
+            className="text-4xl font-bold text-[#162733] mb-8"
           >
             Book an Appointment
           </motion.h1>
@@ -190,38 +183,13 @@ export default function Booking() {
           <div className="space-y-6">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {/* Service Type */}
-                <FormField
-                  control={form.control}
-                  name="serviceType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-900">Service Type</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="bg-white text-gray-900 border-gray-300">
-                            <SelectValue placeholder="Select a service" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent side="bottom" position="popper" className="bg-white text-gray-900 z-50">
-                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Residential Painting">Residential Painting</SelectItem>
-                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Commercial Painting">Commercial Painting</SelectItem>
-                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Exterior Painting">Exterior Painting</SelectItem>
-                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Wall Covering">Wall Covering</SelectItem>
-                          <SelectItem className="rounded-md hover:bg-black hover:text-white" value="Drywall & Plastering">Drywall & Plastering</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className="text-red-500"/>
-                    </FormItem>
-                  )}
-                />
                 {/* Full Name */}
                 <FormField
                   control={form.control}
                   name="customerName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-900">Full Name</FormLabel>
+                      <FormLabel className="text-[#162733]">Full Name</FormLabel>
                       <FormControl>
                         <Input placeholder="John Doe" {...field} className="bg-white text-gray-900 border-gray-300" />
                       </FormControl>
@@ -297,7 +265,7 @@ export default function Booking() {
                 />
                 <Button
                   type="submit"
-                  className="w-full bg-black hover:bg-black/80 text-white"
+                  className="w-full bg-[#162733] hover:bg-[#162733]/80 text-[#D8C6A1]"
                 >
                   Schedule Consultation
                 </Button>
