@@ -9,6 +9,7 @@ import Footer from "@/components/layout/Footer";
 import "@/styles/globals.css";
 import { AppProps } from "next/app";
 import * as React from "react";
+import Link from "next/link";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -72,12 +73,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       {/* Mobile Sticky CTA */}
       <div className="fixed bottom-0 w-full z-50 md:hidden bg-[#162733] px-4 py-3 flex justify-between items-center shadow-lg">
         <span className="text-white text-sm font-medium">🎯 Free White-Glove Quote</span>
-        <a
+        <Link
           href="/booking"
           className="bg-[#cdb898] text-[#162733] font-semibold px-4 py-2 rounded-lg text-sm shadow hover:bg-[#bba784] transition"
         >
           Book Now
-        </a>
+        </Link>
       </div>
 
       <Toaster />
