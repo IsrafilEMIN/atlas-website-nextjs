@@ -24,7 +24,7 @@ const PDFPreviewCard: React.FC<PDFPreviewCardProps> = ({ guide, onDownloadClick 
         <div 
           className="absolute top-3 right-0 bg-red-600 text-white font-size:10px font-weight:bolder px-3 py-1 rounded-l-full rounded-r-none shadow-md"
         >
-          It's Free
+          It&apos;s Free
         </div>
         {/* === MODIFIED "IT'S FREE" BANNER END === */}
       </div>

@@ -141,7 +141,7 @@ const GuideDownloadModal: React.FC<GuideDownloadModalProps> = ({
         
         {!isSuccess && (
           <>
-            <p className="text-sm text-gray-600 mb-1">You're requesting:</p>
+            <p className="text-sm text-gray-600 mb-1">You&apos;re requesting:</p>
             <ul className="list-disc list-inside text-sm text-gray-700 font-medium mb-4 space-y-1 pl-1">
               {guidesToDownload.map(guide => (
                 <li key={guide.id} className="break-words">{guide.title}</li>

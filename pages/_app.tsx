@@ -12,20 +12,6 @@ import { AppProps } from "next/app";
 import React, { useState, useCallback } from "react";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  const [forceLeadMagnetOpen, setForceLeadMagnetOpen] = useState(false);
-
-  const handleForceOpenTriggered = useCallback(() => {
-    console.log('[App.tsx] handleForceOpenTriggered called, setting forceLeadMagnetOpen to false.');
-    setForceLeadMagnetOpen(false);
-  }, []);
-
-  const openLeadMagnetModal = () => {
-    console.log('[App.tsx] openLeadMagnetModal called, setting forceLeadMagnetOpen to true.');
-    setForceLeadMagnetOpen(true);
-  };
-
-  console.log('[App.tsx] Type of openLeadMagnetModal before passing to Header:', typeof openLeadMagnetModal);
-
   return (
     <QueryClientProvider client={queryClient}>
       <Head>

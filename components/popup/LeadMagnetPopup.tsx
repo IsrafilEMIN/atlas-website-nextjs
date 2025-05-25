@@ -188,7 +188,7 @@ const LeadMagnetPopup: React.FC<LeadMagnetPopupProps> = ({ forceOpenTrigger, onF
         </button>
 
         <div className="text-center mb-6">
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">WAIT! Don't Miss This Free Guide!</h3>
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">WAIT! Don&apos;t Miss This Free Guide!</h3>
           <p className="text-gray-600">Discover how to avoid costly painting mistakes & find a trustworthy painter.</p>
           <img
             src="/images/lead-magnet-cover.jpg"

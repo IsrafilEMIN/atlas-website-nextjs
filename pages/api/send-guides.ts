@@ -1,7 +1,7 @@
 // pages/api/send-guides.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Resend } from 'resend';
-import { Client as NotionClient, APIErrorCode, isNotionClientError } from '@notionhq/client';
+import { Client as NotionClient, isNotionClientError } from '@notionhq/client';
 
 // --- Type Definitions (align with your frontend types) ---
 interface RequestedGuide {
