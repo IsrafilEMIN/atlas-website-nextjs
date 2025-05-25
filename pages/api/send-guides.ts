@@ -130,7 +130,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Error adding lead to Notion:');
       if (isNotionClientError(error)) {
         console.error('Notion Client Error Code:', error.code);
-        console.error('Notion Client Error Body:', JSON.stringify(error.body, null, 2)); // Stringify for better readability
+        console.error('Notion Client Error:', error); // Most robust
         notionMessage = `Failed to add lead to Notion: ${error.message} (Code: ${error.code})`;
       } else {
         const generalError = error as Error;
