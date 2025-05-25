@@ -2,6 +2,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Resend } from 'resend';
 import { Client as NotionClient, isNotionClientError } from '@notionhq/client';
+// Import specific types from the Notion SDK for better type safety
+import type {
+  CreatePageParameters,
+  PageObjectResponse // Used for the response type from page creation
+} from '@notionhq/client/build/src/api-endpoints';
 
 // --- Type Definitions (align with your frontend types) ---
 interface RequestedGuide {
@@ -80,13 +85,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // --- 1. Add Lead to Notion (if configured) ---
-  let notionSuccess = false;
   let notionMessage = 'Notion integration skipped (not configured).';
 
   if (notion && notionDatabaseId) {
     // VITAL: Replace these property string keys with the EXACT (case-sensitive) names
     // of your columns/properties in your Notion Database.
-    const notionPageProperties: any = {
+    // Use the specific type from Notion SDK for page properties
+    const notionPageProperties: CreatePageParameters['properties'] = {
       // Replace 'YOUR_NOTION_NAME_PROPERTY' with your actual Notion column name for Name (Title type)
       'Name': { title: [{ text: { content: name } }] },
       // Replace 'YOUR_NOTION_EMAIL_PROPERTY' with your actual Notion column name for Email (Email type)
@@ -99,12 +104,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Handle 'Source' tag (Multi-select type in Notion)
     // Replace 'YOUR_NOTION_SOURCE_PROPERTY' with your actual Notion column name for Source
+    const sourcePropertyName = 'Source'; // Replace with your actual Notion property name for Source
     if (downloadSource) {
-      const sourceTagName = `Website - ${downloadSource}`; // e.g., "Source: GuidesPage"
-      notionPageProperties['Source'] = { multi_select: [{ name: sourceTagName }] };
+      const sourceTagName = `Website - ${downloadSource}`;
+      notionPageProperties[sourcePropertyName] = { multi_select: [{ name: sourceTagName }] };
     } else {
       // Optional: set a default source if not provided, or leave it blank
-      notionPageProperties['Source'] = { multi_select: [{ name: 'Unknown' }] };
+      notionPageProperties[sourcePropertyName] = { multi_select: [{ name: 'Unknown' }] };
     }
     
     try {
@@ -112,14 +118,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         parent: { database_id: notionDatabaseId },
         properties: notionPageProperties,
       });
-      console.log('Lead successfully added to Notion. Page ID:', (notionResponse as any).id);
-      notionSuccess = true;
+
+      // Type guard to safely access 'id' from the response.
+      // A successfully created page should be a PageObjectResponse.
+      if ('id' in notionResponse) {
+        console.log('Lead successfully added to Notion. Page ID:', notionResponse.id);
+      } else {
+        console.log('Lead added to Notion, but response format was unexpected:', notionResponse);
+      }
       notionMessage = 'Lead added to Notion successfully.';
     } catch (error: unknown) {
       console.error('Error adding lead to Notion:');
       if (isNotionClientError(error)) {
         console.error('Notion Client Error Code:', error.code);
-        console.error('Notion Client Error Body:', error.body);
+        console.error('Notion Client Error Body:', JSON.stringify(error.body, null, 2)); // Stringify for better readability
         notionMessage = `Failed to add lead to Notion: ${error.message} (Code: ${error.code})`;
       } else {
         const generalError = error as Error;
@@ -133,8 +145,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // --- 2. Send Email with PDF Links using Resend (if configured) ---
-  // ... (Resend email sending logic remains the same as the previous "full code" version) ...
-  // Ensure `resend` and `resendFromEmail` are checked for null before use, as done at the top
   if (!resend || !resendFromEmail) {
     console.error("Resend client or From Email not initialized. Cannot send email.");
     return res.status(500).json({ 
@@ -168,7 +178,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const { data: resendData, error: resendError } = await resend.emails.send({
-      from: resendFromEmail,
+      from: resendFromEmail, // Ensured this is checked above
       to: [email],
       subject: subject,
       html: `

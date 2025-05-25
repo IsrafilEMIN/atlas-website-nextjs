@@ -27,9 +27,11 @@ export default function Footer() {
   // If you don't intend a collapsible mobile menu in the footer, this can be removed.
   // const [isMenuOpen, setIsMenuOpen] = useState(false); 
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const primaryLinkStyle = (_path?: string) =>
     `cursor-pointer transition-colors duration-200 text-sm md:text-base font-medium font-['SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif] text-white hover:underline`;
   
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const secondaryLinkStyle = (_path?: string) =>
     `cursor-pointer transition-colors duration-200 text-sm md:text-base font-medium text-gray-300 hover:text-white hover:underline`;
 

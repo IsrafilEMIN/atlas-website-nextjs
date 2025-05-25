@@ -10,7 +10,6 @@ import { Testimonial } from "@/types/testimonials";
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
 const GrandSlamOffer = dynamic(() => import("@/components/home/GrandSlamOffer"), { ssr: false });
 const GallerySection = dynamic(() => import("@/components/gallery/GallerySection"), { ssr: false });
-const Header = dynamic(() => import("@/components/layout/Header"), { ssr: false });
 
 interface Post {
   slug: string;
