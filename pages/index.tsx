@@ -92,7 +92,6 @@ export default function Home({ testimonials, averageRating, totalReviews }: Home
 
       {mounted && (
         <div className="bg-white min-h-screen">
-          <Header />
           <main className="w-full">
             <Hero />
             <GrandSlamOffer reviews={testimonials} />
