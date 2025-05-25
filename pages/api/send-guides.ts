@@ -5,7 +5,6 @@ import { Client as NotionClient, isNotionClientError } from '@notionhq/client';
 // Import specific types from the Notion SDK for better type safety
 import type {
   CreatePageParameters,
-  PageObjectResponse // Used for the response type from page creation
 } from '@notionhq/client/build/src/api-endpoints';
 
 // --- Type Definitions (align with your frontend types) ---

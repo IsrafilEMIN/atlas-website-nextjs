@@ -1,5 +1,6 @@
 // components/LeadMagnetPopup.tsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image'; // Assuming you're using Next.js for image optimization
 
 // Define the shape of your form data
 interface FormData {
@@ -190,10 +191,13 @@ const LeadMagnetPopup: React.FC<LeadMagnetPopupProps> = ({ forceOpenTrigger, onF
         <div className="text-center mb-6">
           <h3 className="text-2xl font-bold text-gray-800 mb-2">WAIT! Don&apos;t Miss This Free Guide!</h3>
           <p className="text-gray-600">Discover how to avoid costly painting mistakes & find a trustworthy painter.</p>
-          <img
-            src="/images/lead-magnet-cover.jpg"
+          <Image
+            src="/images/lead-magnet-cover.jpg"  // path in /public
             alt="Free Homeowner's Guide Cover"
-            className="w-48 mx-auto my-4 rounded shadow-md"
+            width={192}                // Tailwind 'w-48' = 12rem = 192px
+            height={256}               // You can set a height that fits your aspect ratio, adjust as needed
+            className="mx-auto my-4 rounded shadow-md" // don't need w-48, Next.js sets width/height
+            priority                   // optional, but recommended if above the fold
           />
         </div>
 
