@@ -4,17 +4,18 @@ import Script from "next/script";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
+import TopStickyBanner from "@/components/layout/TopStickyBanner"; // <-- IMPORT THE NEW BANNER
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import "@/styles/globals.css";
 import { AppProps } from "next/app";
-import * as React from "react";
-import Link from "next/link";
+import React from "react";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <Head>
+        {/* ... (Your existing Head content) ... */}
         <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
         <link rel="shortcut icon" href="/assets/favicon.ico" />
@@ -62,23 +63,18 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         `}
       </Script>
 
+      {/* The new TopStickyBanner is rendered here. Its fixed part will overlay, 
+          and its spacer div will push down the following content. */}
+      <TopStickyBanner />
+
       <div className="min-h-screen flex flex-col">
+        {/* Header is now rendered after TopStickyBanner's spacer, so it's correctly positioned below it.
+            It will scroll with this parent div. */}
         <Header />
         <div className="flex-grow">
           <Component {...pageProps} />
         </div>
         <Footer />
-      </div>
-
-      {/* Mobile Sticky CTA */}
-      <div className="fixed bottom-0 w-full z-50 md:hidden bg-[#162733] px-4 py-3 flex justify-between items-center shadow-lg">
-        <span className="text-white text-sm font-medium">🎯 Free White-Glove Quote</span>
-        <Link
-          href="/booking"
-          className="bg-[#cdb898] text-[#162733] font-semibold px-4 py-2 rounded-lg text-sm shadow hover:bg-[#bba784] transition"
-        >
-          Book Now
-        </Link>
       </div>
 
       <Toaster />
