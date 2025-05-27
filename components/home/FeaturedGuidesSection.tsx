@@ -33,7 +33,6 @@ interface FeaturedGuidesSectionProps {
 }
 
 const FeaturedGuidesSection: React.FC<FeaturedGuidesSectionProps> = ({
-  title = "FREE PAINTING GUIDES",
   subtitle = "Download our comprehensive guide to kickstart your home transformation. Pro tips, checklists, and more!",
   backgroundColor = "bg-gray-50", // Or choose a color that fits below your hero
 }) => {
