@@ -4,14 +4,30 @@ import Script from "next/script";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
-import TopStickyBanner from "@/components/layout/TopStickyBanner"; // <-- IMPORT THE NEW BANNER
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import DefaultLayout from "@/components/layout/DefaultLayout"; // <-- IMPORT THE NEW DEFAULT LAYOUT
 import "@/styles/globals.css";
-import { AppProps } from "next/app";
-import React from "react";
+// Removed: import TopStickyBanner, Header, Footer from here as they are in DefaultLayout
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+import React from "react";
+import type { NextPage } from 'next';
+import type { AppProps as NextAppProps } from 'next/app'; // Renamed to NextAppProps for clarity
+import type { ReactElement, ReactNode } from 'react';
+
+// Define a type for pages that might have a custom getLayout method
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+// Update AppProps type to use NextPageWithLayout
+type AppPropsWithLayout = NextAppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) { // Updated AppProps type here
+  // Use the layout defined at the page level, if available.
+  // Otherwise, wrap the page with the DefaultLayout.
+  const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Head>
@@ -63,21 +79,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         `}
       </Script>
 
-      {/* The new TopStickyBanner is rendered here. Its fixed part will overlay, 
-          and its spacer div will push down the following content. */}
-      <TopStickyBanner />
-
-      <div className="min-h-screen flex flex-col">
-        {/* Header is now rendered after TopStickyBanner's spacer, so it's correctly positioned below it.
-            It will scroll with this parent div. */}
-        <Header />
-        <div className="flex-grow">
-          <Component {...pageProps} />
-        </div>
-        <Footer />
-      </div>
-
+      {/* The Toaster is placed outside the layout structure so it's globally available */}
       <Toaster />
+
+      {/* Render the page with the determined layout */}
+      {getLayout(<Component {...pageProps} />)}
+
     </QueryClientProvider>
   );
 }
