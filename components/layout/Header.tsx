@@ -19,8 +19,9 @@ export default function Header() {
   const navLinks: NavLinkItem[] = [
     { href: "/booking", label: "Booking" },
     { href: "/guides", label: "Free Guides" },
+    // { href: "/socials", label: "Socials" },
     { href: "/gallery", label: "Gallery" },
-    { href: "/contact", label: "Contact Us" },
+    // { href: "/partner-with-us", label: "Partner With Us" },
   ];
 
   const handleLinkClick = (path: string) => (e: React.MouseEvent) => {

@@ -9,7 +9,6 @@ import { Testimonial } from "@/types/testimonials";
 import FeaturedGuidesSection from "@/components/home/FeaturedGuidesSection";
 
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
-const GrandSlamOffer = dynamic(() => import("@/components/home/GrandSlamOffer"), { ssr: false });
 const GallerySection = dynamic(() => import("@/components/gallery/GallerySection"), { ssr: false });
 
 interface Post {
@@ -99,8 +98,6 @@ export default function Home({ testimonials, averageRating, totalReviews }: Home
               subtitle="Download our FREE guides for expert advice on color selection, prep work, and achieving a flawless finish for your home."
               // backgroundColor="bg-white" // Or any other color that fits
             />
-            <GrandSlamOffer reviews={testimonials} />
-            <GallerySection />
           </main>
         </div>
       )}
