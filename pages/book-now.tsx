@@ -3,6 +3,7 @@ import React from 'react';
 import Head from 'next/head';
 import { Button } from '@/components/ui/button';
 import MinimalLayout from '@/components/layout/MinimalLayout';
+import Link from 'next/link';
 
 // Import NextPageWithLayout (adjust path if you moved it to a types file)
 import type { NextPageWithLayout } from './_app'; // Or e.g., from '@/types';
@@ -72,12 +73,11 @@ const BookNowPage: NextPageWithLayout = () => { // <--- UPDATE THIS LINE
             </Button>
           </div>
           <div className="mt-6 text-sm">
-            <a
+            <Link
               href="/"
-              className="font-medium text-[#0F52BA] hover:text-[#0d47a1] transition-colors"
-            >
+              className="font-medium text-[#0F52BA] hover:text-[#0d47a1] transition-colors">
               &larr; Return to Main Site
-            </a>
+            </Link>
           </div>
         </div>
       </div>

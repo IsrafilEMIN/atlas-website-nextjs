@@ -1,7 +1,7 @@
 // pages/book-now.tsx
 import React from 'react';
 import Head from 'next/head';
-import { Button } from '@/components/ui/button'; // Assuming your Button component path
+// import { Button } from '@/components/ui/button'; // Assuming your Button component path
 import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app'; // Or from your types file
 
@@ -93,7 +93,7 @@ const BookNowPage: NextPageWithLayout = () => {
               "
               onClick={handleBookingClick}
             >
-              I'M READY TO BOOK
+              I&apos;M READY TO BOOK
             </button>
           </div>
 
@@ -105,7 +105,7 @@ const BookNowPage: NextPageWithLayout = () => {
             <div className="mt-6 space-y-6 max-w-xl mx-auto">
               {/* Example Testimonial Structure (repeat for multiple) */}
               <blockquote className="text-left p-6 bg-slate-800 rounded-lg shadow-md">
-                <p className="text-slate-300 italic">"Atlas HomeServices transformed our living room! The team was professional, clean, and the results exceeded our expectations. Highly recommend!"</p>
+                <p className="text-slate-300 italic">&quot;Atlas HomeServices transformed our living room! The team was professional, clean, and the results exceeded our expectations. Highly recommend!&quot;</p>
                 <cite className="mt-3 block text-sm font-semibold text-slate-400 not-italic">- Sarah L., Toronto</cite>
               </blockquote>
               {/* Add more testimonials or a link to a testimonials page */}
