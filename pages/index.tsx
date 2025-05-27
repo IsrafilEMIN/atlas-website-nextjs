@@ -5,11 +5,9 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { getStaticTestimonials } from "@/lib/getStaticTestimonials";
-import { Testimonial } from "@/types/testimonials";
 import FeaturedGuidesSection from "@/components/home/FeaturedGuidesSection";
 
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
-const GallerySection = dynamic(() => import("@/components/gallery/GallerySection"), { ssr: false });
 
 interface Post {
   slug: string;
@@ -23,12 +21,11 @@ interface Post {
 
 interface HomeProps {
   posts: Post[];
-  testimonials: Testimonial[]; // Replace `any` with your Testimonial type if defined
   averageRating: number;
   totalReviews: number;
 }
 
-export default function Home({ testimonials, averageRating, totalReviews }: HomeProps) {
+export default function Home({ averageRating, totalReviews }: HomeProps) {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
