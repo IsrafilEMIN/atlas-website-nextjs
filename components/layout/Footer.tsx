@@ -45,7 +45,7 @@ export default function Footer() {
   };
 
   const primaryNavLinks: NavLinkItem[] = [
-    { href: "/booking", label: "Booking" },
+    { href: "/book-now", label: "Booking" },
     { href: "/guides", label: "Free Guides" },
     { href: "/gallery", label: "Gallery" },
     { href: "/contact", label: "Contact Us" },
