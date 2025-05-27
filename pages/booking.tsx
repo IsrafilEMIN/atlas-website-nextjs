@@ -6,7 +6,7 @@ import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app'; // Or from your types file
 
 // --- Configuration for Booking Link and UTM Parameters ---
-const BASE_BOOKING_URL = process.env.NEXT_PUBLIC_BASE_BOOKING_URL || 'https://your-booking-platform.com/service-name';
+const BASE_BOOKING_URL = process.env.NEXT_PUBLIC_BASE_BOOKING_URL || '';
 
 const getBookingLinkWithUTM = (utmContent: string = 'primary_booking_button') => {
   const utmParams = new URLSearchParams({
@@ -37,7 +37,7 @@ const BookNowPage: NextPageWithLayout = () => {
       </Head>
 
       {/* Main page container with dark background, similar to the example */}
-      <div className="flex flex-col items-center justify-start min-h-screen bg-slate-900 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col items-center justify-start min-h-screen bg-[#131628] text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         {/* Optional: Small logo, can be placed here or absolutely positioned */}
         {/* <img src="/assets/atlas-logo-icon-white.png" alt="Atlas HomeServices" className="h-10 mb-8" /> */}
 
@@ -45,7 +45,7 @@ const BookNowPage: NextPageWithLayout = () => {
 
           {/* Headline - Large and impactful */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-50">
-            Transform Your Space, Effortlessly
+            TRANSFORM YOUR HOME
           </h1>
 
           {/* Sub-headline - Engaging and informative */}
@@ -78,25 +78,23 @@ const BookNowPage: NextPageWithLayout = () => {
 
           {/* CTA Button - Prominent and inviting */}
           <div className="mt-10 md:mt-12">
-            <Button
-              size="lg" // Use if your Button component has size variants
+            <button
+              type="button" // Good practice for buttons not submitting forms
               className="
-                inline-block          /* Changed from w-full sm:w-auto for centering if not full width */
-                min-w-[260px] sm:min-w-[300px] /* Ensure good button width */
+                inline-block
+                min-w-[260px] sm:min-w-[300px]
                 px-10 py-4 sm:px-12 sm:py-5
-                text-lg sm:text-xl font-bold
-                bg-[#0F52BA] text-white      /* Your brand blue, or a purple like #5D3FD3 */
-                rounded-lg                  /* Example uses more squared-off rounded corners */
-                hover:bg-[#0D47A1]          /* Darker shade of your brand blue for hover */
-                transition-all duration-300 ease-in-out
-                transform hover:scale-105   /* Slight scale on hover for interactivity */
-                focus:outline-none focus:ring-4 focus:ring-[#0F52BA]/50 /* Focus ring for accessibility */
-                shadow-xl hover:shadow-2xl
+                text-lg sm:text-xl font-bold text-center
+                bg-[#0F52BA] text-white
+                rounded-full
+                hover:bg-[#0F52BA] /* Adjusted hover for visibility */
+                transition-all duration-300
+                focus:outline-none focus:ring-4 focus:ring-[#0F52BA]/50
               "
               onClick={handleBookingClick}
             >
               I'M READY TO BOOK
-            </Button>
+            </button>
           </div>
 
           {/* Optional: Testimonial Section Placeholder - "What Attendees Are Saying" equivalent */}
@@ -112,16 +110,6 @@ const BookNowPage: NextPageWithLayout = () => {
               </blockquote>
               {/* Add more testimonials or a link to a testimonials page */}
             </div>
-          </div>
-
-          {/* Optional: Return to Main Site Link */}
-          <div className="mt-12 pt-8 text-sm">
-            <a
-              href="/" // Change to your homepage URL
-              className="font-medium text-slate-400 hover:text-slate-200 transition-colors"
-            >
-              &larr; Or explore Atlas HomeServices
-            </a>
           </div>
         </div>
       </div>
