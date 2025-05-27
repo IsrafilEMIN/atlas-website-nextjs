@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"; // Assuming this path is correc
 
 // Define image sources
 const DESKTOP_IMAGE_SRC = "/images/atlas-hero-image.png"; 
-const MOBILE_IMAGE_SRC = "/images/atlas-mobile-hero-image.jpeg";
+const MOBILE_IMAGE_SRC = "/images/atlas-mobile-hero-image.png";
 const MOBILE_IMAGE_WIDTH = 2048;
 const MOBILE_IMAGE_HEIGHT = 1632;
 
@@ -46,6 +46,7 @@ export default function Hero() {
             <Button
               size="lg"
               className="
+                w-full sm:w-auto
                 rounded-full
                 px-8 py-4              /* Mobile-specific button padding */
                 font-bold
