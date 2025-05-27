@@ -32,7 +32,7 @@ const PDFPreviewCard: React.FC<PDFPreviewCardProps> = ({ guide, onDownloadClick 
         <h3 className="text-xl font-semibold mb-6 text-gray-800 text-center">{guide.title}</h3>
         <Button 
           onClick={onDownloadClick} 
-          className="w-full mt-auto rounded-full text-white bg-[#0F52BA] hover:bg-[#0F52BA] transition-colors py-3 text-base"
+          className="w-full mt-auto rounded-full text-white bg-[#0F52BA] hover:bg-white hover:text-[#0F52BA] transition-colors py-3 text-base border border-transparent hover:border-[#0F52BA]"
         >
           Download This Guide
         </Button>

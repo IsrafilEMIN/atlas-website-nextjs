@@ -1,99 +1,150 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"; // Assuming this path is correct
+
+// Define image sources
+const DESKTOP_IMAGE_SRC = "/images/atlas-hero-image.png"; 
+const MOBILE_IMAGE_SRC = "/images/atlas-mobile-hero-image.jpeg";
+const MOBILE_IMAGE_WIDTH = 2048;
+const MOBILE_IMAGE_HEIGHT = 1632;
 
 export default function Hero() {
+  // Common text content can be defined once if you prefer
+  const headingText = <>DO YOU WANT TO TRANSFORM<br/>YOUR HOME?</>;
+  const paragraphText = "Transform your home with the team that transformed many homes and hearts.";
+  const buttonText = "TRANSFORM YOUR HOME";
+  const smallText = <>🕒 Average project start: <strong>1–3 days</strong> from quote</>;
+  const bookingLink = "https://atlas-paint.com/booking/";
+
   return (
-    <section
-      className="
-        relative flex items-center overflow-hidden bg-white
-        min-h-[calc(100svh_-_5rem)]  /* full visible height on phones   */
-        md:min-h-[75vh]              /* original desktop heights        */
-        lg:min-h-[80vh]
-        pt-20                         /* clears the fixed navbar        */
-      "
-    >
-      <Image
-        src="/images/hero-luxury-white-glove.png"
-        alt="Atlas HomeServices – luxury white‑glove painting"
-        fill
-        priority
-        sizes="100vw"
-        quality={90}
-        className="object-cover object-top"
-      />
-
-      {/* optional dark tint */}
-      <div className="absolute inset-0 bg-black/10" />
-
-      {/* overlay */}
-      <div className="absolute inset-0 flex items-center">
-        <div
-          className="
-            ml-6 md:ml-24 max-w-[34rem]
-            pt-24 md:pt-0          /* ↓ push text lower only on phones */
-          "
-        >
+    <>
+      {/* --- MOBILE VERSION --- */}
+      {/* Visible by default, hidden on medium screens (md) and up */}
+      <section className="md:hidden flex flex-col">
+        {/* White text block at the top for mobile */}
+        <div className="bg-white px-4 pt-12 pb-8 text-center sm:px-6">
           <h1
             className="
-              font-serif text-[#162733] mb-6 leading-tight
-              text-3xl            /* phones  */
-              sm:text-4xl
-              md:text-5xl         /* original desktop size */
+              font-['SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif]
+              font-black uppercase text-[#162733]
+              mb-6 leading-tight
+              text-4xl sm:text-3xl {/* Mobile-specific H1 sizes */}
             "
           >
-            Make Your Home Look Magazine‑Worthy<br/>
-            Without Lifting a Finger
+            {headingText}
           </h1>
-
           <p
             className="
-              text-[#2A1C14]          /* darker brand colour for stronger contrast   */
-              font-medium             /* was font‑light → thicker strokes            */
-              drop-shadow-sm          /* subtle halo so it pops on busy backgrounds  */
+              font-['SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif]
+              text-[#162733]
+              text-xl sm:text-xl {/* Mobile-specific P sizes */}
               mb-8
-              text-base               /* phones                                      */
-              sm:text-lg
-              md:text-l              /* original desktop size                       */
-              leading-relaxed
             "
           >
-            Luxury interior painting with zero mess, no prep, and white‑glove care.
-            Book today — start in as little as&nbsp;48&nbsp;hours.
+            {paragraphText}
           </p>
-
-
-          {/* divider */}
-          <div className="mt-8 h-px w-full bg-[#162733]" />
-
-          {/* CTA */}
           <div className="mt-10">
             <Button
               size="lg"
               className="
-                px-10 py-5 font-semibold
-                text-lg md:text-xl
-                bg-[#cdb898] text-[#162733] border-2 border-[#162733]
-                hover:bg-[#162733] hover:text-white transition
+                rounded-full
+                px-8 py-4              /* Mobile-specific button padding */
+                font-bold
+                text-base sm:text-lg    /* Mobile-specific button text sizes */
+                bg-[#0F52BA] text-white
+                hover:bg-[#0F52BA] hover:text-white transition
               "
-              onClick={() => (window.location.href = 'https://atlas-paint.com/booking/')}
+              onClick={() => (window.location.href = bookingLink)}
             >
-              Ready to Transform Your Home?
+              {buttonText}
             </Button>
           </div>
           <div className="text-xs text-gray-700 italic mt-2">
-            🕒 Average project start: <strong>2–4 days</strong> from quote
-          </div>
-
-
-          {/* trust badges */}
-          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#2e3e4e] font-medium tracking-wide">
-            <span>🎯 Free Quote → No Final Payment Until You&apos;re Thrilled</span>
-            <span>🚚 We Handle Everything → You Sit Back</span>
-            <span className="basis-full w-full">📸 Optional Progress Updates</span>
-            <span>🛡️ 5‑Year Free Touch‑up Warranty</span>
+            {smallText}
           </div>
         </div>
-      </div>
-    </section>
+
+        {/* Image below text block for mobile */}
+        <div className="w-full"> {/* Container for the responsive image */}
+          <Image
+            src={MOBILE_IMAGE_SRC}
+            alt="Transform your home with our expert painting services (mobile view)" // Descriptive alt text
+            width={MOBILE_IMAGE_WIDTH}
+            height={MOBILE_IMAGE_HEIGHT}
+            layout="responsive" // Scales image nicely, maintaining aspect ratio
+            className="object-cover" // Ensures it covers if aspect ratio differs from image, but might crop
+            quality={80} // Adjusted quality for mobile if needed
+            priority // Consider if this is LCP for mobile
+          />
+        </div>
+      </section>
+
+      {/* --- DESKTOP VERSION --- */}
+      {/* Hidden by default, shown from md breakpoint up */}
+      <section
+        className="
+          hidden md:flex items-center overflow-hidden bg-white
+          w-full max-w-[1920px]
+          h-[550px]
+          mx-auto
+          relative /* For absolute positioning of children */
+        "
+      >
+        <Image
+          src={DESKTOP_IMAGE_SRC}
+          alt="Atlas HomeServices – Luxury Painting (desktop view)"
+          fill
+          priority
+          sizes="(max-width: 1920px) 100vw, 1920px"
+          quality={90}
+          className="object-cover object-top"
+        />
+        <div className="absolute inset-0 bg-black/10" /> {/* Tint */}
+        
+        {/* Overlayed text content for desktop */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="max-w-5xl w-full px-6 text-center pt-0"> {/* pt-0 as vertical centering is handled by flex parent */}
+            <h1
+              className="
+                font-['SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif]
+                font-black uppercase text-[#162733]
+                mb-6 leading-tight
+                text-6xl {/* Desktop H1 size (was md:text-6xl, simplified) */}
+              "
+            >
+              {headingText}
+            </h1>
+            <p
+              className="
+                font-['SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif]
+                text-[#162733]
+                text-2xl {/* Desktop P size (was md:text-2xl, simplified) */}
+                mb-8
+              "
+            >
+              {paragraphText}
+            </p>
+            <div className="mt-10">
+              <Button
+                size="lg"
+                className="
+                  rounded-full
+                  px-20 py-7              /* Desktop button padding */
+                  font-bold
+                  text-xl                 /* Desktop button text size (was md:text-xl, simplified) */
+                  bg-[#0F52BA] text-white
+                  hover:bg-[#0F52BA] hover:text-white transition
+                "
+                onClick={() => (window.location.href = bookingLink)}
+              >
+                {buttonText}
+              </Button>
+            </div>
+            <div className="text-xs text-gray-700 italic mt-2">
+              {smallText}
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
