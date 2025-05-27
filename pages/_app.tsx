@@ -4,9 +4,8 @@ import Script from "next/script";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
-import DefaultLayout from "@/components/layout/DefaultLayout"; // <-- IMPORT THE NEW DEFAULT LAYOUT
+import DefaultLayout from "@/components/layout/DefaultLayout"; 
 import "@/styles/globals.css";
-// Removed: import TopStickyBanner, Header, Footer from here as they are in DefaultLayout
 
 import React from "react";
 import type { NextPage } from 'next';
