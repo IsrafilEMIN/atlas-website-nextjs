@@ -4,6 +4,7 @@ import Head from 'next/head';
 // import { Button } from '@/components/ui/button'; // Assuming your Button component path
 import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app'; // Or from your types file
+import Image from 'next/image';
 
 // --- Configuration for Booking Link and UTM Parameters ---
 const BASE_BOOKING_URL = process.env.NEXT_PUBLIC_BASE_BOOKING_URL || '';
@@ -59,7 +60,7 @@ const BookNowPage: NextPageWithLayout = () => {
             <div className="aspect-video bg-slate-800 rounded-xl shadow-2xl flex items-center justify-center overflow-hidden">
               {/* === REPLACE THIS WITH YOUR IMAGE OR VIDEO === */}
               {/* Example Image: */}
-              <img
+              <Image
                 src="/images/sample-beautifully-painted-room.jpg" // Replace with your image path
                 alt="Beautifully painted interior by Atlas HomeServices"
                 className="w-full h-full object-cover"

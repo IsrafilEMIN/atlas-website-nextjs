@@ -13,7 +13,7 @@ import type { AppProps as NextAppProps } from 'next/app'; // Renamed to NextAppP
 import type { ReactElement, ReactNode } from 'react';
 
 // Define a type for pages that might have a custom getLayout method
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
