@@ -40,7 +40,7 @@ const BookNowPage: NextPageWithLayout = () => {
       {/* The gradient covers the whole page, from dark to white */}
       <div className="flex flex-col items-center min-h-screen relative text-white"
         style={{
-          background: 'linear-gradient(to bottom, #131628 0%, #131628 1070px, #FFFFFF 1520px, #FFFFFF 100%)', // Adjust points as needed
+          background: 'linear-gradient(to bottom, #131628 0%, #131628 1070px, #e8e8e8 1520px, #e8e8e8 100%)', // Adjust points as needed
           // The 750px and 1250px values control where the gradient starts and ends.
           // 750px: The height at which the dark color is still fully visible.
           // 1250px: The height at which the white color is fully visible.
@@ -87,7 +87,7 @@ const BookNowPage: NextPageWithLayout = () => {
                 type="button"
                 className="
                   inline-block
-                  px-10 py-4 sm:px-20 sm:py-8
+                  px-24 py-4 sm:px-26 sm:py-8
                   text-2xl sm:text-4xl font-bold text-center
                   bg-[#0F52BA] text-white
                   rounded-full
@@ -146,6 +146,24 @@ const BookNowPage: NextPageWithLayout = () => {
                   className="w-full h-auto object-cover"
                 />
               </div>
+            </div>
+
+            {/* CTA Button - Prominent and inviting */}
+            <div className="mt-10 md:mt-12">
+              <button
+                type="button"
+                className="
+                  inline-block
+                  px-24 py-4 sm:px-26 sm:py-8
+                  text-2xl sm:text-4xl font-bold text-center
+                  bg-[#0F52BA] text-white
+                  rounded-full
+                  transition-all duration-300
+                "
+                onClick={handleBookingClick}
+              >
+                I&apos;M READY TO TRANSFORM
+              </button>
             </div>
           </div>
         </div>
