@@ -42,17 +42,16 @@ const BookNowPage: NextPageWithLayout = () => {
         {/* Optional: Small logo, can be placed here or absolutely positioned */}
         {/* <img src="/assets/atlas-logo-icon-white.png" alt="Atlas HomeServices" className="h-10 mb-8" /> */}
 
-        <div className="max-w-3xl w-full space-y-8 md:space-y-10 text-center">
+        <div className="max-w-5xl w-full space-y-8 md:space-y-10 text-center">
 
           {/* Headline - Large and impactful */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-50">
-            TRANSFORM YOUR HOME
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-50 max-w-4xl mx-auto">
+            TRANSFORM YOUR HOME WITH US
           </h1>
 
           {/* Sub-headline - Engaging and informative */}
-          <p className="mt-3 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto">
-            Join hundreds of satisfied homeowners who chose Atlas HomeServices for a flawless finish.
-            Book your premium painting service today.
+          <p className="mt-3 text-4xl sm:text-4xl text-slate-300 max-w-5xl mx-auto">
+            Entrust your home to our expert team with a <strong><u>limited-time</u></strong> offer.
           </p>
 
           {/* Visual Element (Image/Video) - Crucial for the example's feel */}
@@ -61,7 +60,7 @@ const BookNowPage: NextPageWithLayout = () => {
               {/* === REPLACE THIS WITH YOUR IMAGE OR VIDEO === */}
               {/* Example Image: */}
               <Image
-                src="/images/sample-beautifully-painted-room.jpg" // Replace with your image path
+                src="" // Replace with your image path
                 alt="Beautifully painted interior by Atlas HomeServices"
                 className="w-full h-full object-cover"
               />
@@ -94,7 +93,7 @@ const BookNowPage: NextPageWithLayout = () => {
               "
               onClick={handleBookingClick}
             >
-              I&apos;M READY TO BOOK
+              I&apos;M READY TO TRANSFORM
             </button>
           </div>
 
