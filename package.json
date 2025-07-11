@@ -4,8 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "fetch:reviews": "tsx lib/google-reviews-json.ts",
-    "prebuild": "npm run fetch:reviews",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
