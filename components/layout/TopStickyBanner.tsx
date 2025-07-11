@@ -11,7 +11,7 @@ const TopStickyBanner: React.FC = () => {
   return (
     <>
       {/* The clickable, fixed banner */}
-      <Link href="/booking" passHref legacyBehavior>
+      <Link href="/book-now" passHref legacyBehavior>
         <a
           style={{
             position: 'fixed',

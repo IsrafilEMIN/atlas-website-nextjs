@@ -14,7 +14,7 @@ export default function Hero() {
   const buttonText = "TRANSFORM YOUR HOME";
   const smallText = <>🕒 Average project start: <strong>1–3 days</strong> from quote</>;
   // const bookingLink = "/booking";
-  const bookingLink = "/booking";
+  const bookingLink = "/book-now";
 
   return (
     <>

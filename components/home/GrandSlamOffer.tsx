@@ -92,7 +92,7 @@ const GrandSlamOffer: React.FC<GrandSlamOfferProps> = ({ reviews }) => {
 
           {/* CTA Button */}
           <Link
-            href="/booking"
+            href="/book-now"
             className="inline-block w-full text-center bg-[#e6d4b5] hover:bg-[#ddc8a5] text-[#162733] font-semibold py-3 px-6 rounded-xl shadow-md transition-all duration-300 uppercase tracking-wide text-sm md:text-base"
           >
             Book My White-Glove Consultation

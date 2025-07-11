@@ -5,7 +5,6 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { getStaticTestimonials } from "@/lib/getStaticTestimonials";
-import FeaturedGuidesSection from "@/components/home/FeaturedGuidesSection";
 
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
 
@@ -90,11 +89,6 @@ export default function Home({ averageRating, totalReviews }: HomeProps) {
         <div className="bg-white min-h-screen">
           <main className="w-full">
             <Hero />
-            <FeaturedGuidesSection
-              title="Unlock Pro Painting Secrets!"
-              subtitle="Download our FREE guides for expert advice on color selection, prep work, and achieving a flawless finish for your home."
-              // backgroundColor="bg-white" // Or any other color that fits
-            />
           </main>
         </div>
       )}
