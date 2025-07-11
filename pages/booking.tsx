@@ -36,7 +36,7 @@ const BookingButton = ({ utmContent }: { utmContent: string }) => {
       onClick={handleClick}
       className="inline-block px-24 py-4 sm:px-26 sm:py-8 text-2xl sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300"
     >
-      I'M READY TO TRANSFORM
+      I&apos;M READY TO TRANSFORM
     </button>
   );
 };
