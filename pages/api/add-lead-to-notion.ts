@@ -1,5 +1,3 @@
-// pages/api/submit-to-notion.ts
-
 import { Client } from '@notionhq/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -7,12 +5,13 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 const databaseId = process.env.NOTION_DATABASE_ID!;
 
-// Define the expected structure of the request body
+// ⭐ MODIFIED: Define the expected structure of the request body, including leadSource
 type RequestBody = {
   name: string;
   phone: string;
   email: string;
   postalCode: string;
+  leadSource: string; // To track UTM source
 };
 
 // The main handler function for the API route
@@ -31,40 +30,55 @@ export default async function handler(
     return res.status(500).json({ error: 'Notion API Key or Database ID not configured.' });
   }
 
-  const { name, email, phone, postalCode } = req.body as RequestBody;
+  // ⭐ MODIFIED: Destructure leadSource from the request body
+  const { name, email, phone, postalCode, leadSource } = req.body as RequestBody;
+
+  // ⭐ MODIFIED: Build the properties object dynamically to conditionally add the 'Lead Source'
+  const properties: any = {
+    // IMPORTANT: These property names ('Name', 'Email', etc.) 
+    // MUST exactly match the column titles in your Notion database.
+    'Name': {
+      title: [
+        {
+          text: {
+            content: name,
+          },
+        },
+      ],
+    },
+    'Email': {
+      email: email,
+    },
+    'Phone': {
+      phone_number: phone,
+    },
+    'Postal Code': {
+      rich_text: [
+        {
+          text: {
+            content: postalCode,
+          },
+        },
+      ],
+    },
+  };
+
+  // ⭐ NEW: If leadSource exists, add it to the properties object.
+  // This assumes your Notion database has a 'Select' column named "Lead Source".
+  if (leadSource) {
+    properties['Lead Source'] = {
+      select: {
+        name: leadSource,
+      },
+    };
+  }
 
   try {
     // Create a new page in the specified Notion database
     const response = await notion.pages.create({
       parent: { database_id: databaseId },
-      properties: {
-        // IMPORTANT: These property names ('Name', 'Email', etc.) 
-        // MUST exactly match the column titles in your Notion database.
-        'Name': {
-          title: [
-            {
-              text: {
-                content: name,
-              },
-            },
-          ],
-        },
-        'Email': {
-          email: email,
-        },
-        'Phone': {
-          phone_number: phone,
-        },
-        'Postal Code': {
-          rich_text: [
-            {
-              text: {
-                content: postalCode,
-              },
-            },
-          ],
-        },
-      },
+      // ⭐ MODIFIED: Use the dynamically created properties object
+      properties: properties,
     });
 
     // If successful, send back a 201 Created status

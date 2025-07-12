@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
@@ -31,12 +31,19 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // ⭐ MODIFIED: This function now converts the postal code to uppercase.
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
-    // If the input is the postal code, convert its value to uppercase. Otherwise, use the original value.
-    const processedValue = name === 'postalCode' ? value.toUpperCase() : value;
+    let processedValue = value;
+    if (name === 'postalCode') {
+        const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        
+        if (cleaned.length > 3) {
+            processedValue = `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)}`;
+        } else {
+            processedValue = cleaned;
+        }
+    }
 
     setFormData((prev) => ({ ...prev, [name]: processedValue }));
     
@@ -47,7 +54,9 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-    const canadianPostalCodeRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
+    // ⭐ MODIFIED: Regex now checks for GTA postal codes specifically.
+    // This includes all 'M' postal codes (Toronto) and specific 'L' prefixes for surrounding regions.
+    const gtaPostalCodeRegex = /^(M\d[A-Z]|L[0-9][A-Z]) \d[A-Z]\d$/;
 
     if (!formData.name.trim()) newErrors.name = 'Name is required.';
     if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email format.';
@@ -57,8 +66,9 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
 
     if (!formData.postalCode.trim()) {
         newErrors.postalCode = 'Postal code is required.';
-    } else if (!canadianPostalCodeRegex.test(formData.postalCode)) {
-        newErrors.postalCode = 'Please enter a valid Canadian postal code (e.g., A1A 1A1).';
+    } else if (!gtaPostalCodeRegex.test(formData.postalCode)) {
+        // ⭐ MODIFIED: Error message is now specific to the GTA.
+        newErrors.postalCode = 'Please enter a valid GTA postal code (e.g., M5V 2T6 or L3T 3N7).';
     }
     
     setErrors(newErrors);
@@ -93,25 +103,25 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
           Just a Few Quick Questions
         </h2>
         <form onSubmit={handleFormSubmit} className="space-y-5" noValidate>
-          {/* Form Fields (No changes needed) */}
+          {/* Form Fields */}
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name <span className="text-red-500">*</span></label>
-            <input type="text" name="name" id="name" required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+            <input type="text" name="name" id="name" value={formData.name} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
             {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
           </div>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
-            <input type="email" name="email" id="email" required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+            <input type="email" name="email" id="email" value={formData.email} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
             {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
           </div>
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone <span className="text-red-500">*</span></label>
-            <input type="tel" name="phone" id="phone" required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+            <input type="tel" name="phone" id="phone" value={formData.phone} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
             {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
           </div>
           <div>
             <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code <span className="text-red-500">*</span></label>
-            <input type="text" name="postalCode" id="postalCode" required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.postalCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+            <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.postalCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={7} />
             {errors.postalCode && <p className="mt-1 text-xs text-red-600">{errors.postalCode}</p>}
           </div>
 
@@ -126,34 +136,51 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
 };
 
 
-// --- THE MAIN PAGE COMPONENT (MODIFIED) ---
+// --- THE MAIN PAGE COMPONENT ---
 const BookNowPage: NextPageWithLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  
+  const [leadSource, setLeadSource] = useState('Organic Traffic');
+
+  useEffect(() => {
+    if (router.isReady) {
+      const source = router.query.utm_source as string;
+      if (source) {
+        if (source.toLowerCase().includes('facebook')) {
+          setLeadSource('Facebook Ads');
+        } else if (source.toLowerCase().includes('google')) {
+          setLeadSource('Google Ads');
+        }
+      }
+    }
+  }, [router.isReady, router.query]);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  // ⭐ NEW: This function now handles both the API submission and the redirect.
   const handleFormSubmission = async (data: FormData) => {
+    const submissionData = {
+      ...data,
+      leadSource: leadSource,
+    };
+
     try {
       const response = await fetch('/api/add-lead-to-notion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(submissionData),
       });
 
       if (!response.ok) {
-        // If the server responds with an error, throw an error to be caught by the catch block
         const errorData = await response.json();
         throw new Error(errorData.error || `Server responded with ${response.status}`);
       }
       
       console.log('Successfully added lead to Notion!');
 
-      // On successful API submission, redirect the user
       router.push({
         pathname: '/thank-you',
         query: data,
@@ -161,7 +188,6 @@ const BookNowPage: NextPageWithLayout = () => {
 
     } catch (error) {
       console.error('Failed to submit to Notion:', error);
-      // Optionally, display an error message to the user
       alert('There was an error submitting your request. Please try again.');
     }
   };
@@ -176,10 +202,10 @@ const BookNowPage: NextPageWithLayout = () => {
       <QualificationFormModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        onSubmit={handleFormSubmission} // ⭐ UPDATED: Use the new handler
+        onSubmit={handleFormSubmission}
       />
       
-      {/* --- Page Content (No changes) --- */}
+      {/* --- Page Content --- */}
       <div className="flex flex-col items-center min-h-screen relative text-white pb-20" style={{ background: 'linear-gradient(to bottom, #131628 0%, #131628 1070px, #e8e8e8 1520px, #e8e8e8 100%)' }}>
         <div className="w-full max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 text-center z-10">
           <div className="space-y-4 md:space-y-6">
