@@ -6,7 +6,6 @@ import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
 
 // --- TYPE DEFINITIONS ---
-// This is a TypeScript interface defining the shape of the form data.
 type FormData = {
   name: string;
   phone: string;
@@ -15,7 +14,6 @@ type FormData = {
   otherAreasToPaint: string[];
 };
 
-// This types the props for the modal component.
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -25,7 +23,6 @@ type ModalProps = {
 
 // --- BANT FORM MODAL COMPONENT (MODIFIED) ---
 const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
-  // TypeScript's generic useState hook provides type safety for the state.
   const [formData, setFormData] = useState<FormData>({
     name: '',
     phone: '',
@@ -38,14 +35,13 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
   
   const paintAreaOptions = ["Living Room", "Bedroom", "Kitchen", "Stairway", "Exterior", "Garage"];
 
-  // Event (e) is typed as a React ChangeEvent on an HTMLInputElement.
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
     let processedValue = value;
 
     if (name === 'phone') {
-        const cleaned = value.replace(/\D/g, ''); // Remove non-digit characters
+        const cleaned = value.replace(/\D/g, '');
         const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
         if (match) {
             let formatted = '';
@@ -107,7 +103,6 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
     return Object.keys(newErrors).length === 0;
   };
 
-  // Event (e) is typed as a React FormEvent.
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
@@ -212,53 +207,52 @@ const BookNowPage: NextPageWithLayout = () => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  // The function parameter 'data' is typed with the FormData interface.
   const handleFormSubmission = async (data: FormData) => {
-  fetch('/api/send-email-notification', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name: data.name,
-      phone: data.phone,
-      postalCode: data.postalCode,
-      email: data.email,
-      otherAreasToPaint: data.otherAreasToPaint.join(', ')
-    }),
-  }).catch(error => {
-    console.error('Non-critical error: Instant notification failed to send.', error);
-  });
-
-  const submissionData = {
-    ...data,
-    leadSource: leadSource,
-  };
-
-  try {
-    const response = await fetch('/api/add-lead-to-notion', {
+    fetch('/api/send-email-notification', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(submissionData),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: data.name,
+        phone: data.phone,
+        postalCode: data.postalCode,
+        email: data.email,
+        otherAreasToPaint: data.otherAreasToPaint.join(', ')
+      }),
+    }).catch(error => {
+      console.error('Non-critical error: Instant notification failed to send.', error);
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `Server responded with ${response.status}`);
+    const submissionData = {
+      ...data,
+      leadSource: leadSource,
+    };
+
+    try {
+      const response = await fetch('/api/add-lead-to-notion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Server responded with ${response.status}`);
+      }
+      
+      console.log('Successfully added lead to Notion!');
+
+      router.push({
+        pathname: '/thank-you',
+        query: { ...data },
+      });
+
+    } catch (error) {
+      console.error('Failed to submit lead to Notion:', error);
+      alert('There was an error submitting your request. Please try again.');
     }
-    
-    console.log('Successfully added lead to Notion!');
-
-    router.push({
-      pathname: '/thank-you',
-      query: data as any,
-    });
-
-  } catch (error) {
-    console.error('Failed to submit lead to Notion:', error);
-    alert('There was an error submitting your request. Please try again.');
-  }
-};
+  };
 
   return (
     <>
