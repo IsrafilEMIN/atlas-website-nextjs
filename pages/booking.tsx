@@ -160,37 +160,52 @@ const BookNowPage: NextPageWithLayout = () => {
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleFormSubmission = async (data: FormData) => {
-    const submissionData = {
-      ...data,
-      leadSource: leadSource,
-    };
+  // 1. Instantly send the notification.
+  fetch('/api/send-email-notification', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: data.name,
+      phone: data.phone,
+      postalCode: data.postalCode,
+      email: data.email, // ⭐ MODIFICATION: Ensure email is sent to the notification API
+    }),
+  }).catch(error => {
+    console.error('Non-critical error: Instant notification failed to send.', error);
+  });
 
-    try {
-      const response = await fetch('/api/add-lead-to-notion', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submissionData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Server responded with ${response.status}`);
-      }
-      
-      console.log('Successfully added lead to Notion!');
-
-      router.push({
-        pathname: '/thank-you',
-        query: data,
-      });
-
-    } catch (error) {
-      console.error('Failed to submit to Notion:', error);
-      alert('There was an error submitting your request. Please try again.');
-    }
+  // 2. Handle the primary action: saving the lead to Notion.
+  const submissionData = {
+    ...data,
+    leadSource: leadSource,
   };
+
+  try {
+    const response = await fetch('/api/add-lead-to-notion', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(submissionData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Server responded with ${response.status}`);
+    }
+    
+    console.log('Successfully added lead to Notion!');
+
+    router.push({
+      pathname: '/thank-you',
+      query: data,
+    });
+
+  } catch (error) {
+    console.error('Failed to submit lead to Notion:', error);
+    alert('There was an error submitting your request. Please try again.');
+  }
+};
 
   return (
     <>
