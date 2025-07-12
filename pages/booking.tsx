@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
@@ -33,7 +33,41 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   
+  // --- MODIFICATION: Added state and ref for the sticky scroll indicator ---
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  
   const paintAreaOptions = ["Living Room", "Bedroom", "Kitchen", "Stairway", "Exterior", "Garage"];
+
+  // --- MODIFICATION: Effect to manage the scroll indicator's visibility ---
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+
+    const handleScroll = () => {
+      if (!scrollContainer) return;
+      // Check if user has scrolled to the bottom (with a 40px tolerance)
+      const isAtBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop <= scrollContainer.clientHeight + 40;
+      if (isAtBottom) {
+        setShowScrollIndicator(false);
+      }
+    };
+
+    if (isOpen && scrollContainer) {
+      // Check if content is scrollable when modal opens
+      const isScrollable = scrollContainer.scrollHeight > scrollContainer.clientHeight;
+      setShowScrollIndicator(isScrollable);
+
+      scrollContainer.addEventListener('scroll', handleScroll);
+    }
+
+    // Cleanup function to remove event listener
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [isOpen]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -117,8 +151,11 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 w-full max-w-lg text-gray-800 relative">
+    <div 
+      ref={scrollContainerRef} 
+      className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-start overflow-y-auto z-50 p-4 pt-12"
+    >
+      <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 w-full max-w-lg text-gray-800 relative mb-8">
         <button  
           onClick={onClose}  
           className="absolute top-2 right-2 p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-all"
@@ -127,7 +164,7 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 pl-2 pr-2">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 pl-2 pr-2">
           Just a Few Quick Questions
         </h2>
         <form onSubmit={handleFormSubmit} className="space-y-5" noValidate>
@@ -153,9 +190,8 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
             {errors.postalCode && <p className="mt-1 text-xs text-red-600">{errors.postalCode}</p>}
           </div>
           
-          {/* --- MODIFICATION: Changed to a grid layout with custom checkboxes --- */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">What other areas are considering to paint? (optional)</label>
+            <label className="block text-sm font-medium text-gray-700">Do you plan to paint other areas in your house?</label>
             <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
                 {paintAreaOptions.map((area) => (
                     <div
@@ -189,10 +225,22 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
           </div>
         </form>
       </div>
+      
+      {/* --- MODIFICATION: Sticky Scroll Down Indicator --- */}
+      {showScrollIndicator && (
+        <div className="sticky bottom-6 left-1/2 -translate-x-1/2 flex justify-center pointer-events-none md:hidden">
+            <div className="bg-black/40 backdrop-blur-sm rounded-full p-2 animate-bounce">
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
+                </svg>
+            </div>
+        </div>
+      )}
     </div>
   );
 };
 
+// --- REMAINDER OF THE FILE (UNCHANGED) ---
 
 // --- THE MAIN PAGE COMPONENT ---
 const BookNowPage: NextPageWithLayout = () => {
