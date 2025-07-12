@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
@@ -33,7 +33,41 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   
+  // --- MODIFICATION: Added state and ref for the sticky scroll indicator ---
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  
   const paintAreaOptions = ["Living Room", "Bedroom", "Kitchen", "Stairway", "Exterior", "Garage"];
+
+  // --- MODIFICATION: Effect to manage the scroll indicator's visibility ---
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+
+    const handleScroll = () => {
+      if (!scrollContainer) return;
+      // Check if user has scrolled to the bottom (with a 40px tolerance)
+      const isAtBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop <= scrollContainer.clientHeight + 40;
+      if (isAtBottom) {
+        setShowScrollIndicator(false);
+      }
+    };
+
+    if (isOpen && scrollContainer) {
+      // Check if content is scrollable when modal opens
+      const isScrollable = scrollContainer.scrollHeight > scrollContainer.clientHeight;
+      setShowScrollIndicator(isScrollable);
+
+      scrollContainer.addEventListener('scroll', handleScroll);
+    }
+
+    // Cleanup function to remove event listener
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [isOpen]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -117,11 +151,10 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
   }
 
   return (
-    // --- MODIFICATION: Changed modal alignment and scrolling behavior ---
-    // - `items-start`: Aligns the form to the top instead of the center.
-    // - `overflow-y-auto`: Makes the entire modal area scrollable if content is too long.
-    // - `pt-12`: Adds padding to the top so the form isn't flush with the screen edge.
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-start overflow-y-auto z-50 p-4 pt-12">
+    <div 
+      ref={scrollContainerRef} 
+      className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-start overflow-y-auto z-50 p-4 pt-12"
+    >
       <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 w-full max-w-lg text-gray-800 relative mb-8">
         <button  
           onClick={onClose}  
@@ -190,15 +223,19 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
             <button type="submit" className="w-full bg-[#0F52BA] text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-800 transition-colors">Submit & Schedule</button>
             <button type="button" onClick={onClose} className="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-gray-300 transition-colors">Cancel</button>
           </div>
-
-          {/* --- MODIFICATION: Scroll Down Indicator for mobile --- */}
-          <div className="text-center pt-4 md:hidden">
-              <svg className="w-8 h-8 text-gray-300 mx-auto animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
-              </svg>
-          </div>
         </form>
       </div>
+      
+      {/* --- MODIFICATION: Sticky Scroll Down Indicator --- */}
+      {showScrollIndicator && (
+        <div className="sticky bottom-6 left-1/2 -translate-x-1/2 flex justify-center pointer-events-none md:hidden">
+            <div className="bg-black/40 backdrop-blur-sm rounded-full p-2 animate-bounce">
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
+                </svg>
+            </div>
+        </div>
+      )}
     </div>
   );
 };
