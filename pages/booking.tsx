@@ -6,13 +6,16 @@ import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
 
 // --- TYPE DEFINITIONS ---
+// This is a TypeScript interface defining the shape of the form data.
 type FormData = {
   name: string;
   phone: string;
   email: string;
   postalCode: string;
+  otherAreasToPaint: string[];
 };
 
+// This types the props for the modal component.
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -22,20 +25,42 @@ type ModalProps = {
 
 // --- BANT FORM MODAL COMPONENT (MODIFIED) ---
 const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
+  // TypeScript's generic useState hook provides type safety for the state.
   const [formData, setFormData] = useState<FormData>({
     name: '',
     phone: '',
     email: '',
     postalCode: '',
+    otherAreasToPaint: [],
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  
+  const paintAreaOptions = ["Living Room", "Bedroom", "Kitchen", "Stairway", "Exterior", "Garage"];
 
+  // Event (e) is typed as a React ChangeEvent on an HTMLInputElement.
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
     let processedValue = value;
-    if (name === 'postalCode') {
+
+    if (name === 'phone') {
+        const cleaned = value.replace(/\D/g, ''); // Remove non-digit characters
+        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+        if (match) {
+            let formatted = '';
+            if (match[1]) {
+                formatted += `(${match[1]}`;
+            }
+            if (match[2]) {
+                formatted += `) ${match[2]}`;
+            }
+            if (match[3]) {
+                formatted += `-${match[3]}`;
+            }
+            processedValue = formatted;
+        }
+    } else if (name === 'postalCode') {
         const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
         
         if (cleaned.length > 3) {
@@ -51,11 +76,19 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
+  
+  const handleAreaSelection = (area: string) => {
+    setFormData((prev) => {
+      const currentAreas = prev.otherAreasToPaint;
+      const newAreas = currentAreas.includes(area)
+        ? currentAreas.filter((a) => a !== area)
+        : [...currentAreas, area];
+      return { ...prev, otherAreasToPaint: newAreas };
+    });
+  };
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-    // ⭐ MODIFIED: Regex now checks for GTA postal codes specifically.
-    // This includes all 'M' postal codes (Toronto) and specific 'L' prefixes for surrounding regions.
     const gtaPostalCodeRegex = /^(M\d[A-Z]|L[0-9][A-Z]) \d[A-Z]\d$/;
 
     if (!formData.name.trim()) newErrors.name = 'Name is required.';
@@ -67,7 +100,6 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
     if (!formData.postalCode.trim()) {
         newErrors.postalCode = 'Postal code is required.';
     } else if (!gtaPostalCodeRegex.test(formData.postalCode)) {
-        // ⭐ MODIFIED: Error message is now specific to the GTA.
         newErrors.postalCode = 'Please enter a valid GTA postal code (e.g., M5V 2T6 or L3T 3N7).';
     }
     
@@ -75,6 +107,7 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
     return Object.keys(newErrors).length === 0;
   };
 
+  // Event (e) is typed as a React FormEvent.
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
@@ -91,8 +124,8 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 w-full max-w-lg text-gray-800 relative">
-        <button 
-          onClick={onClose} 
+        <button  
+          onClick={onClose}  
           className="absolute top-2 right-2 p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-all"
           aria-label="Close"
         >
@@ -116,13 +149,33 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
           </div>
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone <span className="text-red-500">*</span></label>
-            <input type="tel" name="phone" id="phone" value={formData.phone} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+            <input type="tel" name="phone" id="phone" value={formData.phone} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={14}/>
             {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
           </div>
           <div>
             <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code <span className="text-red-500">*</span></label>
             <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.postalCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={7} />
             {errors.postalCode && <p className="mt-1 text-xs text-red-600">{errors.postalCode}</p>}
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Do you plan to paint other areas in your house?</label>
+            <div className="mt-2 flex flex-wrap gap-2">
+                {paintAreaOptions.map((area) => (
+                    <button
+                        key={area}
+                        type="button"
+                        onClick={() => handleAreaSelection(area)}
+                        className={`px-3 py-1.5 text-sm rounded-md transition-colors font-medium ${
+                            formData.otherAreasToPaint.includes(area)
+                                ? 'bg-[#0F52BA] text-white ring-2 ring-offset-1 ring-[#0F52BA]'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                    >
+                        {area}
+                    </button>
+                ))}
+            </div>
           </div>
 
           <div className="pt-4 space-y-3">
@@ -159,8 +212,8 @@ const BookNowPage: NextPageWithLayout = () => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  // The function parameter 'data' is typed with the FormData interface.
   const handleFormSubmission = async (data: FormData) => {
-  // 1. Instantly send the notification.
   fetch('/api/send-email-notification', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -168,13 +221,13 @@ const BookNowPage: NextPageWithLayout = () => {
       name: data.name,
       phone: data.phone,
       postalCode: data.postalCode,
-      email: data.email, // ⭐ MODIFICATION: Ensure email is sent to the notification API
+      email: data.email,
+      otherAreasToPaint: data.otherAreasToPaint.join(', ')
     }),
   }).catch(error => {
     console.error('Non-critical error: Instant notification failed to send.', error);
   });
 
-  // 2. Handle the primary action: saving the lead to Notion.
   const submissionData = {
     ...data,
     leadSource: leadSource,
@@ -198,7 +251,7 @@ const BookNowPage: NextPageWithLayout = () => {
 
     router.push({
       pathname: '/thank-you',
-      query: data,
+      query: data as any,
     });
 
   } catch (error) {
