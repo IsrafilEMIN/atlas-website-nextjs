@@ -11,6 +11,7 @@ type FormData = {
   phone: string;
   email: string;
   postalCode: string;
+  otherAreasToPaint: string[];
 };
 
 type ModalProps = {
@@ -27,15 +28,35 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
     phone: '',
     email: '',
     postalCode: '',
+    otherAreasToPaint: [],
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  
+  const paintAreaOptions = ["Living Room", "Bedroom", "Kitchen", "Stairway", "Exterior", "Garage"];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
     let processedValue = value;
-    if (name === 'postalCode') {
+
+    if (name === 'phone') {
+        const cleaned = value.replace(/\D/g, '');
+        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+        if (match) {
+            let formatted = '';
+            if (match[1]) {
+                formatted += `(${match[1]}`;
+            }
+            if (match[2]) {
+                formatted += `) ${match[2]}`;
+            }
+            if (match[3]) {
+                formatted += `-${match[3]}`;
+            }
+            processedValue = formatted;
+        }
+    } else if (name === 'postalCode') {
         const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
         
         if (cleaned.length > 3) {
@@ -51,11 +72,19 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
+  
+  const handleAreaSelection = (area: string) => {
+    setFormData((prev) => {
+      const currentAreas = prev.otherAreasToPaint;
+      const newAreas = currentAreas.includes(area)
+        ? currentAreas.filter((a) => a !== area)
+        : [...currentAreas, area];
+      return { ...prev, otherAreasToPaint: newAreas };
+    });
+  };
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-    // ⭐ MODIFIED: Regex now checks for GTA postal codes specifically.
-    // This includes all 'M' postal codes (Toronto) and specific 'L' prefixes for surrounding regions.
     const gtaPostalCodeRegex = /^(M\d[A-Z]|L[0-9][A-Z]) \d[A-Z]\d$/;
 
     if (!formData.name.trim()) newErrors.name = 'Name is required.';
@@ -67,7 +96,6 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
     if (!formData.postalCode.trim()) {
         newErrors.postalCode = 'Postal code is required.';
     } else if (!gtaPostalCodeRegex.test(formData.postalCode)) {
-        // ⭐ MODIFIED: Error message is now specific to the GTA.
         newErrors.postalCode = 'Please enter a valid GTA postal code (e.g., M5V 2T6 or L3T 3N7).';
     }
     
@@ -91,8 +119,8 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 w-full max-w-lg text-gray-800 relative">
-        <button 
-          onClick={onClose} 
+        <button  
+          onClick={onClose}  
           className="absolute top-2 right-2 p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-all"
           aria-label="Close"
         >
@@ -116,13 +144,43 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
           </div>
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone <span className="text-red-500">*</span></label>
-            <input type="tel" name="phone" id="phone" value={formData.phone} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+            <input type="tel" name="phone" id="phone" value={formData.phone} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={14}/>
             {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
           </div>
           <div>
             <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code <span className="text-red-500">*</span></label>
             <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.postalCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={7} />
             {errors.postalCode && <p className="mt-1 text-xs text-red-600">{errors.postalCode}</p>}
+          </div>
+          
+          {/* --- MODIFICATION: Changed to a grid layout with custom checkboxes --- */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">What other areas are considering to paint? (optional)</label>
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                {paintAreaOptions.map((area) => (
+                    <div
+                        key={area}
+                        onClick={() => handleAreaSelection(area)}
+                        className="flex items-center p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100"
+                    >
+                        {/* Custom Checkbox */}
+                        <div className={`w-5 h-5 border-2 rounded flex-shrink-0 flex items-center justify-center mr-3 ${
+                            formData.otherAreasToPaint.includes(area)
+                                ? 'bg-[#0F52BA] border-[#0F52BA]'
+                                : 'bg-white border-gray-400'
+                        }`}>
+                            {/* Checkmark Icon */}
+                            {formData.otherAreasToPaint.includes(area) && (
+                                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                                </svg>
+                            )}
+                        </div>
+                        {/* Label */}
+                        <span className="text-gray-800 select-none">{area}</span>
+                    </div>
+                ))}
+            </div>
           </div>
 
           <div className="pt-4 space-y-3">
@@ -160,52 +218,51 @@ const BookNowPage: NextPageWithLayout = () => {
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleFormSubmission = async (data: FormData) => {
-  // 1. Instantly send the notification.
-  fetch('/api/send-email-notification', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name: data.name,
-      phone: data.phone,
-      postalCode: data.postalCode,
-      email: data.email, // ⭐ MODIFICATION: Ensure email is sent to the notification API
-    }),
-  }).catch(error => {
-    console.error('Non-critical error: Instant notification failed to send.', error);
-  });
-
-  // 2. Handle the primary action: saving the lead to Notion.
-  const submissionData = {
-    ...data,
-    leadSource: leadSource,
-  };
-
-  try {
-    const response = await fetch('/api/add-lead-to-notion', {
+    fetch('/api/send-email-notification', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(submissionData),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: data.name,
+        phone: data.phone,
+        postalCode: data.postalCode,
+        email: data.email,
+        otherAreasToPaint: data.otherAreasToPaint.join(', ')
+      }),
+    }).catch(error => {
+      console.error('Non-critical error: Instant notification failed to send.', error);
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `Server responded with ${response.status}`);
+    const submissionData = {
+      ...data,
+      leadSource: leadSource,
+    };
+
+    try {
+      const response = await fetch('/api/add-lead-to-notion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Server responded with ${response.status}`);
+      }
+      
+      console.log('Successfully added lead to Notion!');
+
+      router.push({
+        pathname: '/thank-you',
+        query: { ...data },
+      });
+
+    } catch (error) {
+      console.error('Failed to submit lead to Notion:', error);
+      alert('There was an error submitting your request. Please try again.');
     }
-    
-    console.log('Successfully added lead to Notion!');
-
-    router.push({
-      pathname: '/thank-you',
-      query: data,
-    });
-
-  } catch (error) {
-    console.error('Failed to submit lead to Notion:', error);
-    alert('There was an error submitting your request. Please try again.');
-  }
-};
+  };
 
   return (
     <>
