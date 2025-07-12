@@ -13,7 +13,7 @@ const ThankYouPage: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Schedule Your Consultation - Atlas HomeServices</title>
+        <title>Schedule Your Call With Us - Atlas HomeServices</title>
         <meta name="robots" content="noindex" />
       </Head>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 py-12">
