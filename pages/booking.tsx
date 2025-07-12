@@ -155,7 +155,7 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
           
           {/* --- MODIFICATION: Changed to a grid layout with custom checkboxes --- */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">What other areas are considering to paint?</label>
+            <label className="block text-sm font-medium text-gray-700">What other areas are considering to paint? (optional)</label>
             <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
                 {paintAreaOptions.map((area) => (
                     <div
