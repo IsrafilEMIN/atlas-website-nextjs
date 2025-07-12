@@ -1,17 +1,19 @@
 import { Client } from '@notionhq/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-// ⭐ 1. IMPORT THE NOTION-SPECIFIC TYPE
 import type { CreatePageParameters } from '@notionhq/client/build/src/api-endpoints';
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 const databaseId = process.env.NOTION_DATABASE_ID!;
 
+// --- MODIFICATION 1: Update the RequestBody type ---
+// Added 'otherAreasToPaint' to match the data being sent from the frontend.
 type RequestBody = {
   name: string;
   phone: string;
   email: string;
   postalCode: string;
   leadSource: string;
+  otherAreasToPaint: string[]; // This is the new field
 };
 
 export default async function handler(
@@ -27,12 +29,12 @@ export default async function handler(
     return res.status(500).json({ error: 'Notion API Key or Database ID not configured.' });
   }
 
-  const { name, email, phone, postalCode, leadSource } = req.body as RequestBody;
+  // --- MODIFICATION 2: Destructure the new field ---
+  // Get 'otherAreasToPaint' from the request body.
+  const { name, email, phone, postalCode, leadSource, otherAreasToPaint } = req.body as RequestBody;
 
-  // ⭐ 2. REPLACE 'any' WITH THE IMPORTED TYPE
   const properties: CreatePageParameters['properties'] = {
-    // IMPORTANT: These property names ('Name', 'Email', etc.)
-    // MUST exactly match the column titles in your Notion database.
+    // IMPORTANT: These property names MUST exactly match your Notion database columns.
     'Name': {
       title: [
         {
@@ -59,7 +61,7 @@ export default async function handler(
     },
   };
 
-  // If leadSource exists, add it to the properties object.
+  // Conditionally add 'Lead Source' if it exists
   if (leadSource) {
     properties['Lead Source'] = {
       select: {
@@ -68,10 +70,20 @@ export default async function handler(
     };
   }
 
+  // --- MODIFICATION 3: Add the 'Other Areas' multi-select property ---
+  // Check if otherAreasToPaint has items and format it for the Notion API.
+  if (otherAreasToPaint && otherAreasToPaint.length > 0) {
+    properties['Other Areas'] = { // This MUST match the Notion property name.
+      multi_select: otherAreasToPaint.map((area: string) => {
+        return { name: area }; // Format each string into an object Notion expects.
+      }),
+    };
+  }
+
   try {
     const response = await notion.pages.create({
       parent: { database_id: databaseId },
-      properties: properties, // Now this is fully type-safe!
+      properties: properties, // The properties object is now fully type-safe and complete.
     });
 
     return res.status(201).json({ message: 'Success!', data: response });
@@ -79,9 +91,9 @@ export default async function handler(
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('Notion API Error:', error);
-      return res.status(500).json({ 
-        error: 'Failed to add data to Notion.', 
-        details: error.message 
+      return res.status(500).json({
+        error: 'Failed to add data to Notion.',
+        details: error.message
       });
     }
     console.error('An unexpected error occurred:', error);
