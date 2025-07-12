@@ -266,8 +266,8 @@ const BookNowPage: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Book Your Premium Painting Service - Atlas HomeServices</title>
-        <meta name="description" content="Experience a seamless booking process for your next painting project. Atlas HomeServices guarantees quality and satisfaction." />
+        <title>Book a call with us - Atlas HomeServices</title>
+        <meta name="description" content="Join our limited-time challenge, Atlas HomeServices guarantees your satisfaction or else money-back." />
       </Head>
 
       <QualificationFormModal
