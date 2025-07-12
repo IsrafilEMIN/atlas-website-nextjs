@@ -153,22 +153,32 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
             {errors.postalCode && <p className="mt-1 text-xs text-red-600">{errors.postalCode}</p>}
           </div>
           
+          {/* --- MODIFICATION: Changed to a grid layout with custom checkboxes --- */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Do you plan to paint other areas in your house?</label>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <label className="block text-sm font-medium text-gray-700">What other areas are considering to paint?</label>
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
                 {paintAreaOptions.map((area) => (
-                    <button
+                    <div
                         key={area}
-                        type="button"
                         onClick={() => handleAreaSelection(area)}
-                        className={`px-3 py-1.5 text-sm rounded-md transition-colors font-medium ${
-                            formData.otherAreasToPaint.includes(area)
-                                ? 'bg-[#0F52BA] text-white ring-2 ring-offset-1 ring-[#0F52BA]'
-                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
+                        className="flex items-center p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100"
                     >
-                        {area}
-                    </button>
+                        {/* Custom Checkbox */}
+                        <div className={`w-5 h-5 border-2 rounded flex-shrink-0 flex items-center justify-center mr-3 ${
+                            formData.otherAreasToPaint.includes(area)
+                                ? 'bg-[#0F52BA] border-[#0F52BA]'
+                                : 'bg-white border-gray-400'
+                        }`}>
+                            {/* Checkmark Icon */}
+                            {formData.otherAreasToPaint.includes(area) && (
+                                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                                </svg>
+                            )}
+                        </div>
+                        {/* Label */}
+                        <span className="text-gray-800 select-none">{area}</span>
+                    </div>
                 ))}
             </div>
           </div>
