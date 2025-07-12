@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
@@ -191,8 +191,6 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
     </div>
   );
 };
-
-// --- REMAINDER OF THE FILE (UNCHANGED) ---
 
 // --- THE MAIN PAGE COMPONENT ---
 const BookNowPage: NextPageWithLayout = () => {
