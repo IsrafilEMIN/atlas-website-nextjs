@@ -1,31 +1,194 @@
-// pages/book-now.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-// import { Button } from '@/components/ui/button'; // Assuming your Button component path
+import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
-import type { NextPageWithLayout } from '@/pages/_app'; // Or from your types file
+import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
 
-// --- Configuration for Booking Link and UTM Parameters ---
-const BASE_BOOKING_URL = process.env.NEXT_PUBLIC_BASE_BOOKING_URL || '';
-
-const getBookingLinkWithUTM = (utmContent: string = 'primary_booking_button') => {
-  const utmParams = new URLSearchParams({
-    utm_source: 'website',
-    utm_medium: 'dedicated_booking_page_v2', // Updated medium for new design
-    utm_campaign: 'focused_booking_experience',
-    utm_content: utmContent,
-  });
-  const separator = BASE_BOOKING_URL.includes('?') ? '&' : '?';
-  return `${BASE_BOOKING_URL}${separator}${utmParams.toString()}`;
+// --- TYPE DEFINITIONS ---
+type FormData = {
+  name: string;
+  phone: string;
+  email: string;
+  postalCode: string;
 };
 
-const BookNowPage: NextPageWithLayout = () => {
-  const primaryBookingLink = getBookingLinkWithUTM('main_hero_book_cta');
+type ModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: FormData) => void;
+};
 
-  const handleBookingClick = () => {
-    if (typeof window !== 'undefined') {
-      window.location.href = primaryBookingLink;
+
+// --- BANT FORM MODAL COMPONENT (MODIFIED) ---
+const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    phone: '',
+    email: '',
+    postalCode: '',
+  });
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    let processedValue = value;
+    if (name === 'postalCode') {
+        const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        
+        if (cleaned.length > 3) {
+            processedValue = `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)}`;
+        } else {
+            processedValue = cleaned;
+        }
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: processedValue }));
+    
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+    // ⭐ MODIFIED: Regex now checks for GTA postal codes specifically.
+    // This includes all 'M' postal codes (Toronto) and specific 'L' prefixes for surrounding regions.
+    const gtaPostalCodeRegex = /^(M\d[A-Z]|L[0-9][A-Z]) \d[A-Z]\d$/;
+
+    if (!formData.name.trim()) newErrors.name = 'Name is required.';
+    if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email format.';
+    
+    const phoneDigits = formData.phone.replace(/\D/g, '');
+    if (phoneDigits.length !== 10) newErrors.phone = 'Phone number must be 10 digits.';
+
+    if (!formData.postalCode.trim()) {
+        newErrors.postalCode = 'Postal code is required.';
+    } else if (!gtaPostalCodeRegex.test(formData.postalCode)) {
+        // ⭐ MODIFIED: Error message is now specific to the GTA.
+        newErrors.postalCode = 'Please enter a valid GTA postal code (e.g., M5V 2T6 or L3T 3N7).';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (validate()) {
+      onSubmit(formData);
+    } else {
+      console.log('Validation failed');
+    }
+  };
+
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 w-full max-w-lg text-gray-800 relative">
+        <button 
+          onClick={onClose} 
+          className="absolute top-2 right-2 p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-all"
+          aria-label="Close"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 pl-2 pr-2">
+          Just a Few Quick Questions
+        </h2>
+        <form onSubmit={handleFormSubmit} className="space-y-5" noValidate>
+          {/* Form Fields */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name <span className="text-red-500">*</span></label>
+            <input type="text" name="name" id="name" value={formData.name} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+            {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
+            <input type="email" name="email" id="email" value={formData.email} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+            {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
+          </div>
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone <span className="text-red-500">*</span></label>
+            <input type="tel" name="phone" id="phone" value={formData.phone} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+            {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
+          </div>
+          <div>
+            <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code <span className="text-red-500">*</span></label>
+            <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.postalCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={7} />
+            {errors.postalCode && <p className="mt-1 text-xs text-red-600">{errors.postalCode}</p>}
+          </div>
+
+          <div className="pt-4 space-y-3">
+            <button type="submit" className="w-full bg-[#0F52BA] text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-800 transition-colors">Submit & Schedule</button>
+            <button type="button" onClick={onClose} className="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-gray-300 transition-colors">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+
+// --- THE MAIN PAGE COMPONENT ---
+const BookNowPage: NextPageWithLayout = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  
+  const [leadSource, setLeadSource] = useState('Organic Traffic');
+
+  useEffect(() => {
+    if (router.isReady) {
+      const source = router.query.utm_source as string;
+      if (source) {
+        if (source.toLowerCase().includes('facebook')) {
+          setLeadSource('Facebook Ads');
+        } else if (source.toLowerCase().includes('google')) {
+          setLeadSource('Google Ads');
+        }
+      }
+    }
+  }, [router.isReady, router.query]);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleFormSubmission = async (data: FormData) => {
+    const submissionData = {
+      ...data,
+      leadSource: leadSource,
+    };
+
+    try {
+      const response = await fetch('/api/add-lead-to-notion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Server responded with ${response.status}`);
+      }
+      
+      console.log('Successfully added lead to Notion!');
+
+      router.push({
+        pathname: '/thank-you',
+        query: data,
+      });
+
+    } catch (error) {
+      console.error('Failed to submit to Notion:', error);
+      alert('There was an error submitting your request. Please try again.');
     }
   };
 
@@ -34,82 +197,46 @@ const BookNowPage: NextPageWithLayout = () => {
       <Head>
         <title>Book Your Premium Painting Service - Atlas HomeServices</title>
         <meta name="description" content="Experience a seamless booking process for your next painting project. Atlas HomeServices guarantees quality and satisfaction." />
-        {/* <meta name="robots" content="noindex, nofollow" /> */}
       </Head>
 
-      {/* Main page container with dark background, similar to the example */}
-      <div className="flex flex-col items-center justify-start min-h-screen bg-[#131628] text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
-        {/* Optional: Small logo, can be placed here or absolutely positioned */}
-        {/* <img src="/assets/atlas-logo-icon-white.png" alt="Atlas HomeServices" className="h-10 mb-8" /> */}
-
-        <div className="max-w-3xl w-full space-y-8 md:space-y-10 text-center">
-
-          {/* Headline - Large and impactful */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-50">
-            TRANSFORM YOUR HOME
-          </h1>
-
-          {/* Sub-headline - Engaging and informative */}
-          <p className="mt-3 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto">
-            Join hundreds of satisfied homeowners who chose Atlas HomeServices for a flawless finish.
-            Book your premium painting service today.
-          </p>
-
-          {/* Visual Element (Image/Video) - Crucial for the example's feel */}
-          <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
-            <div className="aspect-video bg-slate-800 rounded-xl shadow-2xl flex items-center justify-center overflow-hidden">
-              {/* === REPLACE THIS WITH YOUR IMAGE OR VIDEO === */}
-              {/* Example Image: */}
-              <Image
-                src="/images/sample-beautifully-painted-room.jpg" // Replace with your image path
-                alt="Beautifully painted interior by Atlas HomeServices"
-                className="w-full h-full object-cover"
-              />
-              {/* Or, for a placeholder if you don't have an image yet: */}
-              {/* <p className="text-slate-500 text-lg">Showcasing Our Best Work</p> */}
-              {/* For a video, you'd use a video player component or an iframe embed */}
+      <QualificationFormModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleFormSubmission}
+      />
+      
+      {/* --- Page Content --- */}
+      <div className="flex flex-col items-center min-h-screen relative text-white pb-20" style={{ background: 'linear-gradient(to bottom, #131628 0%, #131628 1070px, #e8e8e8 1520px, #e8e8e8 100%)' }}>
+        <div className="w-full max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 text-center z-10">
+          <div className="space-y-4 md:space-y-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto">
+              TRANSFORM YOUR HOME WITH US
+            </h1>
+            <p className="mt-3 text-2xl md:text-4xl text-white max-w-5xl mx-auto">
+              Join our <strong><u>limited-time</u></strong> &quot;One Room Transformation&quot; Challenge.
+            </p>
+            <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
+              <div className="aspect-video bg-slate-800 rounded-xl shadow-2xl overflow-hidden">
+                <Image
+                  src="/images/atlas-hero-image.png"
+                  alt="Beautifully painted interior by Atlas HomeServices"
+                  className="w-full h-full object-cover"
+                  width={800}
+                  height={400}
+                  priority
+                />
+              </div>
             </div>
-          </div>
-
-          {/* Descriptive Text - Explaining the value/process */}
-          <p className="mt-8 md:mt-10 text-base sm:text-lg text-slate-300 max-w-xl mx-auto leading-relaxed">
-            Our streamlined booking process makes it simple to schedule your project. Receive a transparent quote,
-            choose your colors with expert guidance, and let our professional team deliver exceptional results.
-          </p>
-
-          {/* CTA Button - Prominent and inviting */}
-          <div className="mt-10 md:mt-12">
-            <button
-              type="button" // Good practice for buttons not submitting forms
-              className="
-                inline-block
-                min-w-[260px] sm:min-w-[300px]
-                px-10 py-4 sm:px-12 sm:py-5
-                text-lg sm:text-xl font-bold text-center
-                bg-[#0F52BA] text-white
-                rounded-full
-                hover:bg-[#0F52BA] /* Adjusted hover for visibility */
-                transition-all duration-300
-                focus:outline-none focus:ring-4 focus:ring-[#0F52BA]/50
-              "
-              onClick={handleBookingClick}
-            >
-              I&apos;M READY TO BOOK
-            </button>
-          </div>
-
-          {/* Optional: Testimonial Section Placeholder - "What Attendees Are Saying" equivalent */}
-          <div className="mt-16 md:mt-20 pt-10 border-t border-slate-700/50">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-100">
-              Hear From Our Happy Clients
-            </h2>
-            <div className="mt-6 space-y-6 max-w-xl mx-auto">
-              {/* Example Testimonial Structure (repeat for multiple) */}
-              <blockquote className="text-left p-6 bg-slate-800 rounded-lg shadow-md">
-                <p className="text-slate-300 italic">&quot;Atlas HomeServices transformed our living room! The team was professional, clean, and the results exceeded our expectations. Highly recommend!&quot;</p>
-                <cite className="mt-3 block text-sm font-semibold text-slate-400 not-italic">- Sarah L., Toronto</cite>
-              </blockquote>
-              {/* Add more testimonials or a link to a testimonials page */}
+            <p className="mt-8 md:mt-10 text-2xl md:text-3xl text-slate-300 max-w-5xl mx-auto leading-relaxed">
+              It&apos;s a flawless painting process with <strong><u>MONEY BACK</u></strong> guarantee.
+            </p>
+            <p className="mt-3 text-3xl md:text-4xl text-white max-w-5xl mx-auto">
+              Only <strong><u>4 SPOTS</u></strong> left for July.
+            </p>
+            <div className="mt-10 md:mt-12">
+              <button type="button" onClick={handleOpenModal} className="inline-block px-24 py-4 sm:px-26 sm:py-8 text-2xl sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300">
+                I&apos;M READY TO TRANSFORM
+              </button>
             </div>
           </div>
         </div>
@@ -118,7 +245,7 @@ const BookNowPage: NextPageWithLayout = () => {
   );
 };
 
-// Assign the MinimalLayout to this page (ensures no main site header/footer)
+
 BookNowPage.getLayout = function getLayout(page: React.ReactElement) {
   return <MinimalLayout>{page}</MinimalLayout>;
 };

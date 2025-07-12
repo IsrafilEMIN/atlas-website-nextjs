@@ -1,31 +1,10 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-import { getStaticTestimonials } from "@/lib/getStaticTestimonials";
-import FeaturedGuidesSection from "@/components/home/FeaturedGuidesSection";
 
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
 
-interface Post {
-  slug: string;
-  title: string;
-  excerpt: string;
-  author: string;
-  date: string;
-  dateISO: string;
-  category: string;
-}
-
-interface HomeProps {
-  posts: Post[];
-  averageRating: number;
-  totalReviews: number;
-}
-
-export default function Home({ averageRating, totalReviews }: HomeProps) {
+export default function Home() {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -58,11 +37,6 @@ export default function Home({ averageRating, totalReviews }: HomeProps) {
       "postalCode": "L2H 3E9",
       "addressCountry": "CA"
     },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": averageRating.toFixed(1),
-      "reviewCount": totalReviews.toString()
-    },
     "image": "https://atlas-paint.com/assets/apple-touch-icon.png",
     "sameAs": [
       "https://www.instagram.com/atlas_homeservices/",
@@ -90,50 +64,9 @@ export default function Home({ averageRating, totalReviews }: HomeProps) {
         <div className="bg-white min-h-screen">
           <main className="w-full">
             <Hero />
-            <FeaturedGuidesSection
-              title="Unlock Pro Painting Secrets!"
-              subtitle="Download our FREE guides for expert advice on color selection, prep work, and achieving a flawless finish for your home."
-              // backgroundColor="bg-white" // Or any other color that fits
-            />
           </main>
         </div>
       )}
     </>
   );
-}
-
-export async function getStaticProps() {
-  const postsDir = path.join(process.cwd(), "content/posts");
-  const filenames = fs.readdirSync(postsDir);
-
-  const posts = filenames
-    .filter((name) => name.endsWith(".mdx"))
-    .map((filename) => {
-      const filePath = path.join(postsDir, filename);
-      const fileContent = fs.readFileSync(filePath, "utf8");
-      const { data } = matter(fileContent);
-
-      return {
-        slug: filename.replace(/\.mdx$/, ""),
-        title: data.title || "",
-        excerpt: data.excerpt || "",
-        author: data.author || "",
-        date: data.date || "",
-        dateISO: data.dateISO || "",
-        category: data.category || ""
-      };
-    })
-    .sort((a, b) => new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime())
-    .slice(0, 3);
-
-  const { testimonials, averageRating, totalReviews } = await getStaticTestimonials();
-
-  return {
-    props: {
-      posts,
-      testimonials,
-      averageRating,
-      totalReviews
-    }
-  };
 }
