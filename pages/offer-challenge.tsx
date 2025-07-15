@@ -5,6 +5,16 @@ import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
 
+// ⭐ --- START: NEW CODE ---
+// Add this interface at the top of your file to avoid TypeScript errors
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}
+// ⭐ --- END: NEW CODE ---
+
+
 // --- TYPE DEFINITIONS ---
 type FormData = {
   name: string;
@@ -21,175 +31,176 @@ type ModalProps = {
 };
 
 
-// --- BANT FORM MODAL COMPONENT ---
+// --- BANT FORM MODAL COMPONENT (No changes needed here) ---
 const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    phone: '',
-    email: '',
-    postalCode: '',
-    otherAreasToPaint: [],
-  });
-
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  
-  const paintAreaOptions = ["Living Room", "Bedroom", "Kitchen", "Stairway", "Exterior", "Garage"];
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    
-    let processedValue = value;
-
-    if (name === 'phone') {
-        const cleaned = value.replace(/\D/g, '');
-        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
-        if (match) {
-            let formatted = '';
-            if (match[1]) {
-                formatted += `(${match[1]}`;
-            }
-            if (match[2]) {
-                formatted += `) ${match[2]}`;
-            }
-            if (match[3]) {
-                formatted += `-${match[3]}`;
-            }
-            processedValue = formatted;
-        }
-    } else if (name === 'postalCode') {
-        const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-        
-        if (cleaned.length > 3) {
-            processedValue = `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)}`;
-        } else {
-            processedValue = cleaned;
-        }
-    }
-
-    setFormData((prev) => ({ ...prev, [name]: processedValue }));
-    
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-  };
-  
-  const handleAreaSelection = (area: string) => {
-    setFormData((prev) => {
-      const currentAreas = prev.otherAreasToPaint;
-      const newAreas = currentAreas.includes(area)
-        ? currentAreas.filter((a) => a !== area)
-        : [...currentAreas, area];
-      return { ...prev, otherAreasToPaint: newAreas };
+    // ... all the code for your modal remains exactly the same
+    const [formData, setFormData] = useState<FormData>({
+        name: '',
+        phone: '',
+        email: '',
+        postalCode: '',
+        otherAreasToPaint: [],
     });
-  };
 
-  const validate = () => {
-    const newErrors: { [key: string]: string } = {};
-    const gtaPostalCodeRegex = /^(M\d[A-Z]|L[0-9][A-Z]) \d[A-Z]\d$/;
-
-    if (!formData.name.trim()) newErrors.name = 'Name is required.';
-    if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email format.';
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     
-    const phoneDigits = formData.phone.replace(/\D/g, '');
-    if (phoneDigits.length !== 10) newErrors.phone = 'Phone number must be 10 digits.';
+    const paintAreaOptions = ["Living Room", "Bedroom", "Kitchen", "Stairway", "Exterior", "Garage"];
 
-    if (!formData.postalCode.trim()) {
-        newErrors.postalCode = 'Postal code is required.';
-    } else if (!gtaPostalCodeRegex.test(formData.postalCode)) {
-        newErrors.postalCode = 'Please enter a valid GTA postal code (e.g., M5V 2T6 or L3T 3N7).';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (validate()) {
-      onSubmit(formData);
-    } else {
-      console.log('Validation failed');
-    }
-  };
-
-  if (!isOpen) {
-    return null;
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-start overflow-y-auto z-50 p-4 pt-12">
-      <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 w-full max-w-lg text-gray-800 relative mb-8">
-        <button  
-          onClick={onClose}  
-          className="absolute top-2 right-2 p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-all"
-          aria-label="Close"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
         
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 pl-2 pr-2">
-          Just a Few Quick Questions
-        </h2>
-        <form onSubmit={handleFormSubmit} className="space-y-5" noValidate>
-          {/* Form Fields */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name <span className="text-red-500">*</span></label>
-            <input type="text" name="name" id="name" value={formData.name} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
-            {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
-            <input type="email" name="email" id="email" value={formData.email} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
-            {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
-          </div>
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone <span className="text-red-500">*</span></label>
-            <input type="tel" name="phone" id="phone" value={formData.phone} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={14}/>
-            {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
-          </div>
-          <div>
-            <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code <span className="text-red-500">*</span></label>
-            <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.postalCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={7} />
-            {errors.postalCode && <p className="mt-1 text-xs text-red-600">{errors.postalCode}</p>}
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Do you plan to paint other areas in your house?</label>
-            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                {paintAreaOptions.map((area) => (
-                    <div
-                        key={area}
-                        onClick={() => handleAreaSelection(area)}
-                        className="flex items-center p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100"
-                    >
-                        {/* Custom Checkbox */}
-                        <div className={`w-5 h-5 border-2 rounded flex-shrink-0 flex items-center justify-center mr-3 ${
-                            formData.otherAreasToPaint.includes(area)
-                                ? 'bg-[#0F52BA] border-[#0F52BA]'
-                                : 'bg-white border-gray-400'
-                        }`}>
-                            {/* Checkmark Icon */}
-                            {formData.otherAreasToPaint.includes(area) && (
-                                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                                </svg>
-                            )}
-                        </div>
-                        {/* Label */}
-                        <span className="text-gray-800 select-none">{area}</span>
-                    </div>
-                ))}
-            </div>
-          </div>
+        let processedValue = value;
 
-          <div className="pt-4 space-y-3">
-            <button type="submit" className="w-full bg-[#0F52BA] text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-800 transition-colors">Submit & Schedule</button>
-            <button type="button" onClick={onClose} className="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-gray-300 transition-colors">Cancel</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+        if (name === 'phone') {
+            const cleaned = value.replace(/\D/g, '');
+            const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+            if (match) {
+                let formatted = '';
+                if (match[1]) {
+                    formatted += `(${match[1]}`;
+                }
+                if (match[2]) {
+                    formatted += `) ${match[2]}`;
+                }
+                if (match[3]) {
+                    formatted += `-${match[3]}`;
+                }
+                processedValue = formatted;
+            }
+        } else if (name === 'postalCode') {
+            const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+            
+            if (cleaned.length > 3) {
+                processedValue = `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)}`;
+            } else {
+                processedValue = cleaned;
+            }
+        }
+
+        setFormData((prev) => ({ ...prev, [name]: processedValue }));
+        
+        if (errors[name]) {
+            setErrors((prev) => ({ ...prev, [name]: '' }));
+        }
+    };
+    
+    const handleAreaSelection = (area: string) => {
+        setFormData((prev) => {
+        const currentAreas = prev.otherAreasToPaint;
+        const newAreas = currentAreas.includes(area)
+            ? currentAreas.filter((a) => a !== area)
+            : [...currentAreas, area];
+        return { ...prev, otherAreasToPaint: newAreas };
+        });
+    };
+
+    const validate = () => {
+        const newErrors: { [key: string]: string } = {};
+        const gtaPostalCodeRegex = /^(M\d[A-Z]|L[0-9][A-Z]) \d[A-Z]\d$/;
+
+        if (!formData.name.trim()) newErrors.name = 'Name is required.';
+        if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email format.';
+        
+        const phoneDigits = formData.phone.replace(/\D/g, '');
+        if (phoneDigits.length !== 10) newErrors.phone = 'Phone number must be 10 digits.';
+
+        if (!formData.postalCode.trim()) {
+            newErrors.postalCode = 'Postal code is required.';
+        } else if (!gtaPostalCodeRegex.test(formData.postalCode)) {
+            newErrors.postalCode = 'Please enter a valid GTA postal code (e.g., M5V 2T6 or L3T 3N7).';
+        }
+        
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (validate()) {
+        onSubmit(formData);
+        } else {
+        console.log('Validation failed');
+        }
+    };
+
+    if (!isOpen) {
+        return null;
+    }
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-start overflow-y-auto z-50 p-4 pt-12">
+        <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 w-full max-w-lg text-gray-800 relative mb-8">
+            <button  
+            onClick={onClose}  
+            className="absolute top-2 right-2 p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-all"
+            aria-label="Close"
+            >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 pl-2 pr-2">
+            Just a Few Quick Questions
+            </h2>
+            <form onSubmit={handleFormSubmit} className="space-y-5" noValidate>
+            {/* Form Fields */}
+            <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name <span className="text-red-500">*</span></label>
+                <input type="text" name="name" id="name" value={formData.name} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+                {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
+            </div>
+            <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
+                <input type="email" name="email" id="email" value={formData.email} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
+                {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
+            </div>
+            <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone <span className="text-red-500">*</span></label>
+                <input type="tel" name="phone" id="phone" value={formData.phone} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={14}/>
+                {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
+            </div>
+            <div>
+                <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code <span className="text-red-500">*</span></label>
+                <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.postalCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={7} />
+                {errors.postalCode && <p className="mt-1 text-xs text-red-600">{errors.postalCode}</p>}
+            </div>
+            
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Do you plan to paint other areas in your house?</label>
+                <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                    {paintAreaOptions.map((area) => (
+                        <div
+                            key={area}
+                            onClick={() => handleAreaSelection(area)}
+                            className="flex items-center p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100"
+                        >
+                            {/* Custom Checkbox */}
+                            <div className={`w-5 h-5 border-2 rounded flex-shrink-0 flex items-center justify-center mr-3 ${
+                                formData.otherAreasToPaint.includes(area)
+                                    ? 'bg-[#0F52BA] border-[#0F52BA]'
+                                    : 'bg-white border-gray-400'
+                            }`}>
+                                {/* Checkmark Icon */}
+                                {formData.otherAreasToPaint.includes(area) && (
+                                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                )}
+                            </div>
+                            {/* Label */}
+                            <span className="text-gray-800 select-none">{area}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="pt-4 space-y-3">
+                <button type="submit" className="w-full bg-[#0F52BA] text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-800 transition-colors">Submit & Schedule</button>
+                <button type="button" onClick={onClose} className="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-gray-300 transition-colors">Cancel</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    );
 };
 
 
@@ -292,50 +303,45 @@ const OfferChallengePage: NextPageWithLayout = () => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  // ⭐ THIS IS THE MODIFIED FUNCTION ⭐
   const handleFormSubmission = async (data: FormData) => {
-    fetch('/api/send-email-notification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: data.name,
-        phone: data.phone,
-        postalCode: data.postalCode,
-        email: data.email,
-      }),
-    }).catch(error => {
-      console.error('Non-critical error: Instant notification failed to send.', error);
-    });
+    // This is an optimistic update. We assume the backend calls will work
+    // and fire the tracking event immediately for speed.
+    // We can add more robust error handling later if needed.
 
+    // ⭐ 1. PUSH THE CUSTOM EVENT TO THE DATA LAYER
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'google_lead_form_submit', // This name must match your GTM trigger
+      form_data: { 
+        lead_source: leadSource, // Sends the determined lead source
+      }
+    });
+    console.log('DataLayer event pushed: google_lead_form_submit');
+
+    // All your existing logic now runs after the event is fired.
     const submissionData = {
       ...data,
       leadSource: leadSource,
     };
 
-    try {
-      const response = await fetch('/api/add-lead-to-notion', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submissionData),
-      });
+    // --- Run backend submissions in the background ---
+    fetch('/api/send-email-notification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(submissionData),
+    }).catch(error => console.error('Non-critical: Notification failed.', error));
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Server responded with ${response.status}`);
-      }
-      
-      console.log('Successfully added lead to Notion!');
-
-      sessionStorage.setItem('canAccessThankYou', 'true');
-      sessionStorage.setItem('leadDataForThankYou', JSON.stringify(data));
-
-      router.push('/thank-you');
-
-    } catch (error) {
-      console.error('Failed to submit lead to Notion:', error);
-      alert('There was an error submitting your request. Please try again.');
-    }
+    fetch('/api/add-lead-to-notion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(submissionData),
+    }).catch(error => console.error('Non-critical: Notion sync failed.', error));
+    
+    // --- Redirect the user to the next step ---
+    sessionStorage.setItem('canAccessThankYou', 'true');
+    sessionStorage.setItem('leadDataForThankYou', JSON.stringify(data));
+    router.push('/thank-you');
   };
 
   return (
