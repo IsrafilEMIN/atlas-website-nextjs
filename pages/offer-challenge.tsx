@@ -1,9 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
+
+// Define the dataLayer event structure
+declare global {
+  interface DataLayerEvent {
+    event: string;
+    form_data?: {
+      lead_source: string;
+    };
+  }
+
+  interface Window {
+    dataLayer: DataLayerEvent[];
+  }
+}
 
 // --- TYPE DEFINITIONS ---
 type FormData = {
@@ -19,7 +33,6 @@ type ModalProps = {
   onClose: () => void;
   onSubmit: (data: FormData) => void;
 };
-
 
 // --- BANT FORM MODAL COMPONENT ---
 const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
@@ -41,29 +54,29 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
     let processedValue = value;
 
     if (name === 'phone') {
-        const cleaned = value.replace(/\D/g, '');
-        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
-        if (match) {
-            let formatted = '';
-            if (match[1]) {
-                formatted += `(${match[1]}`;
-            }
-            if (match[2]) {
-                formatted += `) ${match[2]}`;
-            }
-            if (match[3]) {
-                formatted += `-${match[3]}`;
-            }
-            processedValue = formatted;
+      const cleaned = value.replace(/\D/g, '');
+      const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+      if (match) {
+        let formatted = '';
+        if (match[1]) {
+          formatted += `(${match[1]}`;
         }
+        if (match[2]) {
+          formatted += `) ${match[2]}`;
+        }
+        if (match[3]) {
+          formatted += `-${match[3]}`;
+        }
+        processedValue = formatted;
+      }
     } else if (name === 'postalCode') {
-        const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-        
-        if (cleaned.length > 3) {
-            processedValue = `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)}`;
-        } else {
-            processedValue = cleaned;
-        }
+      const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      
+      if (cleaned.length > 3) {
+        processedValue = `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)}`;
+      } else {
+        processedValue = cleaned;
+      }
     }
 
     setFormData((prev) => ({ ...prev, [name]: processedValue }));
@@ -94,9 +107,9 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
     if (phoneDigits.length !== 10) newErrors.phone = 'Phone number must be 10 digits.';
 
     if (!formData.postalCode.trim()) {
-        newErrors.postalCode = 'Postal code is required.';
+      newErrors.postalCode = 'Postal code is required.';
     } else if (!gtaPostalCodeRegex.test(formData.postalCode)) {
-        newErrors.postalCode = 'Please enter a valid GTA postal code (e.g., M5V 2T6 or L3T 3N7).';
+      newErrors.postalCode = 'Please enter a valid GTA postal code (e.g., M5V 2T6 or L3T 3N7).';
     }
     
     setErrors(newErrors);
@@ -127,7 +140,7 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 pl-2 pr-2">
+        <h2 className="text-2xl md:text-3xl font[\] font-bold text-center mb-4 pl-2 pr-2">
           Just a Few Quick Questions
         </h2>
         <form onSubmit={handleFormSubmit} className="space-y-5" noValidate>
@@ -156,29 +169,26 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
           <div>
             <label className="block text-sm font-medium text-gray-700">Do you plan to paint other areas in your house?</label>
             <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                {paintAreaOptions.map((area) => (
-                    <div
-                        key={area}
-                        onClick={() => handleAreaSelection(area)}
-                        className="flex items-center p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100"
-                    >
-                        {/* Custom Checkbox */}
-                        <div className={`w-5 h-5 border-2 rounded flex-shrink-0 flex items-center justify-center mr-3 ${
-                            formData.otherAreasToPaint.includes(area)
-                                ? 'bg-[#0F52BA] border-[#0F52BA]'
-                                : 'bg-white border-gray-400'
-                        }`}>
-                            {/* Checkmark Icon */}
-                            {formData.otherAreasToPaint.includes(area) && (
-                                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                                </svg>
-                            )}
-                        </div>
-                        {/* Label */}
-                        <span className="text-gray-800 select-none">{area}</span>
-                    </div>
-                ))}
+              {paintAreaOptions.map((area) => (
+                <div
+                  key={area}
+                  onClick={() => handleAreaSelection(area)}
+                  className="flex items-center p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100"
+                >
+                  <div className={`w-5 h-5 border-2 rounded flex-shrink-0 flex items-center justify-center mr-3 ${
+                    formData.otherAreasToPaint.includes(area)
+                      ? 'bg-[#0F52BA] border-[#0F52BA]'
+                      : 'bg-white border-gray-400'
+                  }`}>
+                    {formData.otherAreasToPaint.includes(area) && (
+                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                  <span className="text-gray-800 select-none">{area}</span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -192,7 +202,6 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
   );
 };
 
-
 // --- THE MAIN PAGE COMPONENT ---
 const OfferChallengePage: NextPageWithLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -202,7 +211,7 @@ const OfferChallengePage: NextPageWithLayout = () => {
   const pageContainerRef = useRef<HTMLDivElement>(null);
   const firstReviewRef = useRef<HTMLDivElement>(null);
 
-  const reviews = [
+  const reviews = useMemo(() => [
     {
       src: "/testimonialImages/testimonial-image-01.png",
       alt: "HomeStars review for Atlas HomeServices",
@@ -245,7 +254,7 @@ const OfferChallengePage: NextPageWithLayout = () => {
       width: 800,
       height: 410,
     }
-  ];
+  ], []); // Empty dependency array since reviews are static
 
   useEffect(() => {
     if (router.isReady) {
@@ -281,7 +290,6 @@ const OfferChallengePage: NextPageWithLayout = () => {
     };
 
     calculateGradient();
-
     window.addEventListener('resize', calculateGradient);
 
     return () => {
@@ -293,49 +301,35 @@ const OfferChallengePage: NextPageWithLayout = () => {
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleFormSubmission = async (data: FormData) => {
-    fetch('/api/send-email-notification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: data.name,
-        phone: data.phone,
-        postalCode: data.postalCode,
-        email: data.email,
-      }),
-    }).catch(error => {
-      console.error('Non-critical error: Instant notification failed to send.', error);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'google_lead_form_submit',
+      form_data: { 
+        lead_source: leadSource,
+      }
     });
+    console.log('DataLayer event pushed: google_lead_form_submit');
 
     const submissionData = {
       ...data,
       leadSource: leadSource,
     };
 
-    try {
-      const response = await fetch('/api/add-lead-to-notion', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submissionData),
-      });
+    fetch('/api/send-email-notification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(submissionData),
+    }).catch(error => console.error('Non-critical: Notification failed.', error));
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Server responded with ${response.status}`);
-      }
-      
-      console.log('Successfully added lead to Notion!');
-
-      sessionStorage.setItem('canAccessThankYou', 'true');
-      sessionStorage.setItem('leadDataForThankYou', JSON.stringify(data));
-
-      router.push('/thank-you');
-
-    } catch (error) {
-      console.error('Failed to submit lead to Notion:', error);
-      alert('There was an error submitting your request. Please try again.');
-    }
+    fetch('/api/add-lead-to-notion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(submissionData),
+    }).catch(error => console.error('Non-critical: Notion sync failed.', error));
+    
+    sessionStorage.setItem('canAccessThankYou', 'true');
+    sessionStorage.setItem('leadDataForThankYou', JSON.stringify(data));
+    router.push('/thank-you');
   };
 
   return (
@@ -355,22 +349,22 @@ const OfferChallengePage: NextPageWithLayout = () => {
         <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
           <div className="space-y-2 md:space-y-8">
             <h1 className="mt-0 my-4 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
-                TRANSFORM YOUR HOME
+              TRANSFORM YOUR HOME
             </h1>
             <p className="mt-3 text-2xl md:text-4xl text-white max-w-6xl mx-auto">
               Join our <strong><u>money-back</u></strong> guaranteed transformation challenge for <u>Richmond Hill</u> homeowners.
             </p>
             <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
-                <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                    <Image
-                        src="/offerChallengeImages/offer-challenge-image.jpeg"
-                        alt="Beautifully painted interior by Atlas HomeServices"
-                        className="w-full h-full object-cover"
-                        width={1600}
-                        height={900}
-                        priority
-                    />
-                </div>
+              <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                <Image
+                  src="/offerChallengeImages/offer-challenge-image.jpeg"
+                  alt="Beautifully painted interior by Atlas HomeServices"
+                  className="w-full h-full object-cover"
+                  width={1600}
+                  height={900}
+                  priority
+                />
+              </div>
             </div>
             <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
               It&apos;s a <u>limited time</u> one room transformation challenge for Richmond Hill homeowners, with free color consultation and 100% <strong><u>money-back</u></strong> guarantee.
@@ -379,42 +373,40 @@ const OfferChallengePage: NextPageWithLayout = () => {
               Only <strong><u>4 SPOTS</u></strong> left for July.
             </p>
             <div className="mt-10 md:mt-12">
-                <button type="button" onClick={handleOpenModal} className="inline-block px-8 py-3 sm:px-24 sm:py-8 text-lg sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300">
-                    I&apos;M READY TO TRANSFORM
-                </button>
+              <button type="button" onClick={handleOpenModal} className="inline-block px-8 py-3 sm:px-24 sm:py-8 text-lg sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300">
+                I&apos;M READY TO TRANSFORM
+              </button>
             </div>
           </div>
           
           <div className="pt-12 sm:pt-28 text-center">
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
-                  What Our Happy Clients Say
-              </h2>
-              <div className="mt-12 mx-auto w-full max-w-3xl space-y-0">
-                  {reviews.map((review, index) => (
-                      <div 
-                        key={index}
-                        ref={index === 0 ? firstReviewRef : null} 
-                        className="bg-black/10 rounded-lg shadow-2xl"
-                      >
-                          <Image
-                              src={review.src}
-                              alt={review.alt}
-                              className="w-full h-auto border-2 border-gray-400/50 rounded-md"
-                              width={review.width}
-                              height={review.height}
-                              unoptimized
-                          />
-                      </div>
-                  ))}
-              </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
+              What Our Happy Clients Say
+            </h2>
+            <div className="mt-12 mx-auto w-full max-w-3xl space-y-0">
+              {reviews.map((review, index) => (
+                <div 
+                  key={index}
+                  ref={index === 0 ? firstReviewRef : null} 
+                  className="bg-black/10 rounded-lg shadow-2xl"
+                >
+                  <Image
+                    src={review.src}
+                    alt={review.alt}
+                    className="w-full h-auto border-2 border-gray-400/50 rounded-md"
+                    width={review.width}
+                    height={review.height}
+                    unoptimized
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-
         </div>
       </div>
     </>
   );
 };
-
 
 OfferChallengePage.getLayout = function getLayout(page: React.ReactElement) {
   return <MinimalLayout>{page}</MinimalLayout>;
