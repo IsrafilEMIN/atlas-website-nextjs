@@ -29,7 +29,11 @@
   }
 }
 
-/* --- ADD THIS CLASS --- */
 .challenge-page-gradient {
-  background: linear-gradient(to bottom, #131628 0%, #131628 1070px, #e8e8e8 1520px, #e8e8e8 100%);
+  background: linear-gradient(
+    #131628 0%,
+    #131628 var(--gradient-start, 1200px), /* Use variable, with a fallback */
+    #ffffff var(--gradient-end, 1450px),   /* Use variable, with a fallback */
+    #ffffff 100%
+  );
 }
