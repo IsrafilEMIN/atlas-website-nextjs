@@ -62,7 +62,7 @@ const ThankYouPage: NextPageWithLayout = () => {
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 py-12">
         <div className="w-full max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
-            You're Almost Done!
+            You&apos;re Almost Done!
           </h1>
           <p className="mt-4 text-lg text-gray-600">
             Please book your consultation time below. Your details have been pre-filled for you.

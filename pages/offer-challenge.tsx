@@ -307,7 +307,7 @@ const OfferChallengePage: NextPageWithLayout = () => {
             </div>
             <p className="mt-3 text-2xl md:text-3xl text-white max-w-5xl text-left">
               - Before you commit to a big project, we paint your first room for <strong>$899.</strong> <br></br>  
-              - If there's any issue, we <strong>refund</strong> the full amount. <br></br>
+              - If there&apos;s any issue, we <strong>refund</strong> the full amount. <br></br>
               - If you love it, we credit the <strong>$899</strong> to the next project.
             </p>
             <p className="mt-3 text-3xl md:text-4xl text-white max-w-5xl mx-auto">
