@@ -28,3 +28,8 @@
     width: 100%;
   }
 }
+
+/* --- ADD THIS CLASS --- */
+.challenge-page-gradient {
+  background: linear-gradient(to bottom, #131628 0%, #131628 1070px, #e8e8e8 1520px, #e8e8e8 100%);
+}

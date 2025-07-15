@@ -2,8 +2,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button"; // Assuming this path is correct
 
 // Define image sources
-const DESKTOP_IMAGE_SRC = "/images/atlas-hero-image.png"; 
-const MOBILE_IMAGE_SRC = "/images/atlas-mobile-hero-image.png";
+const DESKTOP_IMAGE_SRC = "/heroImages/atlas-hero-image.png"; 
+const MOBILE_IMAGE_SRC = "/heroImages/atlas-mobile-hero-image.png";
 const MOBILE_IMAGE_WIDTH = 2048;
 const MOBILE_IMAGE_HEIGHT = 1632;
 
@@ -14,7 +14,7 @@ export default function Hero() {
   const buttonText = "TRANSFORM YOUR HOME";
   const smallText = <>🕒 Average project start: <strong>1–3 days</strong> from quote</>;
   // const bookingLink = "/booking";
-  const bookingLink = "/booking";
+  const bookingLink = "/offer-challenge";
 
   return (
     <>

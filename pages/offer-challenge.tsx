@@ -21,7 +21,7 @@ type ModalProps = {
 };
 
 
-// --- BANT FORM MODAL COMPONENT (MODIFIED) ---
+// --- BANT FORM MODAL COMPONENT (UNCHANGED) ---
 const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -192,14 +192,14 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
   );
 };
 
+
 // --- THE MAIN PAGE COMPONENT ---
-const BookNowPage: NextPageWithLayout = () => {
+const OfferChallengePage: NextPageWithLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   
   const [leadSource, setLeadSource] = useState('Organic Traffic');
 
-  // useEffect is still needed here for the main page component logic
   useEffect(() => {
     if (router.isReady) {
       const source = router.query.utm_source as string;
@@ -216,7 +216,9 @@ const BookNowPage: NextPageWithLayout = () => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  // --- MODIFIED SUBMISSION HANDLER ---
   const handleFormSubmission = async (data: FormData) => {
+    // 1. Instantly send the notification.
     fetch('/api/send-email-notification', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -225,12 +227,12 @@ const BookNowPage: NextPageWithLayout = () => {
         phone: data.phone,
         postalCode: data.postalCode,
         email: data.email,
-        otherAreasToPaint: data.otherAreasToPaint.join(', ')
       }),
     }).catch(error => {
       console.error('Non-critical error: Instant notification failed to send.', error);
     });
 
+    // 2. Handle the primary action: saving the lead to Notion.
     const submissionData = {
       ...data,
       leadSource: leadSource,
@@ -252,10 +254,12 @@ const BookNowPage: NextPageWithLayout = () => {
       
       console.log('Successfully added lead to Notion!');
 
-      router.push({
-        pathname: '/thank-you',
-        query: { ...data },
-      });
+      // >>> CHANGE 1: Set a flag and the form data in session storage.
+      sessionStorage.setItem('canAccessThankYou', 'true');
+      sessionStorage.setItem('leadDataForThankYou', JSON.stringify(data));
+
+      // >>> CHANGE 2: Redirect to a clean URL. The thank-you page will handle the rest.
+      router.push('/thank-you');
 
     } catch (error) {
       console.error('Failed to submit lead to Notion:', error);
@@ -267,7 +271,7 @@ const BookNowPage: NextPageWithLayout = () => {
     <>
       <Head>
         <title>Book a call with us - Atlas HomeServices</title>
-        <meta name="description" content="Join our limited-time challenge, Atlas HomeServices guarantees your satisfaction or else money-back." />
+        <meta name="description" content="Experience a seamless booking process for your next painting project. Atlas HomeServices guarantees quality and satisfaction." />
       </Head>
 
       <QualificationFormModal
@@ -276,38 +280,38 @@ const BookNowPage: NextPageWithLayout = () => {
         onSubmit={handleFormSubmission}
       />
       
-      {/* --- Page Content --- */}
-      <div className="flex flex-col items-center min-h-screen relative text-white pb-20" style={{ background: 'linear-gradient(to bottom, #131628 0%, #131628 1070px, #e8e8e8 1520px, #e8e8e8 100%)' }}>
-        <div className="w-full max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 text-center z-10">
-          <div className="space-y-4 md:space-y-6">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto">
-              TRANSFORM YOUR HOME
+      {/* --- Page Content (UNCHANGED) --- */}
+      <div className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
+        <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
+          <div className="space-y-2 md:space-y-8">
+            <h1 className="mt-2 my-8 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
+                TRANSFORM YOUR HOME
             </h1>
-            <p className="mt-3 text-2xl md:text-4xl text-white max-w-5xl mx-auto">
-              Join our <strong><u>limited-time</u></strong> &quot;One Room Transformation&quot; Challenge.
+            <p className="mt-3 text-2xl md:text-4xl text-white max-w-8xl mx-auto">
+              Join our <strong><u>money-back</u></strong> guaranteed transformation challenge.
             </p>
             <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
-              <div className="aspect-video bg-slate-800 rounded-xl shadow-2xl overflow-hidden">
-                <Image
-                  src="/heroImages/atlas-hero-image.png"
-                  alt="Beautifully painted interior by Atlas HomeServices"
-                  className="w-full h-full object-cover"
-                  width={800}
-                  height={400}
-                  priority
-                />
-              </div>
+                <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                    <Image
+                        src="/offerChallengeImages/offer-challenge-image.jpeg"
+                        alt="Beautifully painted interior by Atlas HomeServices"
+                        className="w-full h-full object-cover"
+                        width={1600}
+                        height={900}
+                        priority
+                    />
+                </div>
             </div>
-            <p className="mt-8 md:mt-10 text-2xl md:text-3xl text-slate-300 max-w-5xl mx-auto leading-relaxed">
-              It&apos;s a flawless painting process with <strong><u>MONEY BACK</u></strong> guarantee.
+            <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
+              It&apos;s a <u>limited time</u> one room transformation challenge for Richmond Hill homeowners, with 100% <strong><u>money-back</u></strong> guarantee. 
             </p>
-            <p className="mt-3 text-3xl md:text-4xl text-white max-w-5xl mx-auto">
+            <p className="mt-3 text-xl md:text-4xl text-white max-w-5xl mx-auto">
               Only <strong><u>4 SPOTS</u></strong> left for July.
             </p>
             <div className="mt-10 md:mt-12">
-              <button type="button" onClick={handleOpenModal} className="inline-block px-24 py-4 sm:px-26 sm:py-8 text-2xl sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300">
-                I&apos;M READY TO TRANSFORM
-              </button>
+                <button type="button" onClick={handleOpenModal} className="inline-block px-8 py-3 sm:px-24 sm:py-8 text-lg sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300">
+                    I&apos;M READY TO TRANSFORM
+                </button>
             </div>
           </div>
         </div>
@@ -317,8 +321,8 @@ const BookNowPage: NextPageWithLayout = () => {
 };
 
 
-BookNowPage.getLayout = function getLayout(page: React.ReactElement) {
+OfferChallengePage.getLayout = function getLayout(page: React.ReactElement) {
   return <MinimalLayout>{page}</MinimalLayout>;
 };
 
-export default BookNowPage;
+export default OfferChallengePage;
