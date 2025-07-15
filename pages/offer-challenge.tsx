@@ -282,41 +282,36 @@ const OfferChallengePage: NextPageWithLayout = () => {
       
       {/* --- Page Content (UNCHANGED) --- */}
       <div className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
-        <div className="w-full max-w-5xl px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
-          <div className="space-y-4 md:space-y-6">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto">
-              TRANSFORM YOUR HOME
+        <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
+          <div className="space-y-2 md:space-y-8">
+            <h1 className="mt-2 my-8 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
+                TRANSFORM YOUR HOME
             </h1>
-            <p className="mt-3 text-3xl md:text-4xl text-white max-w-5xl mx-auto">
-              Do you need a painter but don&apos;t know <strong><u>who to trust</u></strong>? 
-            </p>
-            <p className="mt-3 text-3xl md:text-4xl text-white max-w-5xl mx-auto">
-              Join our <u>limited-time</u> &quot;One Room Transformation&quot; Challenge:
+            <p className="mt-3 text-2xl md:text-4xl text-white max-w-8xl mx-auto">
+              Join our <strong><u>money-back</u></strong> guaranteed transformation challenge.
             </p>
             <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
-                <div className="aspect-video bg-slate-800 rounded-xl shadow-2xl overflow-hidden">
+                <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
                     <Image
-                        src="/heroImages/atlas-hero-image.png"
+                        src="/offerChallengeImages/offer-challenge-image.jpeg"
                         alt="Beautifully painted interior by Atlas HomeServices"
                         className="w-full h-full object-cover"
-                        width={1200}
-                        height={600}
+                        width={1600}
+                        height={900}
                         priority
                     />
                 </div>
             </div>
-            <p className="mt-3 text-2xl md:text-3xl text-white max-w-5xl text-left">
-              - Before you commit to a big project, we paint your first room for <strong>$899.</strong> <br></br>  
-              - If there&apos;s any issue, we <strong>refund</strong> the full amount. <br></br>
-              - If you love it, we credit the <strong>$899</strong> to the next project.
+            <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
+              It's a <u>limited time</u> one room transformation challenge for Richmond Hill homeowners, with 100% <strong><u>money-back</u></strong> guarantee. 
             </p>
-            <p className="mt-3 text-3xl md:text-4xl text-white max-w-5xl mx-auto">
+            <p className="mt-3 text-xl md:text-4xl text-white max-w-5xl mx-auto">
               Only <strong><u>4 SPOTS</u></strong> left for July.
             </p>
             <div className="mt-10 md:mt-12">
-              <button type="button" onClick={handleOpenModal} className="inline-block px-24 py-4 sm:px-26 sm:py-8 text-2xl sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300">
-                I&apos;M READY TO TRANSFORM
-              </button>
+                <button type="button" onClick={handleOpenModal} className="inline-block px-8 py-3 sm:px-24 sm:py-8 text-lg sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300">
+                    I&apos;M READY TO TRANSFORM
+                </button>
             </div>
           </div>
         </div>
