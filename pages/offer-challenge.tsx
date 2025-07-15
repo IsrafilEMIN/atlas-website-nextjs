@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
@@ -21,7 +21,7 @@ type ModalProps = {
 };
 
 
-// --- BANT FORM MODAL COMPONENT (UNCHANGED) ---
+// --- BANT FORM MODAL COMPONENT ---
 const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -197,8 +197,55 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
 const OfferChallengePage: NextPageWithLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-  
   const [leadSource, setLeadSource] = useState('Organic Traffic');
+
+  const pageContainerRef = useRef<HTMLDivElement>(null);
+  const firstReviewRef = useRef<HTMLDivElement>(null);
+
+  const reviews = [
+    {
+      src: "/testimonialImages/testimonial-image-01.png",
+      alt: "HomeStars review for Atlas HomeServices",
+      width: 800,
+      height: 400,
+    },
+    {
+      src: "/testimonialImages/testimonial-image-02.png",
+      alt: "HomeStars review for Atlas HomeServices",
+      width: 800,
+      height: 550,
+    },
+    {
+      src: "/testimonialImages/testimonial-image-03.png",
+      alt: "HomeStars review for Atlas HomeServices",
+      width: 800,
+      height: 420,
+    },
+    {
+      src: "/testimonialImages/testimonial-image-04.png",
+      alt: "HomeStars Review for Atlas HomeServices",
+      width: 800,
+      height: 500,
+    },
+    {
+      src: "/testimonialImages/testimonial-image-05.png",
+      alt: "HomeStars Review for Atlas HomeServices",
+      width: 800,
+      height: 450,
+    },
+    {
+      src: "/testimonialImages/testimonial-image-06.png",
+      alt: "Google Review for Atlas HomeServices",
+      width: 800,
+      height: 520,
+    },
+    {
+      src: "/testimonialImages/testimonial-image-07.png",
+      alt: "Google Review for Atlas HomeServices",
+      width: 800,
+      height: 410,
+    }
+  ];
 
   useEffect(() => {
     if (router.isReady) {
@@ -212,13 +259,40 @@ const OfferChallengePage: NextPageWithLayout = () => {
       }
     }
   }, [router.isReady, router.query]);
+  
+  useEffect(() => {
+    const calculateGradient = () => {
+      const pageContainer = pageContainerRef.current;
+      const firstReview = firstReviewRef.current;
+
+      if (!pageContainer || !firstReview) {
+        return;
+      }
+
+      const firstReviewTop = firstReview.offsetTop;
+      const firstReviewHeight = firstReview.clientHeight;
+      const gradientMidpoint = firstReviewTop + (firstReviewHeight / 2);
+
+      const gradientStart = gradientMidpoint - 125;
+      const gradientEnd = gradientMidpoint + 125;
+      
+      pageContainer.style.setProperty('--gradient-start', `${gradientStart}px`);
+      pageContainer.style.setProperty('--gradient-end', `${gradientEnd}px`);
+    };
+
+    calculateGradient();
+
+    window.addEventListener('resize', calculateGradient);
+
+    return () => {
+      window.removeEventListener('resize', calculateGradient);
+    };
+  }, [reviews]);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  // --- MODIFIED SUBMISSION HANDLER ---
   const handleFormSubmission = async (data: FormData) => {
-    // 1. Instantly send the notification.
     fetch('/api/send-email-notification', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -232,7 +306,6 @@ const OfferChallengePage: NextPageWithLayout = () => {
       console.error('Non-critical error: Instant notification failed to send.', error);
     });
 
-    // 2. Handle the primary action: saving the lead to Notion.
     const submissionData = {
       ...data,
       leadSource: leadSource,
@@ -254,11 +327,9 @@ const OfferChallengePage: NextPageWithLayout = () => {
       
       console.log('Successfully added lead to Notion!');
 
-      // >>> CHANGE 1: Set a flag and the form data in session storage.
       sessionStorage.setItem('canAccessThankYou', 'true');
       sessionStorage.setItem('leadDataForThankYou', JSON.stringify(data));
 
-      // >>> CHANGE 2: Redirect to a clean URL. The thank-you page will handle the rest.
       router.push('/thank-you');
 
     } catch (error) {
@@ -280,8 +351,7 @@ const OfferChallengePage: NextPageWithLayout = () => {
         onSubmit={handleFormSubmission}
       />
       
-      {/* --- Page Content (UNCHANGED) --- */}
-      <div className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
+      <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
         <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
           <div className="space-y-2 md:space-y-8">
             <h1 className="mt-2 my-8 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
@@ -314,6 +384,31 @@ const OfferChallengePage: NextPageWithLayout = () => {
                 </button>
             </div>
           </div>
+          
+          <div className="pt-12 sm:pt-28 text-center">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
+                  What Our Happy Clients Say
+              </h2>
+              <div className="mt-12 mx-auto w-full max-w-3xl space-y-0">
+                  {reviews.map((review, index) => (
+                      <div 
+                        key={index}
+                        ref={index === 0 ? firstReviewRef : null} 
+                        className="bg-black/10 rounded-lg shadow-2xl"
+                      >
+                          <Image
+                              src={review.src}
+                              alt={review.alt}
+                              className="w-full h-auto border-2 border-gray-400/50 rounded-md"
+                              width={review.width}
+                              height={review.height}
+                              unoptimized
+                          />
+                      </div>
+                  ))}
+              </div>
+          </div>
+
         </div>
       </div>
     </>
