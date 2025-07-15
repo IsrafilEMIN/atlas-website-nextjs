@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
@@ -9,7 +9,7 @@ import Image from 'next/image';
 // Add this interface at the top of your file to avoid TypeScript errors
 declare global {
   interface Window {
-    dataLayer: any[];
+    dataLayer: Array<Record<string, any>>;
   }
 }
 // ⭐ --- END: NEW CODE ---
@@ -213,50 +213,50 @@ const OfferChallengePage: NextPageWithLayout = () => {
   const pageContainerRef = useRef<HTMLDivElement>(null);
   const firstReviewRef = useRef<HTMLDivElement>(null);
 
-  const reviews = [
-    {
-      src: "/testimonialImages/testimonial-image-01.png",
-      alt: "HomeStars review for Atlas HomeServices",
-      width: 800,
-      height: 400,
-    },
-    {
-      src: "/testimonialImages/testimonial-image-02.png",
-      alt: "HomeStars review for Atlas HomeServices",
-      width: 800,
-      height: 550,
-    },
-    {
-      src: "/testimonialImages/testimonial-image-03.png",
-      alt: "HomeStars review for Atlas HomeServices",
-      width: 800,
-      height: 420,
-    },
-    {
-      src: "/testimonialImages/testimonial-image-04.png",
-      alt: "HomeStars Review for Atlas HomeServices",
-      width: 800,
-      height: 500,
-    },
-    {
-      src: "/testimonialImages/testimonial-image-05.png",
-      alt: "HomeStars Review for Atlas HomeServices",
-      width: 800,
-      height: 450,
-    },
-    {
-      src: "/testimonialImages/testimonial-image-06.png",
-      alt: "Google Review for Atlas HomeServices",
-      width: 800,
-      height: 520,
-    },
-    {
-      src: "/testimonialImages/testimonial-image-07.png",
-      alt: "Google Review for Atlas HomeServices",
-      width: 800,
-      height: 410,
-    }
-  ];
+  const reviews = useMemo(() => ([ // Wrap the array in useMemo
+      {
+        src: "/testimonialImages/testimonial-image-01.png",
+        alt: "HomeStars review for Atlas HomeServices",
+        width: 800,
+        height: 400,
+      },
+      {
+        src: "/testimonialImages/testimonial-image-02.png",
+        alt: "HomeStars review for Atlas HomeServices",
+        width: 800,
+        height: 550,
+      },
+      {
+        src: "/testimonialImages/testimonial-image-03.png",
+        alt: "HomeStars review for Atlas HomeServices",
+        width: 800,
+        height: 420,
+      },
+      {
+        src: "/testimonialImages/testimonial-image-04.png",
+        alt: "HomeStars Review for Atlas HomeServices",
+        width: 800,
+        height: 500,
+      },
+      {
+        src: "/testimonialImages/testimonial-image-05.png",
+        alt: "HomeStars Review for Atlas HomeServices",
+        width: 800,
+        height: 450,
+      },
+      {
+        src: "/testimonialImages/testimonial-image-06.png",
+        alt: "Google Review for Atlas HomeServices",
+        width: 800,
+        height: 520,
+      },
+      {
+        src: "/testimonialImages/testimonial-image-07.png",
+        alt: "Google Review for Atlas HomeServices",
+        width: 800,
+        height: 410,
+      }
+    ]), []);
 
   useEffect(() => {
     if (router.isReady) {
