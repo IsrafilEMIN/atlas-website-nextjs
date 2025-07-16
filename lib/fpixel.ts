@@ -4,7 +4,7 @@
 // This is the type definition for the fbq function
 declare global {
   interface Window {
-    fbq: (...args: any[]) => void;
+    fbq: (...args: ['init', string] | ['track', string, object?]) => void;
   }
 }
 
