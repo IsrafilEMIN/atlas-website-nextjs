@@ -1,10 +1,12 @@
 // pages/thank-you.tsx
+
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app';
 import HubSpotWidget from '@/components/HubSpotWidget';
+import * as fpixel from '../lib/fpixel'; // <-- Make sure this import is here
 
 // Define a type for the data we expect from the previous page
 type LeadData = {
@@ -34,13 +36,37 @@ const ThankYouPage: NextPageWithLayout = () => {
       sessionStorage.removeItem('canAccessThankYou');
       sessionStorage.removeItem('leadDataForThankYou');
 
-      // 3. Allow the page to render
+      // --- 3. 🔥 ADD HUBSPOT EVENT LISTENER TO FIRE 'SCHEDULE' EVENT 🔥 ---
+      const handleHubSpotMessage = (event: MessageEvent) => {
+        // First, check if the message is from a trusted source (HubSpot)
+        if (event.origin !== "https://meetings.hubspot.com") {
+          return;
+        }
+
+        // Next, check if the message data indicates a meeting was booked.
+        // HubSpot's booking widget sends an event with `meetingBooked: true`.
+        if (event.data && event.data.meetingBooked) {
+          console.log('HubSpot meeting booked message received. Firing Schedule event.');
+          fpixel.event('Schedule');
+        }
+      };
+
+      // Add the listener to the window object
+      window.addEventListener('message', handleHubSpotMessage);
+      // -----------------------------------------------------------------
+
+      // 4. Allow the page to render
       setIsLoading(false);
+      
+      // 5. Clean up the listener when the component unmounts to prevent memory leaks
+      return () => {
+        window.removeEventListener('message', handleHubSpotMessage);
+      };
+
     } else {
       // --- ACCESS DENIED ---
       // Redirect user away because they didn't come from the form.
-      // router.replace() prevents them from using the 'back' button to return here.
-      router.replace('/offer-challenge'); // Or redirect to your homepage '/'
+      router.replace('/offer-challenge'); 
     }
   }, [router]);
 
@@ -66,7 +92,7 @@ const ThankYouPage: NextPageWithLayout = () => {
             You&apos;re Almost Done!
           </h1>
           <p className="mt-4 text-lg text-gray-600">
-            Please book your consultation time below. Your details have been pre-filled for you.
+            Please book your consultation time below. Your details may be pre-filled for you.
           </p>
 
           <div className="mt-8 relative h-[650px] w-full">
