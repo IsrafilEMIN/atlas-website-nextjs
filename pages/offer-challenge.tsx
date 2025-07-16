@@ -1,9 +1,11 @@
+// pages/offer-challenge.tsx
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
+import * as fpixel from '../lib/fpixel';
 
 // Define the dataLayer event structure
 declare global {
@@ -309,6 +311,10 @@ const OfferChallengePage: NextPageWithLayout = () => {
       }
     });
     console.log('DataLayer event pushed: google_lead_form_submit');
+
+    // 2. 🔥 FIRE META PIXEL 'LEAD' EVENT HERE 🔥
+    fpixel.event('Lead');
+    console.log("Meta Pixel 'Lead' event fired.");
 
     const submissionData = {
       ...data,
