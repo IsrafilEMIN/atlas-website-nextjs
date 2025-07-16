@@ -40,7 +40,7 @@ export default function Header() {
           <Link href="/" passHref legacyBehavior>
             <a onClick={handleLinkClick("/")} className="flex items-center group" aria-label="Go to Homepage">
               <Image
-                src="/assets/website-header-logo.png"
+                src="/assets/Header - Atlas HomeServices Transparent-White.png"
                 alt="Atlas HomeServices"
                 width={500}
                 height={100}

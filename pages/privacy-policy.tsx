@@ -9,6 +9,7 @@ export default function PrivacyPolicy() {
           name="description"
           content="View the privacy policy for Atlas HomeServices, a luxury painting company serving Ontario homeowners."
         />
+        <meta name="robots" content="noindex, nofollow" />
       </Head>
       <main className="bg-[#f9f6f2] min-h-screen px-6 py-16 md:px-12 text-[#2c3e50]">
         <div className="max-w-3xl mx-auto">
