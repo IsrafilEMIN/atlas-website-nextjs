@@ -76,7 +76,7 @@ export default function Footer() {
             <Link href="/" passHref legacyBehavior>
               <a onClick={handleLinkClick("/")} className="flex items-center group" aria-label="Go to Homepage">
                 <Image 
-                  src="/assets/website-footer-logo.png" 
+                  src="/assets/Header - Atlas HomeServices Transparent-White.png" 
                   alt="Atlas HomeServices Footer Logo"
                   width={500} // Adjusted intrinsic width (example, use your actual image's aspect ratio)
                   height={100}  // Adjusted intrinsic height (example)
