@@ -35,7 +35,7 @@ const TopStickyBanner: React.FC = () => {
         className="transition-opacity duration-150" 
       >
         {/* Customize your CTA text below */}
-        Book Your Project Today & Get a Special Discount! Click Here!
+        Book Your 100% Money-Back Guaranteed Transformation. Click Here!
       </Link>
       
       {/* Spacer div remains the same */}
