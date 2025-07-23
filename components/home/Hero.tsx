@@ -9,10 +9,9 @@ const MOBILE_IMAGE_HEIGHT = 1632;
 
 export default function Hero() {
   // Common text content can be defined once if you prefer
-  const headingText = <>DO YOU WANT TO TRANSFORM<br/>YOUR HOME?</>;
-  const paragraphText = "Transform your home with the team that transformed many homes and hearts.";
-  const buttonText = "TRANSFORM YOUR HOME";
-  const smallText = <>🕒 Average project start: <strong>1–3 days</strong> from quote</>;
+  const headingText = <>DO YOU WANT TO PAINT<br/>YOUR HOME?</>;
+  const paragraphText = "We help homeowners in Richmond Hill, Markham, Vaughan transform their homes with 100% money-back guarantee. No surprise fees.";
+  const buttonText = "GET A QUOTE";
   // const bookingLink = "/booking";
   const bookingLink = "/offer-challenge";
 
@@ -59,9 +58,6 @@ export default function Hero() {
             >
               {buttonText}
             </Button>
-          </div>
-          <div className="text-xs text-gray-700 italic mt-2">
-            {smallText}
           </div>
         </div>
 
@@ -140,9 +136,6 @@ export default function Hero() {
               >
                 {buttonText}
               </Button>
-            </div>
-            <div className="text-xs text-gray-700 italic mt-2">
-              {smallText}
             </div>
           </div>
         </div>
