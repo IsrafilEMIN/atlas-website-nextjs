@@ -355,10 +355,10 @@ const OfferChallengePage: NextPageWithLayout = () => {
         <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
           <div className="space-y-2 md:space-y-8">
             <h1 className="mt-0 my-4 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
-              TRANSFORM YOUR HOME
+              PAINT YOUR HOME
             </h1>
             <p className="mt-3 text-2xl md:text-4xl text-white max-w-6xl mx-auto">
-              Join our <strong><u>money-back</u></strong> guaranteed transformation challenge for <u>Richmond Hill</u> homeowners.
+              Paint your home with our <strong><u>money-back</u></strong> guaranteed offer for<br></br> <u>Richmond Hill, Markham, Vaughan</u> homeowners.
             </p>
             <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
               <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
@@ -373,7 +373,7 @@ const OfferChallengePage: NextPageWithLayout = () => {
               </div>
             </div>
             <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
-              It&apos;s a <u>limited time</u> one room transformation challenge for Richmond Hill homeowners, with free color consultation and 100% <strong><u>money-back</u></strong> guarantee.
+              It&apos;s a <u>limited time</u> painting transformation challenge for Richmond Hill, Markham, Vaughan homeowners, with 100% <strong><u>money-back</u></strong> guarantee.
             </p>
             <p className="mt-3 text-xl md:text-4xl text-white max-w-5xl mx-auto">
               Only <strong><u>4 SPOTS</u></strong> left for July.
