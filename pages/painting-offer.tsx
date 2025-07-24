@@ -1,4 +1,3 @@
-// pages/offer-challenge.tsx
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -205,7 +204,7 @@ const QualificationFormModal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmi
 };
 
 // --- THE MAIN PAGE COMPONENT ---
-const OfferChallengePage: NextPageWithLayout = () => {
+const PaintingOfferPage: NextPageWithLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const [leadSource, setLeadSource] = useState('Organic Traffic');
@@ -213,7 +212,24 @@ const OfferChallengePage: NextPageWithLayout = () => {
   const pageContainerRef = useRef<HTMLDivElement>(null);
   const firstReviewRef = useRef<HTMLDivElement>(null);
 
+  // Extract and process location from query parameters
+  const location = router.query.location as string;
+  const normalizedLocation = location ? location.toLowerCase() : '';
+  const locationMap: { [key: string]: string } = {
+    'vaughan': 'Vaughan',
+    'markham': 'Markham',
+    'richmond hill': 'Richmond Hill',
+  };
+  const properLocation = locationMap[normalizedLocation];
+  const headerTitle = properLocation ? `${properLocation} Top-Rated Painter` : 'Paint Your Home';
+
   const reviews = useMemo(() => [
+    {
+      src: "/testimonialImages/testimonial-image-08.png",
+      alt: "Google review for Atlas HomeServices",
+      width: 800,
+      height: 400,
+    },
     {
       src: "/testimonialImages/testimonial-image-01.png",
       alt: "HomeStars review for Atlas HomeServices",
@@ -354,8 +370,8 @@ const OfferChallengePage: NextPageWithLayout = () => {
       <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
         <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
           <div className="space-y-2 md:space-y-8">
-            <h1 className="mt-0 my-4 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
-              PAINT YOUR HOME
+            <h1 className="mt-0 my-4 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto uppercase">
+              {headerTitle}
             </h1>
             <p className="mt-3 text-2xl md:text-4xl text-white max-w-6xl mx-auto">
               Paint your home with our <strong><u>money-back</u></strong> guaranteed offer for<br></br> <u>Richmond Hill, Markham, Vaughan</u> homeowners.
@@ -373,14 +389,14 @@ const OfferChallengePage: NextPageWithLayout = () => {
               </div>
             </div>
             <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
-              It&apos;s a <u>limited time</u> painting transformation offer for Richmond Hill, Markham, Vaughan homeowners, with 100% <strong><u>money-back</u></strong> guarantee.
+              It's a <u>limited time</u> painting transformation offer for Richmond Hill, Markham, Vaughan homeowners, with 100% <strong><u>money-back</u></strong> guarantee.
             </p>
             <p className="mt-3 text-xl md:text-4xl text-white max-w-5xl mx-auto">
               Only <strong><u>5 SPOTS</u></strong> left for August.
             </p>
             <div className="mt-10 md:mt-12">
               <button type="button" onClick={handleOpenModal} className="inline-block px-8 py-3 sm:px-24 sm:py-8 text-lg sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300">
-                I&apos;M READY TO PAINT
+                I'M READY TO PAINT
               </button>
             </div>
           </div>
@@ -414,8 +430,8 @@ const OfferChallengePage: NextPageWithLayout = () => {
   );
 };
 
-OfferChallengePage.getLayout = function getLayout(page: React.ReactElement) {
+PaintingOfferPage.getLayout = function getLayout(page: React.ReactElement) {
   return <MinimalLayout>{page}</MinimalLayout>;
 };
 
-export default OfferChallengePage;
+export default PaintingOfferPage;
