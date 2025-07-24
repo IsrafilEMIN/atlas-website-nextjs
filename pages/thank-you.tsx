@@ -40,7 +40,7 @@ const ThankYouPage: NextPageWithLayout = () => {
       // --- ACCESS DENIED ---
       // Redirect user away because they didn't come from the form.
       // router.replace() prevents them from using the 'back' button to return here.
-      router.replace('/offer-challenge'); // Or redirect to your homepage '/'
+      router.replace('/painting-offer'); // Or redirect to your homepage '/'
     }
   }, [router]);
 

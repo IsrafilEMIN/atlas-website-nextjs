@@ -13,7 +13,7 @@ export default function Hero() {
   const paragraphText = "We help homeowners in Richmond Hill, Markham, Vaughan transform their homes with 100% money-back guarantee. No surprise fees.";
   const buttonText = "GET A QUOTE";
   // const bookingLink = "/booking";
-  const bookingLink = "/offer-challenge";
+  const bookingLink = "/painting-offer";
 
   return (
     <>
