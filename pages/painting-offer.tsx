@@ -5,6 +5,7 @@ import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
 import * as fpixel from '../lib/fpixel';
+import GoogleReviewPill from '@/components/GoogleReviewPill';
 
 // Define the dataLayer event structure
 declare global {
@@ -222,6 +223,8 @@ const PaintingOfferPage: NextPageWithLayout = () => {
   };
   const properLocation = locationMap[normalizedLocation];
   const headerTitle = properLocation ? `${properLocation} Top-Rated Painter` : 'Paint Your Home';
+  const subTextLocation = properLocation ? `${properLocation} homeowners` : 'homeowners';
+
 
   const reviews = useMemo(() => [
     {
@@ -366,6 +369,12 @@ const PaintingOfferPage: NextPageWithLayout = () => {
         onClose={handleCloseModal}
         onSubmit={handleFormSubmission}
       />
+
+      <GoogleReviewPill 
+        reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review" 
+        rating={5} 
+        reviewCount={5}
+      />
       
       <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
         <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
@@ -373,8 +382,8 @@ const PaintingOfferPage: NextPageWithLayout = () => {
             <h1 className="mt-0 my-4 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto uppercase">
               {headerTitle}
             </h1>
-            <p className="mt-3 text-2xl md:text-4xl text-white max-w-6xl mx-auto">
-              Paint your home with our <strong><u>money-back</u></strong> guaranteed offer for<br></br> <u>Richmond Hill, Markham, Vaughan</u> homeowners.
+            <p className="mt-3 text-2xl md:text-5xl text-white max-w-6xl mx-auto">
+              Experience a Meticulous Painting Transformation.
             </p>
             <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
               <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
@@ -389,7 +398,7 @@ const PaintingOfferPage: NextPageWithLayout = () => {
               </div>
             </div>
             <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
-              It&apos;s a <u>limited time</u> painting transformation offer for Richmond Hill, Markham, Vaughan homeowners, with 100% <strong><u>money-back</u></strong> guarantee.
+              It&apos;s a <u>limited time</u> painting transformation offer for {subTextLocation}, with 100% <strong><u>money-back</u></strong> guarantee.
             </p>
             <p className="mt-3 text-xl md:text-4xl text-white max-w-5xl mx-auto">
               Only <strong><u>5 SPOTS</u></strong> left for August.
