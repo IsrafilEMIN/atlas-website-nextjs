@@ -389,14 +389,14 @@ const PaintingOfferPage: NextPageWithLayout = () => {
               </div>
             </div>
             <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
-              It's a <u>limited time</u> painting transformation offer for Richmond Hill, Markham, Vaughan homeowners, with 100% <strong><u>money-back</u></strong> guarantee.
+              It&apos;s a <u>limited time</u> painting transformation offer for Richmond Hill, Markham, Vaughan homeowners, with 100% <strong><u>money-back</u></strong> guarantee.
             </p>
             <p className="mt-3 text-xl md:text-4xl text-white max-w-5xl mx-auto">
               Only <strong><u>5 SPOTS</u></strong> left for August.
             </p>
             <div className="mt-10 md:mt-12">
               <button type="button" onClick={handleOpenModal} className="inline-block px-8 py-3 sm:px-24 sm:py-8 text-lg sm:text-4xl font-bold text-center bg-[#0F52BA] text-white rounded-full transition-all duration-300">
-                I'M READY TO PAINT
+                I&apos;M READY TO PAINT
               </button>
             </div>
           </div>
