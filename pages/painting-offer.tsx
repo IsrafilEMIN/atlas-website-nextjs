@@ -267,7 +267,7 @@ const PaintingOfferPage: NextPageWithLayout = () => {
               </div>
             </div>
             <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
-              It's a <u>limited time</u> painting transformation offer for {subTextLocation}, with 100% <strong><u>money-back</u></strong> guarantee.
+              It&apos;s a <u>limited time</u> painting transformation offer for {subTextLocation}, with 100% <strong><u>money-back</u></strong> guarantee.
             </p>
             <p className="mt-3 text-xl md:text-4xl text-white max-w-5xl mx-auto">
               Only <strong><u>5 SPOTS</u></strong> left for August.
