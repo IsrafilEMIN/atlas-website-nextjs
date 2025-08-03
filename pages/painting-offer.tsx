@@ -158,8 +158,8 @@ const PaintingOfferPage: NextPageWithLayout = () => {
     'richmond hill': 'Richmond Hill',
   };
   const properLocation = locationMap[normalizedLocation];
-  const headerTitle = properLocation ? `${properLocation} Top-Rated Painter` : 'Paint Your Home';
-  const subTextLocation = properLocation ? `${properLocation} homeowners` : 'homeowners';
+  const headerTitle = properLocation ? `${properLocation} Realtor\'s Trusted Painter` : 'Realtor\'s Trusted Painter';
+  const subTextLocation = properLocation ? `${properLocation} realtors` : 'realtors';
 
   const reviews = useMemo(() => [
     { src: "/testimonialImages/testimonial-image-08.png", alt: "Google review for Atlas HomeServices", width: 800, height: 400 },
@@ -252,13 +252,33 @@ const PaintingOfferPage: NextPageWithLayout = () => {
               {headerTitle}
             </h1>
             <p className="mt-3 text-2xl md:text-5xl text-white max-w-6xl mx-auto">
-              Experience a Meticulous Painting Transformation.
+              Have your properties ready for listing in 72 hours.
             </p>
-            <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
-              <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
                 <Image
-                  src="/offerChallengeImages/offer-challenge-image.jpeg"
-                  alt="Beautifully painted interior by Atlas HomeServices"
+                  src="/paintingOfferImages/painting-offer-image-01.jpg"
+                  alt="Beautifully painted interior by Atlas HomeServices - Image 1"
+                  className="w-full h-full object-cover"
+                  width={1600}
+                  height={900}
+                  priority
+                />
+              </div>
+              <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                <Image
+                  src="/paintingOfferImages/painting-offer-image-02.jpg"
+                  alt="Beautifully painted interior by Atlas HomeServices - Image 2"
+                  className="w-full h-full object-cover"
+                  width={1600}
+                  height={900}
+                  priority
+                />
+              </div>
+              <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                <Image
+                  src="/paintingOfferImages/painting-offer-image-03.jpg"
+                  alt="Beautifully painted interior by Atlas HomeServices - Image 3"
                   className="w-full h-full object-cover"
                   width={1600}
                   height={900}
@@ -267,10 +287,7 @@ const PaintingOfferPage: NextPageWithLayout = () => {
               </div>
             </div>
             <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
-              It&apos;s a <u>limited time</u> painting transformation offer for {subTextLocation}, with 100% <strong><u>money-back</u></strong> guarantee.
-            </p>
-            <p className="mt-3 text-xl md:text-4xl text-white max-w-5xl mx-auto">
-              Only <strong><u>5 SPOTS</u></strong> left for August.
+              It&apos;s a <strong><u>fixed price</u></strong>, <u>72-hour</u> ready-for-listing guaranteed painting for {subTextLocation}.
             </p>
             <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
               <QualificationForm onSubmit={handleFormSubmission} />

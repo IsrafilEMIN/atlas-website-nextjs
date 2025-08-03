@@ -1,3 +1,4 @@
+//components/home/Hero.tsx
 import Image from "next/image";
 import { Button } from "@/components/ui/button"; // Assuming this path is correct
 
@@ -9,8 +10,8 @@ const MOBILE_IMAGE_HEIGHT = 1632;
 
 export default function Hero() {
   // Common text content can be defined once if you prefer
-  const headingText = <>DO YOU WANT TO PAINT<br/>YOUR HOME?</>;
-  const paragraphText = "We help homeowners in Richmond Hill, Markham, Vaughan transform their homes with 100% money-back guarantee. No surprise fees.";
+  const headingText = <>ARE YOU A REALTOR LOOKING FOR A PAINTER?</>;
+  const paragraphText = "We help realtors make their properties ready for listing in 72 hours.";
   const buttonText = "GET A QUOTE";
   // const bookingLink = "/booking";
   const bookingLink = "/painting-offer";
