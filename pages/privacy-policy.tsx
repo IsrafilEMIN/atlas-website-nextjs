@@ -59,7 +59,7 @@ export default function PrivacyPolicy() {
             We do not sell, rent, or trade your personal information to third parties for marketing purposes. Your data is only shared with trusted partners who assist us in operating our business (such as our CRM software provider), and they are held to strict confidentiality agreements.
           </p>
           <p className="mb-4">
-            When you submit information through a Meta lead ad, your data is also subject to Meta's Data Policy.
+            When you submit information through a Meta lead ad, your data is also subject to Meta&apos;s Data Policy.
           </p>
 
           <h2 className="text-xl font-semibold mt-6 mb-2">4. Data Security</h2>
@@ -79,7 +79,7 @@ export default function PrivacyPolicy() {
 
           <h2 className="text-xl font-semibold mt-6 mb-2">7. Policy Updates</h2>
           <p className="mb-4">
-            We may update this privacy policy from time to time to reflect changes in our practices. We will post any changes on this page and update the "Last updated" date.
+            We may update this privacy policy from time to time to reflect changes in our practices. We will post any changes on this page and update the &quot;Last updated&quot; date.
           </p>
 
           <h2 className="text-xl font-semibold mt-6 mb-2">8. Contact Us</h2>
