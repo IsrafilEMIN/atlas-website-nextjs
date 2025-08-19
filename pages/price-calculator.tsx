@@ -27,6 +27,7 @@ interface ExteriorItem {
 }
 
 type PrepCondition = 'good' | 'fair' | 'poor' | '';
+type PaintQuality = 'good' | 'better' | 'best' | '';
 type SidingType = 'Vinyl' | 'Wood' | 'Stucco' | 'Brick' | 'Metal' | 'Fiber Cement';
 type StoryCount = '1' | '2' | '3';
 
@@ -51,22 +52,36 @@ interface ExteriorModalProps {
 }
 
 
-// --- CONFIGURATION & CONSTANTS (RE-CALIBRATED) ---
+// --- CONFIGURATION & CONSTANTS (RE-CALIBRATED FOR 50% GROSS MARGIN) ---
 const PRICING = {
-    BILLABLE_HOURLY_RATE: 65.00,
+    // --- Core Profitability & Cost ---
+    PROFIT_MARKUP: 2.0, // Sets the 50% gross margin (Price = COGS * 2)
+    PAINTER_BURDENED_HOURLY_COST: 40.00, // Actual cost: painter's wage + WSIB + payroll taxes
+
+    // --- Material Costs (Your Actual Contractor Cost from Supplier) ---
+    PAINT_COST_PER_GALLON: { good: 30, better: 50, best: 65 },
+    SUPPLIES_PERCENTAGE: 0.15, // Cost of tape, rollers, etc. as a % of paint cost
+
+    // --- Production Rates & Fixed Costs (COGS) ---
     PAINTING_SQFT_PER_HOUR: 175,
     BASE_PREP_HOURS_PER_ROOM: 2.0,
     BASE_PREP_HOURS_EXTERIOR: 4.0,
-    COST_PER_DOOR: 100.00,
-    COST_PER_EXTERIOR_DOOR: 175.00,
-    COST_PER_CABINET_PIECE: 140.00,
+    COST_PER_DOOR: 75.00,             // Estimated COGS (1.5hr labor + materials)
+    COST_PER_EXTERIOR_DOOR: 125.00,   // Estimated COGS (2.5hr labor + materials)
+    COST_PER_CABINET_PIECE: 100.00,   // Estimated COGS (2hr labor + specialty materials)
+
+    // --- Complexity Multipliers (Applied to Labor Hours) ---
     PREP_CONDITION_MULTIPLIERS: { good: 1.0, fair: 1.5, poor: 2.5 },
     HIGH_CEILING_MULTIPLIER: 1.20,
     SIDING_LABOR_MULTIPLIERS: { 'Vinyl': 1.0, 'Wood': 1.4, 'Stucco': 1.6, 'Brick': 1.7, 'Metal': 1.1, 'Fiber Cement': 1.1 },
     STORY_MULTIPLIERS: { '1': 1.0, '2': 1.25, '3': 1.5 },
-    COVERAGE_PER_GALLON: 350, SUPPLIES_PERCENTAGE: 0.15,
-    RANGE_MULTIPLIER_LOW: 0.95, RANGE_MULTIPLIER_HIGH: 1.20,
+
+    // --- General Constants ---
+    COVERAGE_PER_GALLON: 350,
+    RANGE_MULTIPLIER_LOW: 0.95,
+    RANGE_MULTIPLIER_HIGH: 1.20,
 };
+
 
 // --- HELPER & MODAL COMPONENTS ---
 const SelectableCard: React.FC<SelectableCardProps> = ({ label, selected, onClick, children = null }) => (
@@ -173,6 +188,7 @@ const ExteriorModal: React.FC<ExteriorModalProps> = ({ item, onSave, onClose }) 
     );
 };
 
+
 // --- MAIN APP COMPONENT ---
 export default function App() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -182,7 +198,7 @@ export default function App() {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [exteriorItems, setExteriorItems] = useState<ExteriorItem[]>([]);
     const [selectedPrep, setSelectedPrep] = useState<PrepCondition>('');
-    const [selectedPaintCost, setSelectedPaintCost] = useState(0);
+    const [selectedPaintQuality, setSelectedPaintQuality] = useState<PaintQuality>('');
     const [isRoomModalOpen, setIsRoomModalOpen] = useState(false);
     const [isExteriorModalOpen, setIsExteriorModalOpen] = useState(false);
     const [editingRoom, setEditingRoom] = useState<Room | null>(null);
@@ -192,58 +208,79 @@ export default function App() {
         if (rooms.length === 0 && exteriorItems.length === 0) {
             return { low: 0, high: 0, materialsLow: 0, materialsHigh: 0, laborLow: 0, laborHigh: 0, prepLow: 0, prepHigh: 0, paintJobLow: 0, paintJobHigh: 0 };
         }
-        let totalPaintableSqFt = 0, totalPaintingHours = 0, totalPrepHours = 0, addedCosts = 0;
+
+        let totalPaintableSqFt = 0, totalPaintingHours = 0, totalPrepHours = 0, addonCOGS = 0;
         const prepMultiplier = PRICING.PREP_CONDITION_MULTIPLIERS[selectedPrep as keyof typeof PRICING.PREP_CONDITION_MULTIPLIERS] || 1.0;
 
         if (projectType === 'interior' || projectType === 'both') {
             rooms.forEach(room => {
                 let roomSqFt = 0;
                 const ceilingMultiplier = (room.ceilingHeight as number) > 10 ? PRICING.HIGH_CEILING_MULTIPLIER : 1;
+
                 if (room.paintWalls) roomSqFt += ((room.length as number) + (room.width as number)) * 2 * (room.ceilingHeight as number);
                 if (room.paintCeiling) roomSqFt += (room.length as number) * (room.width as number);
-                if (room.paintTrim) totalPaintingHours += (((room.length as number) + (room.width as number)) * 2) / 40;
+                if (room.paintTrim) totalPaintingHours += (((room.length as number) + (room.width as number)) * 2) / 40; // Approx. 40 LFT/hr for trim
+
                 totalPaintableSqFt += roomSqFt;
                 totalPaintingHours += (roomSqFt * 2 * ceilingMultiplier) / PRICING.PAINTING_SQFT_PER_HOUR;
                 totalPrepHours += PRICING.BASE_PREP_HOURS_PER_ROOM;
-                if ((room.doors as number) > 0) addedCosts += (room.doors as number) * PRICING.COST_PER_DOOR;
+
+                if ((room.doors as number) > 0) addonCOGS += (room.doors as number) * PRICING.COST_PER_DOOR;
                 if (room.paintCabinets) {
                     const cabinetCount = ((room.cabinetDoors as number) || 0) + ((room.cabinetDrawers as number) || 0);
-                    addedCosts += cabinetCount * PRICING.COST_PER_CABINET_PIECE;
+                    addonCOGS += cabinetCount * PRICING.COST_PER_CABINET_PIECE;
                 }
             });
         }
+
         if (projectType === 'exterior' || projectType === 'both') {
             exteriorItems.forEach(item => {
                 const sidingMultiplier = PRICING.SIDING_LABOR_MULTIPLIERS[item.siding as SidingType] || 1;
                 const storyMultiplier = PRICING.STORY_MULTIPLIERS[item.stories as StoryCount] || 1;
+
                 totalPaintableSqFt += (item.sqft as number);
                 totalPaintingHours += ((item.sqft as number) * 2 * sidingMultiplier * storyMultiplier) / PRICING.PAINTING_SQFT_PER_HOUR;
                 totalPrepHours += PRICING.BASE_PREP_HOURS_EXTERIOR;
-                if ((item.trimLft as number) > 0) totalPaintingHours += (item.trimLft as number) / 30;
-                if ((item.doors as number) > 0) addedCosts += (item.doors as number) * PRICING.COST_PER_EXTERIOR_DOOR;
+
+                if ((item.trimLft as number) > 0) totalPaintingHours += (item.trimLft as number) / 30; // Approx. 30 LFT/hr for exterior trim
+                if ((item.doors as number) > 0) addonCOGS += (item.doors as number) * PRICING.COST_PER_EXTERIOR_DOOR;
             });
         }
+        
+        // --- COST OF GOODS SOLD (COGS) CALCULATION ---
         const finalPrepHours = totalPrepHours * prepMultiplier;
         const totalLaborHours = totalPaintingHours + finalPrepHours;
-        const totalLaborCost = totalLaborHours * PRICING.BILLABLE_HOURLY_RATE;
-        let totalPaintCost = 0;
-        if (selectedPaintCost > 0) {
+        const laborCOGS = totalLaborHours * PRICING.PAINTER_BURDENED_HOURLY_COST;
+        
+        let materialCOGS = 0;
+        if (selectedPaintQuality) {
+            const paintCostPerGallon = PRICING.PAINT_COST_PER_GALLON[selectedPaintQuality];
             const gallonsNeeded = Math.ceil((totalPaintableSqFt * 2) / PRICING.COVERAGE_PER_GALLON);
-            totalPaintCost = gallonsNeeded * selectedPaintCost;
-            totalPaintCost += totalPaintCost * PRICING.SUPPLIES_PERCENTAGE;
+            const totalPaintCost = gallonsNeeded * paintCostPerGallon;
+            const suppliesCost = totalPaintCost * PRICING.SUPPLIES_PERCENTAGE;
+            materialCOGS = totalPaintCost + suppliesCost;
         }
-        const baseCost = totalLaborCost + totalPaintCost + addedCosts;
+
+        const totalCOGS = laborCOGS + materialCOGS + addonCOGS;
+
+        // --- FINAL PRICE CALCULATION (APPLYING MARKUP) ---
+        const price = totalCOGS * PRICING.PROFIT_MARKUP;
         const roundTo = (num: number, nearest: number) => Math.round(num / nearest) * nearest;
-        const prepLaborCost = finalPrepHours * PRICING.BILLABLE_HOURLY_RATE;
-        const paintJobLaborCost = totalPaintingHours * PRICING.BILLABLE_HOURLY_RATE;
+
+        // Calculate price breakdown for final page
+        const materialPrice = materialCOGS * PRICING.PROFIT_MARKUP;
+        const laborAndAddonPrice = (laborCOGS + addonCOGS) * PRICING.PROFIT_MARKUP;
+        const prepPrice = (finalPrepHours * PRICING.PAINTER_BURDENED_HOURLY_COST) * PRICING.PROFIT_MARKUP;
+        const paintJobPrice = ((totalPaintingHours * PRICING.PAINTER_BURDENED_HOURLY_COST) + addonCOGS) * PRICING.PROFIT_MARKUP;
+
         return {
-            low: roundTo(baseCost * PRICING.RANGE_MULTIPLIER_LOW, 25), high: roundTo(baseCost * PRICING.RANGE_MULTIPLIER_HIGH, 25),
-            materialsLow: roundTo(totalPaintCost * PRICING.RANGE_MULTIPLIER_LOW, 5), materialsHigh: roundTo(totalPaintCost * PRICING.RANGE_MULTIPLIER_HIGH, 5),
-            laborLow: roundTo((totalLaborCost + addedCosts) * PRICING.RANGE_MULTIPLIER_LOW, 25), laborHigh: roundTo((totalLaborCost + addedCosts) * PRICING.RANGE_MULTIPLIER_HIGH, 25),
-            prepLow: roundTo(prepLaborCost * PRICING.RANGE_MULTIPLIER_LOW, 25), prepHigh: roundTo(prepLaborCost * PRICING.RANGE_MULTIPLIER_HIGH, 25),
-            paintJobLow: roundTo((paintJobLaborCost + addedCosts) * PRICING.RANGE_MULTIPLIER_LOW, 25), paintJobHigh: roundTo((paintJobLaborCost + addedCosts) * PRICING.RANGE_MULTIPLIER_HIGH, 25),
+            low: roundTo(price * PRICING.RANGE_MULTIPLIER_LOW, 25), high: roundTo(price * PRICING.RANGE_MULTIPLIER_HIGH, 25),
+            materialsLow: roundTo(materialPrice * PRICING.RANGE_MULTIPLIER_LOW, 5), materialsHigh: roundTo(materialPrice * PRICING.RANGE_MULTIPLIER_HIGH, 5),
+            laborLow: roundTo(laborAndAddonPrice * PRICING.RANGE_MULTIPLIER_LOW, 25), laborHigh: roundTo(laborAndAddonPrice * PRICING.RANGE_MULTIPLIER_HIGH, 25),
+            prepLow: roundTo(prepPrice * PRICING.RANGE_MULTIPLIER_LOW, 25), prepHigh: roundTo(prepPrice * PRICING.RANGE_MULTIPLIER_HIGH, 25),
+            paintJobLow: roundTo(paintJobPrice * PRICING.RANGE_MULTIPLIER_LOW, 25), paintJobHigh: roundTo(paintJobPrice * PRICING.RANGE_MULTIPLIER_HIGH, 25),
         };
-    }, [rooms, exteriorItems, projectType, selectedPrep, selectedPaintCost]);
+    }, [rooms, exteriorItems, projectType, selectedPrep, selectedPaintQuality]);
 
     const handlePostalCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -261,7 +298,7 @@ export default function App() {
     const handleStart = () => { if (validatePostalCode(postalCode, true)) { setCurrentStep(2); } };
     const startOver = () => {
         setPostalCode(''); setPostalCodeError(''); setProjectType(''); setRooms([]); setExteriorItems([]);
-        setSelectedPrep(''); setSelectedPaintCost(0); setCurrentStep(1);
+        setSelectedPrep(''); setSelectedPaintQuality(''); setCurrentStep(1);
     };
     const handleSaveRoom = (roomData: Room) => {
         const index = rooms.findIndex(r => r.id === roomData.id);
@@ -282,9 +319,9 @@ export default function App() {
             <h1 className="text-3xl md:text-4xl font-serif font-semibold text-[#162733] mb-4">Your Project, Your Price</h1>
             <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">Get a transparent cost estimate in 90 seconds. This tool provides a realistic price range for a professional, high-quality paint job.</p>
             <div className="max-w-sm mx-auto">
-                 <label htmlFor="zip-code" className="block text-sm font-medium text-gray-700 mb-2">Project Postal Code</label>
-                 <input type="text" id="zip-code" value={postalCode} onChange={handlePostalCodeChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#0F52BA] focus:border-[#0F52BA]" placeholder="A1A 1A1" />
-                 <p className="text-red-600 text-sm mt-1 h-5">{postalCodeError}</p>
+                <label htmlFor="zip-code" className="block text-sm font-medium text-gray-700 mb-2">Project Postal Code</label>
+                <input type="text" id="zip-code" value={postalCode} onChange={handlePostalCodeChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#0F52BA] focus:border-[#0F52BA]" placeholder="A1A 1A1" />
+                <p className="text-red-600 text-sm mt-1 h-5">{postalCodeError}</p>
             </div>
             <button onClick={handleStart} className="btn-primary font-bold py-3 px-8 rounded-lg mt-8 text-lg shadow-lg">Let&apos;s Get Started</button>
         </div>
@@ -359,14 +396,14 @@ export default function App() {
             <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">What quality of paint do you have in mind?</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-                    <SelectableCard label="Good (Builder)" selected={selectedPaintCost === 45} onClick={() => setSelectedPaintCost(45)}><p className="text-sm text-gray-600 mt-1">Meets basic needs. Good for low-traffic areas.</p></SelectableCard>
-                    <SelectableCard label="Better (Professional)" selected={selectedPaintCost === 65} onClick={() => setSelectedPaintCost(65)}><p className="text-sm text-gray-600 mt-1">Our most popular choice. Excellent durability and finish.</p></SelectableCard>
-                    <SelectableCard label="Best (Premium)" selected={selectedPaintCost === 90} onClick={() => setSelectedPaintCost(90)}><p className="text-sm text-gray-600 mt-1">Superior longevity, richer color, and a truly luxurious finish. (e.g., BM Aura, SW Emerald, Behr Marquee)</p></SelectableCard>
+                    <SelectableCard label="Good (Builder)" selected={selectedPaintQuality === 'good'} onClick={() => setSelectedPaintQuality('good')}><p className="text-sm text-gray-600 mt-1">Meets basic needs. Good for low-traffic areas.</p></SelectableCard>
+                    <SelectableCard label="Better (Professional)" selected={selectedPaintQuality === 'better'} onClick={() => setSelectedPaintQuality('better')}><p className="text-sm text-gray-600 mt-1">Our most popular choice. Excellent durability and finish.</p></SelectableCard>
+                    <SelectableCard label="Best (Premium)" selected={selectedPaintQuality === 'best'} onClick={() => setSelectedPaintQuality('best')}><p className="text-sm text-gray-600 mt-1">Superior longevity, richer color, and a truly luxurious finish. (e.g., BM Aura, SW Emerald)</p></SelectableCard>
                 </div>
             </div>
             <div className="text-center mt-10 flex justify-center gap-4">
                 <button onClick={() => setCurrentStep(3)} className="btn-secondary font-bold py-3 px-8 rounded-lg text-lg">Back</button>
-                <button onClick={() => setCurrentStep(5)} className="btn-primary font-bold py-3 px-8 rounded-lg text-lg shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!selectedPrep || !selectedPaintCost}>See My Estimate</button>
+                <button onClick={() => setCurrentStep(5)} className="btn-primary font-bold py-3 px-8 rounded-lg text-lg shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!selectedPrep || !selectedPaintQuality}>See My Estimate</button>
             </div>
         </div>
     );
