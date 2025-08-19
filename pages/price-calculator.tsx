@@ -286,7 +286,7 @@ export default function App() {
                  <input type="text" id="zip-code" value={postalCode} onChange={handlePostalCodeChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#0F52BA] focus:border-[#0F52BA]" placeholder="A1A 1A1" />
                  <p className="text-red-600 text-sm mt-1 h-5">{postalCodeError}</p>
             </div>
-            <button onClick={handleStart} className="btn-primary font-bold py-3 px-8 rounded-lg mt-8 text-lg shadow-lg">Let's Get Started</button>
+            <button onClick={handleStart} className="btn-primary font-bold py-3 px-8 rounded-lg mt-8 text-lg shadow-lg">Let&apos;s Get Started</button>
         </div>
     );
     const renderStep2 = () => (
@@ -313,7 +313,7 @@ export default function App() {
                             <h3 className="text-xl font-semibold mb-4 text-gray-700">Interior Spaces</h3>
                             <div className="space-y-4 mb-6">{rooms.length > 0 ? rooms.map(room => (
                                 <div key={room.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-                                    <div><p className="font-bold text-lg text-[#162733]">{room.type}</p><p className="text-sm text-gray-600">{room.length}'x{room.width}' {room.paintCabinets && `+ ${((room.cabinetDoors as number) || 0) + ((room.cabinetDrawers as number) || 0)} cabinets`}</p></div>
+                                    <div><p className="font-bold text-lg text-[#162733]">{room.type}</p><p className="text-sm text-gray-600">{room.length}&apos;x{room.width}&apos; {room.paintCabinets && `+ ${((room.cabinetDoors as number) || 0) + ((room.cabinetDrawers as number) || 0)} cabinets`}</p></div>
                                     <div className="flex gap-2"><button onClick={() => { setEditingRoom(room); setIsRoomModalOpen(true); }} className="text-blue-600 hover:text-blue-800 font-semibold">Edit</button><button onClick={() => setRooms(rooms.filter(r => r.id !== room.id))} className="text-red-600 hover:text-red-800 font-semibold">Delete</button></div>
                                 </div>
                             )) : <p className="text-center text-gray-500">No rooms added yet.</p>}</div>
@@ -387,7 +387,7 @@ export default function App() {
                 <h4 className="font-bold text-lg text-red-700 mb-2">Red Flags with Lowball Bids:</h4>
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
                     <li><strong>Inadequate Preparation:</strong> Skipping sanding, cleaning, and proper patching leads to peeling and cracking within a year.</li>
-                    <li><strong>Low-Quality Paint:</strong> Cheap paints require more coats, offer poor coverage, and don't hold up to cleaning or wear-and-tear.</li>
+                    <li><strong>Low-Quality Paint:</strong> Cheap paints require more coats, offer poor coverage, and don&apos;t hold up to cleaning or wear-and-tear.</li>
                     <li><strong>No Insurance:</strong> If a painter is uninsured and an accident happens on your property, you could be liable.</li>
                 </ul>
             </div>
