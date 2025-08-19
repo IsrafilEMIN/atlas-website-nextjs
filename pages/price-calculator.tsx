@@ -193,7 +193,7 @@ export default function App() {
             return { low: 0, high: 0, materialsLow: 0, materialsHigh: 0, laborLow: 0, laborHigh: 0, prepLow: 0, prepHigh: 0, paintJobLow: 0, paintJobHigh: 0 };
         }
         let totalPaintableSqFt = 0, totalPaintingHours = 0, totalPrepHours = 0, addedCosts = 0;
-        const prepMultiplier = PRICING.PREP_CONDITION_MULTIPLIERS[selectedPrep] || 1.0;
+        const prepMultiplier = PRICING.PREP_CONDITION_MULTIPLIERS[selectedPrep as keyof typeof PRICING.PREP_CONDITION_MULTIPLIERS] || 1.0;
 
         if (projectType === 'interior' || projectType === 'both') {
             rooms.forEach(room => {
