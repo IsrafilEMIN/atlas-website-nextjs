@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 
-// --- TYPE DEFINITIONS ---
+// --- TYPE DEFINITIONS (EXPANDED FOR EXTERIOR) ---
 interface Room {
     id: number;
-    type: string;
+    type: 'Bedroom' | 'Bathroom' | 'Living Room' | 'Dining Room' | 'Kitchen' | 'Hallway' | 'Entryway' | 'Office';
     length: number | string;
     width: number | string;
     ceilingHeight: number | string;
@@ -12,6 +12,14 @@ interface Room {
     paintTrim: boolean;
     doors: number | string;
     paintDoorsCheck: boolean;
+    closetDoors?: number | string;
+    paintVanity?: boolean;
+    vanityDoors?: number | string;
+    vanityDrawers?: number | string;
+    useMoldResistantPaint?: boolean;
+    paintCrownMolding?: boolean;
+    paintFireplaceMantel?: boolean;
+    paintStairwell?: boolean;
     paintCabinets?: boolean;
     cabinetDoors?: number | string;
     cabinetDrawers?: number | string;
@@ -24,6 +32,11 @@ interface ExteriorItem {
     stories: string;
     trimLft: number | string;
     doors: number | string;
+    // New detailed exterior items
+    shutters?: number | string;
+    windowFrames?: number | string;
+    gutterLft?: number | string;
+    deckSqft?: number | string;
 }
 
 type PrepCondition = 'good' | 'fair' | 'poor' | '';
@@ -51,37 +64,39 @@ interface ExteriorModalProps {
     onClose: () => void;
 }
 
-
-// --- CONFIGURATION & CONSTANTS (RE-CALIBRATED FOR 50% GROSS MARGIN) ---
+// --- CONFIGURATION & CONSTANTS (UPDATED WITH EXTERIOR COSTS) ---
 const PRICING = {
-    // --- Core Profitability & Cost ---
-    PROFIT_MARKUP: 2.0, // Sets the 50% gross margin (Price = COGS * 2)
-    PAINTER_BURDENED_HOURLY_COST: 40.00, // Actual cost: painter's wage + WSIB + payroll taxes
-
-    // --- Material Costs (Your Actual Contractor Cost from Supplier) ---
+    PROFIT_MARKUP: 2.0,
+    PAINTER_BURDENED_HOURLY_COST: 40.00,
     PAINT_COST_PER_GALLON: { good: 30, better: 50, best: 65 },
-    SUPPLIES_PERCENTAGE: 0.15, // Cost of tape, rollers, etc. as a % of paint cost
-
-    // --- Production Rates & Fixed Costs (COGS) ---
+    SUPPLIES_PERCENTAGE: 0.15,
     PAINTING_SQFT_PER_HOUR: 175,
     BASE_PREP_HOURS_PER_ROOM: 2.0,
     BASE_PREP_HOURS_EXTERIOR: 4.0,
-    COST_PER_DOOR: 75.00,             // Estimated COGS (1.5hr labor + materials)
-    COST_PER_EXTERIOR_DOOR: 125.00,   // Estimated COGS (2.5hr labor + materials)
-    COST_PER_CABINET_PIECE: 100.00,   // Estimated COGS (2hr labor + specialty materials)
-
-    // --- Complexity Multipliers (Applied to Labor Hours) ---
+    // --- Cost of Goods Sold (COGS) for Add-ons ---
+    COST_PER_DOOR: 75.00,
+    COST_PER_EXTERIOR_DOOR: 125.00,
+    COST_PER_CABINET_PIECE: 100.00,
+    COST_PER_CLOSET_DOOR: 40.00,
+    COST_PER_VANITY_PIECE: 60.00,
+    COST_MOLD_RESISTANT_PAINT_UPCHARGE: 75.00,
+    COST_CROWN_MOLDING: 250.00,
+    COST_FIREPLACE_MANTEL: 200.00,
+    COST_STAIRWELL: 450.00,
+    // New Exterior COGS
+    COST_PER_SHUTTER: 25.00,
+    COST_PER_WINDOW_FRAME: 40.00,
+    COST_GUTTERS_PER_LFT: 3.00,
+    COST_DECK_STAIN_PER_SQFT: 2.50,
+    // --- Multipliers ---
     PREP_CONDITION_MULTIPLIERS: { good: 1.0, fair: 1.5, poor: 2.5 },
     HIGH_CEILING_MULTIPLIER: 1.20,
     SIDING_LABOR_MULTIPLIERS: { 'Vinyl': 1.0, 'Wood': 1.4, 'Stucco': 1.6, 'Brick': 1.7, 'Metal': 1.1, 'Fiber Cement': 1.1 },
     STORY_MULTIPLIERS: { '1': 1.0, '2': 1.25, '3': 1.5 },
-
-    // --- General Constants ---
     COVERAGE_PER_GALLON: 350,
     RANGE_MULTIPLIER_LOW: 0.95,
     RANGE_MULTIPLIER_HIGH: 1.20,
 };
-
 
 // --- HELPER & MODAL COMPONENTS ---
 const SelectableCard: React.FC<SelectableCardProps> = ({ label, selected, onClick, children = null }) => (
@@ -95,42 +110,98 @@ const SelectableCard: React.FC<SelectableCardProps> = ({ label, selected, onClic
 );
 
 const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
-    const [formData, setFormData] = useState<Room>(room || {
+    const initialRoomState: Room = {
         id: Date.now(), type: 'Bedroom', length: '', width: '', ceilingHeight: 8,
         paintWalls: true, paintCeiling: false, paintTrim: false, doors: '', paintDoorsCheck: false,
+        closetDoors: '', paintVanity: false, vanityDoors: '', vanityDrawers: '', useMoldResistantPaint: false,
+        paintCrownMolding: false, paintFireplaceMantel: false, paintStairwell: false,
         paintCabinets: false, cabinetDoors: '', cabinetDrawers: ''
-    });
+    };
+    const [formData, setFormData] = useState<Room>(room || initialRoomState);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         const checked = (e.target as HTMLInputElement).checked;
-        setFormData((prev: Room) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+        setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    };
+    
+    const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newType = e.target.value as Room['type'];
+        setFormData(prev => ({
+            ...initialRoomState,
+            id: prev.id,
+            length: prev.length,
+            width: prev.width,
+            ceilingHeight: prev.ceilingHeight,
+            type: newType,
+        }));
     };
 
     const handleSave = () => {
         if (!formData.length || !formData.width) {
             alert("Please enter valid room dimensions."); return;
         }
-        onSave({
-            ...formData,
-            length: parseFloat(String(formData.length)) || 0,
-            width: parseFloat(String(formData.width)) || 0,
-            ceilingHeight: parseFloat(String(formData.ceilingHeight)) || 8,
-            doors: formData.paintDoorsCheck ? (parseInt(String(formData.doors)) || 0) : 0,
-            cabinetDoors: formData.paintCabinets ? (parseInt(String(formData.cabinetDoors)) || 0) : 0,
-            cabinetDrawers: formData.paintCabinets ? (parseInt(String(formData.cabinetDrawers)) || 0) : 0,
-        });
+        onSave(formData);
+    };
+
+    const renderCustomFields = () => {
+        switch (formData.type) {
+            case 'Bedroom':
+                return (
+                    <div><label htmlFor="closet-doors" className="block text-sm text-gray-600">Closet Doors (qty)</label><input type="number" id="closet-doors" name="closetDoors" value={formData.closetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                );
+            case 'Bathroom':
+                return (
+                    <div className="space-y-4">
+                        <label className="flex items-center"><input type="checkbox" name="useMoldResistantPaint" checked={formData.useMoldResistantPaint} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Use Mold-Resistant Paint (Recommended)</label>
+                        <label className="flex items-center"><input type="checkbox" name="paintVanity" checked={formData.paintVanity} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Vanity</label>
+                        {formData.paintVanity && (
+                            <div className="grid grid-cols-2 gap-4 pl-6">
+                                <div><label htmlFor="vanity-doors" className="block text-sm text-gray-600">Vanity Doors</label><input type="number" id="vanity-doors" name="vanityDoors" value={formData.vanityDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                                <div><label htmlFor="vanity-drawers" className="block text-sm text-gray-600">Vanity Drawers</label><input type="number" id="vanity-drawers" name="vanityDrawers" value={formData.vanityDrawers} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                            </div>
+                        )}
+                    </div>
+                );
+            case 'Living Room':
+            case 'Dining Room':
+                return (
+                    <div className="space-y-2">
+                        <label className="flex items-center"><input type="checkbox" name="paintCrownMolding" checked={formData.paintCrownMolding} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Crown Molding</label>
+                        <label className="flex items-center"><input type="checkbox" name="paintFireplaceMantel" checked={formData.paintFireplaceMantel} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Fireplace Mantel</label>
+                    </div>
+                );
+            case 'Hallway':
+            case 'Entryway':
+                return (
+                     <label className="flex items-center"><input type="checkbox" name="paintStairwell" checked={formData.paintStairwell} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Includes Stairwell Walls / Risers</label>
+                );
+            case 'Kitchen':
+                return (
+                    <div className="space-y-2">
+                        <label className="flex items-center"><input type="checkbox" name="paintCabinets" checked={formData.paintCabinets} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Refinish Kitchen Cabinets</label>
+                        {formData.paintCabinets && (
+                            <div className="grid grid-cols-2 gap-4 pl-6">
+                                <div><label htmlFor="cabinet-doors" className="block text-sm text-gray-600">Cabinet Doors</label><input type="number" id="cabinet-doors" name="cabinetDoors" value={formData.cabinetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                                <div><label htmlFor="cabinet-drawers" className="block text-sm text-gray-600">Cabinet Drawers</label><input type="number" id="cabinet-drawers" name="cabinetDrawers" value={formData.cabinetDrawers} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                            </div>
+                        )}
+                    </div>
+                );
+            default:
+                return null;
+        }
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full animate-fade-in-up">
-                <h3 className="text-2xl font-serif font-semibold text-[#162733] mb-6">{room ? 'Edit' : 'Add'} Interior Room</h3>
+            <div className="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full animate-fade-in-up max-h-[90vh] overflow-y-auto">
+                <h3 className="text-2xl font-serif font-semibold text-[#162733] mb-6">{room ? 'Edit' : 'Add'} Interior Space</h3>
                 <div className="space-y-4">
                     <div>
                         <label htmlFor="room-type" className="block text-sm font-medium text-gray-700">Room Type</label>
-                        <select id="room-type" name="type" value={formData.type} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]">
-                            <option>Bedroom</option><option>Living Room</option><option>Kitchen</option><option>Bathroom</option><option>Hallway</option><option>Office</option><option>Dining Room</option>
+                        <select id="room-type" name="type" value={formData.type} onChange={handleTypeChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]">
+                            <option>Bedroom</option><option>Living Room</option><option>Kitchen</option><option>Bathroom</option><option>Hallway</option><option>Entryway</option><option>Office</option><option>Dining Room</option>
                         </select>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -138,23 +209,26 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
                         <div><label htmlFor="room-width" className="block text-sm font-medium text-gray-700">Width (ft)</label><input type="number" id="room-width" name="width" value={formData.width} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="e.g., 15" /></div>
                     </div>
                     <div><label htmlFor="ceiling-height" className="block text-sm font-medium text-gray-700">Ceiling Height (ft)</label><select id="ceiling-height" name="ceilingHeight" value={String(formData.ceilingHeight)} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]"><option value="8">8 ft (Standard)</option><option value="9">9 ft</option><option value="10">10 ft</option><option value="12">12+ ft (High/Vaulted)</option></select></div>
-                    <div><p className="block text-sm font-medium text-gray-700 mb-2">What to paint?</p><div className="space-y-2"><label className="flex items-center"><input type="checkbox" name="paintWalls" checked={formData.paintWalls} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Walls</label><label className="flex items-center"><input type="checkbox" name="paintCeiling" checked={formData.paintCeiling} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Ceiling</label><label className="flex items-center"><input type="checkbox" name="paintTrim" checked={formData.paintTrim} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Trim & Baseboards</label><div className="flex items-center gap-4"><label className="flex items-center"><input type="checkbox" name="paintDoorsCheck" checked={formData.paintDoorsCheck} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Doors</label><input type="number" name="doors" value={formData.doors} onChange={handleChange} className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="Qty" disabled={!formData.paintDoorsCheck} /></div></div></div>
-                    {formData.type === 'Kitchen' && (
-                        <div className="pt-4 border-t">
-                            <p className="block text-sm font-medium text-gray-700 mb-2">Kitchen Cabinets</p>
-                            <div className="space-y-2">
-                                <label className="flex items-center"><input type="checkbox" name="paintCabinets" checked={formData.paintCabinets} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Include Cabinet Painting</label>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div><label htmlFor="cabinet-doors" className="block text-sm text-gray-600">Cabinet Doors</label><input type="number" id="cabinet-doors" name="cabinetDoors" value={formData.cabinetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="e.g., 20" disabled={!formData.paintCabinets} /></div>
-                                    <div><label htmlFor="cabinet-drawers" className="block text-sm text-gray-600">Cabinet Drawers</label><input type="number" id="cabinet-drawers" name="cabinetDrawers" value={formData.cabinetDrawers} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="e.g., 8" disabled={!formData.paintCabinets} /></div>
-                                </div>
+                    <div>
+                        <p className="block text-sm font-medium text-gray-700 mb-2">Standard Items to Paint</p>
+                        <div className="space-y-2">
+                            <label className="flex items-center"><input type="checkbox" name="paintWalls" checked={formData.paintWalls} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Walls</label>
+                            <label className="flex items-center"><input type="checkbox" name="paintCeiling" checked={formData.paintCeiling} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Ceiling</label>
+                            <label className="flex items-center"><input type="checkbox" name="paintTrim" checked={formData.paintTrim} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Trim & Baseboards</label>
+                            <div className="flex items-center gap-4">
+                                <label className="flex items-center"><input type="checkbox" name="paintDoorsCheck" checked={formData.paintDoorsCheck} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Room Doors</label>
+                                <input type="number" name="doors" value={formData.doors} onChange={handleChange} className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="Qty" disabled={!formData.paintDoorsCheck} />
                             </div>
                         </div>
-                    )}
+                    </div>
+                     <div className="pt-4 border-t">
+                        <p className="block text-sm font-medium text-gray-700 mb-2">Room-Specific Features</p>
+                        {renderCustomFields()}
+                    </div>
                 </div>
                 <div className="mt-8 flex justify-end gap-4">
                     <button onClick={onClose} className="btn-secondary font-bold py-2 px-6 rounded-lg">Cancel</button>
-                    <button onClick={handleSave} className="btn-primary font-bold py-2 px-6 rounded-lg">Save Room</button>
+                    <button onClick={handleSave} className="btn-primary font-bold py-2 px-6 rounded-lg">Save Space</button>
                 </div>
             </div>
         </div>
@@ -163,21 +237,32 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
 
 const ExteriorModal: React.FC<ExteriorModalProps> = ({ item, onSave, onClose }) => {
     const [formData, setFormData] = useState<ExteriorItem>(item || {
-        id: Date.now(), siding: 'Vinyl', sqft: '', stories: '1', trimLft: '', doors: ''
+        id: Date.now(), siding: 'Vinyl', sqft: '', stories: '1', trimLft: '', doors: '',
+        shutters: '', windowFrames: '', gutterLft: '', deckSqft: ''
     });
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => { const { name, value } = e.target; setFormData((prev: ExteriorItem) => ({ ...prev, [name]: value })); };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => { const { name, value } = e.target; setFormData(prev => ({ ...prev, [name]: value })); };
     const handleSave = () => {
         if (!formData.sqft) { alert("Please enter a valid surface area."); return; }
-        onSave({ ...formData, sqft: parseFloat(String(formData.sqft)) || 0, trimLft: parseFloat(String(formData.trimLft)) || 0, doors: parseInt(String(formData.doors)) || 0 });
+        onSave(formData);
     };
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full animate-fade-in-up">
+            <div className="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full animate-fade-in-up max-h-[90vh] overflow-y-auto">
                 <h3 className="text-2xl font-serif font-semibold text-[#162733] mb-6">{item ? 'Edit' : 'Add'} Exterior Surface</h3>
                 <div className="space-y-4">
                     <div><label htmlFor="siding-type" className="block text-sm font-medium text-gray-700">Siding Material</label><select id="siding-type" name="siding" value={formData.siding} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]">{Object.keys(PRICING.SIDING_LABOR_MULTIPLIERS).map(s => <option key={s}>{s}</option>)}</select></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label htmlFor="surface-sqft" className="block text-sm font-medium text-gray-700">Surface Area (sq ft)</label><input type="number" id="surface-sqft" name="sqft" value={formData.sqft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="e.g., 1500" /></div><div><label htmlFor="stories" className="block text-sm font-medium text-gray-700">Number of Stories</label><select id="stories" name="stories" value={formData.stories} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]"><option value="1">1 Story</option><option value="2">2 Stories</option><option value="3">3 Stories</option></select></div></div>
-                    <div><p className="block text-sm font-medium text-gray-700 mb-2">Add-ons (optional)</p><div className="grid grid-cols-2 gap-4"><div><label htmlFor="exterior-trim-lft" className="block text-sm text-gray-600">Trim (linear ft)</label><input type="number" id="exterior-trim-lft" name="trimLft" value={formData.trimLft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div><div><label htmlFor="exterior-doors-qty" className="block text-sm text-gray-600">Doors (qty)</label><input type="number" id="exterior-doors-qty" name="doors" value={formData.doors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div></div></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label htmlFor="surface-sqft" className="block text-sm font-medium text-gray-700">Siding Area (sq ft)</label><input type="number" id="surface-sqft" name="sqft" value={formData.sqft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="e.g., 1500" /></div><div><label htmlFor="stories" className="block text-sm font-medium text-gray-700">Number of Stories</label><select id="stories" name="stories" value={formData.stories} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]"><option value="1">1 Story</option><option value="2">2 Stories</option><option value="3">3 Stories</option></select></div></div>
+                    <div><label htmlFor="exterior-trim-lft" className="block text-sm font-medium text-gray-700">Trim (linear ft)</label><input type="number" id="exterior-trim-lft" name="trimLft" value={formData.trimLft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                    <div><label htmlFor="exterior-doors-qty" className="block text-sm font-medium text-gray-700">Exterior Doors (qty)</label><input type="number" id="exterior-doors-qty" name="doors" value={formData.doors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                    <div className="pt-4 border-t">
+                        <p className="block text-sm font-medium text-gray-700 mb-2">Additional Exterior Items (Optional)</p>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div><label htmlFor="shutters" className="block text-sm text-gray-600">Shutters (qty)</label><input type="number" id="shutters" name="shutters" value={formData.shutters} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                            <div><label htmlFor="window-frames" className="block text-sm text-gray-600">Window Frames (qty)</label><input type="number" id="window-frames" name="windowFrames" value={formData.windowFrames} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                            <div><label htmlFor="gutter-lft" className="block text-sm text-gray-600">Gutters/Fascia (lft)</label><input type="number" id="gutter-lft" name="gutterLft" value={formData.gutterLft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                            <div><label htmlFor="deck-sqft" className="block text-sm text-gray-600">Deck Staining (sq ft)</label><input type="number" id="deck-sqft" name="deckSqft" value={formData.deckSqft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                        </div>
+                    </div>
                 </div>
                 <div className="mt-8 flex justify-end gap-4">
                     <button onClick={onClose} className="btn-secondary font-bold py-2 px-6 rounded-lg">Cancel</button>
@@ -187,7 +272,6 @@ const ExteriorModal: React.FC<ExteriorModalProps> = ({ item, onSave, onClose }) 
         </div>
     );
 };
-
 
 // --- MAIN APP COMPONENT ---
 export default function App() {
@@ -205,49 +289,67 @@ export default function App() {
     const [editingExteriorItem, setEditingExteriorItem] = useState<ExteriorItem | null>(null);
 
     const estimate = useMemo(() => {
-        if (rooms.length === 0 && exteriorItems.length === 0) {
-            return { low: 0, high: 0, materialsLow: 0, materialsHigh: 0, laborLow: 0, laborHigh: 0, prepLow: 0, prepHigh: 0, paintJobLow: 0, paintJobHigh: 0 };
-        }
+        if (rooms.length === 0 && exteriorItems.length === 0) return { low: 0, high: 0 };
 
         let totalPaintableSqFt = 0, totalPaintingHours = 0, totalPrepHours = 0, addonCOGS = 0;
         const prepMultiplier = PRICING.PREP_CONDITION_MULTIPLIERS[selectedPrep as keyof typeof PRICING.PREP_CONDITION_MULTIPLIERS] || 1.0;
 
+        // --- INTERIOR CALCULATION ---
         if (projectType === 'interior' || projectType === 'both') {
             rooms.forEach(room => {
+                const length = parseFloat(String(room.length)) || 0;
+                const width = parseFloat(String(room.width)) || 0;
+                const ceilingHeight = parseFloat(String(room.ceilingHeight)) || 8;
+                
                 let roomSqFt = 0;
-                const ceilingMultiplier = (room.ceilingHeight as number) > 10 ? PRICING.HIGH_CEILING_MULTIPLIER : 1;
+                const ceilingMultiplier = ceilingHeight > 10 ? PRICING.HIGH_CEILING_MULTIPLIER : 1;
 
-                if (room.paintWalls) roomSqFt += ((room.length as number) + (room.width as number)) * 2 * (room.ceilingHeight as number);
-                if (room.paintCeiling) roomSqFt += (room.length as number) * (room.width as number);
-                if (room.paintTrim) totalPaintingHours += (((room.length as number) + (room.width as number)) * 2) / 40; // Approx. 40 LFT/hr for trim
+                if (room.paintWalls) roomSqFt += (length + width) * 2 * ceilingHeight;
+                if (room.paintCeiling) roomSqFt += length * width;
+                if (room.paintTrim) totalPaintingHours += ((length + width) * 2) / 40;
 
                 totalPaintableSqFt += roomSqFt;
                 totalPaintingHours += (roomSqFt * 2 * ceilingMultiplier) / PRICING.PAINTING_SQFT_PER_HOUR;
                 totalPrepHours += PRICING.BASE_PREP_HOURS_PER_ROOM;
 
-                if ((room.doors as number) > 0) addonCOGS += (room.doors as number) * PRICING.COST_PER_DOOR;
+                if (room.paintDoorsCheck) addonCOGS += (parseFloat(String(room.doors)) || 0) * PRICING.COST_PER_DOOR;
+                if (room.closetDoors) addonCOGS += (parseFloat(String(room.closetDoors)) || 0) * PRICING.COST_PER_CLOSET_DOOR;
+                if (room.useMoldResistantPaint) addonCOGS += PRICING.COST_MOLD_RESISTANT_PAINT_UPCHARGE;
+                if (room.paintVanity) {
+                    const vanityCount = (parseFloat(String(room.vanityDoors)) || 0) + (parseFloat(String(room.vanityDrawers)) || 0);
+                    addonCOGS += vanityCount * PRICING.COST_PER_VANITY_PIECE;
+                }
+                if (room.paintCrownMolding) addonCOGS += PRICING.COST_CROWN_MOLDING;
+                if (room.paintFireplaceMantel) addonCOGS += PRICING.COST_FIREPLACE_MANTEL;
+                if (room.paintStairwell) addonCOGS += PRICING.COST_STAIRWELL;
                 if (room.paintCabinets) {
-                    const cabinetCount = ((room.cabinetDoors as number) || 0) + ((room.cabinetDrawers as number) || 0);
+                    const cabinetCount = (parseFloat(String(room.cabinetDoors)) || 0) + (parseFloat(String(room.cabinetDrawers)) || 0);
                     addonCOGS += cabinetCount * PRICING.COST_PER_CABINET_PIECE;
                 }
             });
         }
 
+        // --- EXTERIOR CALCULATION ---
         if (projectType === 'exterior' || projectType === 'both') {
             exteriorItems.forEach(item => {
+                const sqft = parseFloat(String(item.sqft)) || 0;
                 const sidingMultiplier = PRICING.SIDING_LABOR_MULTIPLIERS[item.siding as SidingType] || 1;
                 const storyMultiplier = PRICING.STORY_MULTIPLIERS[item.stories as StoryCount] || 1;
-
-                totalPaintableSqFt += (item.sqft as number);
-                totalPaintingHours += ((item.sqft as number) * 2 * sidingMultiplier * storyMultiplier) / PRICING.PAINTING_SQFT_PER_HOUR;
+                
+                totalPaintableSqFt += sqft;
+                totalPaintingHours += (sqft * 2 * sidingMultiplier * storyMultiplier) / PRICING.PAINTING_SQFT_PER_HOUR;
                 totalPrepHours += PRICING.BASE_PREP_HOURS_EXTERIOR;
 
-                if ((item.trimLft as number) > 0) totalPaintingHours += (item.trimLft as number) / 30; // Approx. 30 LFT/hr for exterior trim
-                if ((item.doors as number) > 0) addonCOGS += (item.doors as number) * PRICING.COST_PER_EXTERIOR_DOOR;
+                if (item.trimLft) totalPaintingHours += (parseFloat(String(item.trimLft)) || 0) / 30;
+                if (item.doors) addonCOGS += (parseFloat(String(item.doors)) || 0) * PRICING.COST_PER_EXTERIOR_DOOR;
+                if (item.shutters) addonCOGS += (parseFloat(String(item.shutters)) || 0) * PRICING.COST_PER_SHUTTER;
+                if (item.windowFrames) addonCOGS += (parseFloat(String(item.windowFrames)) || 0) * PRICING.COST_PER_WINDOW_FRAME;
+                if (item.gutterLft) addonCOGS += (parseFloat(String(item.gutterLft)) || 0) * PRICING.COST_GUTTERS_PER_LFT;
+                if (item.deckSqft) addonCOGS += (parseFloat(String(item.deckSqft)) || 0) * PRICING.COST_DECK_STAIN_PER_SQFT;
             });
         }
         
-        // --- COST OF GOODS SOLD (COGS) CALCULATION ---
+        // --- FINAL COGS & PRICE CALCULATION ---
         const finalPrepHours = totalPrepHours * prepMultiplier;
         const totalLaborHours = totalPaintingHours + finalPrepHours;
         const laborCOGS = totalLaborHours * PRICING.PAINTER_BURDENED_HOURLY_COST;
@@ -262,26 +364,34 @@ export default function App() {
         }
 
         const totalCOGS = laborCOGS + materialCOGS + addonCOGS;
-
-        // --- FINAL PRICE CALCULATION (APPLYING MARKUP) ---
         const price = totalCOGS * PRICING.PROFIT_MARKUP;
         const roundTo = (num: number, nearest: number) => Math.round(num / nearest) * nearest;
 
-        // Calculate price breakdown for final page
-        const materialPrice = materialCOGS * PRICING.PROFIT_MARKUP;
-        const laborAndAddonPrice = (laborCOGS + addonCOGS) * PRICING.PROFIT_MARKUP;
-        const prepPrice = (finalPrepHours * PRICING.PAINTER_BURDENED_HOURLY_COST) * PRICING.PROFIT_MARKUP;
-        const paintJobPrice = ((totalPaintingHours * PRICING.PAINTER_BURDENED_HOURLY_COST) + addonCOGS) * PRICING.PROFIT_MARKUP;
-
         return {
-            low: roundTo(price * PRICING.RANGE_MULTIPLIER_LOW, 25), high: roundTo(price * PRICING.RANGE_MULTIPLIER_HIGH, 25),
-            materialsLow: roundTo(materialPrice * PRICING.RANGE_MULTIPLIER_LOW, 5), materialsHigh: roundTo(materialPrice * PRICING.RANGE_MULTIPLIER_HIGH, 5),
-            laborLow: roundTo(laborAndAddonPrice * PRICING.RANGE_MULTIPLIER_LOW, 25), laborHigh: roundTo(laborAndAddonPrice * PRICING.RANGE_MULTIPLIER_HIGH, 25),
-            prepLow: roundTo(prepPrice * PRICING.RANGE_MULTIPLIER_LOW, 25), prepHigh: roundTo(prepPrice * PRICING.RANGE_MULTIPLIER_HIGH, 25),
-            paintJobLow: roundTo(paintJobPrice * PRICING.RANGE_MULTIPLIER_LOW, 25), paintJobHigh: roundTo(paintJobPrice * PRICING.RANGE_MULTIPLIER_HIGH, 25),
+            low: roundTo(price * PRICING.RANGE_MULTIPLIER_LOW, 25),
+            high: roundTo(price * PRICING.RANGE_MULTIPLIER_HIGH, 25),
         };
     }, [rooms, exteriorItems, projectType, selectedPrep, selectedPaintQuality]);
 
+    const handleSaveRoom = (roomData: Room) => {
+        const index = rooms.findIndex(r => r.id === roomData.id);
+        if (index > -1) { setRooms(rooms.map(r => r.id === roomData.id ? roomData : r)); } 
+        else { setRooms([...rooms, roomData]); }
+        setIsRoomModalOpen(false); setEditingRoom(null);
+    };
+
+    const handleSaveExterior = (itemData: ExteriorItem) => {
+        const index = exteriorItems.findIndex(i => i.id === itemData.id);
+        if (index > -1) { setExteriorItems(exteriorItems.map(i => i.id === itemData.id ? itemData : i)); }
+        else { setExteriorItems([...exteriorItems, itemData]); }
+        setIsExteriorModalOpen(false); setEditingExteriorItem(null);
+    };
+    
+    const handleStart = () => { if (validatePostalCode(postalCode, true)) { setCurrentStep(2); } };
+    const startOver = () => {
+        setPostalCode(''); setPostalCodeError(''); setProjectType(''); setRooms([]); setExteriorItems([]);
+        setSelectedPrep(''); setSelectedPaintQuality(''); setCurrentStep(1);
+    };
     const handlePostalCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
         if (value.length > 3) { value = value.slice(0, 3) + ' ' + value.slice(3); }
@@ -295,37 +405,29 @@ export default function App() {
         if (!gtaRegex.test(pc)) { setPostalCodeError("Note: Outside GTA. Estimates may be less accurate."); } else { setPostalCodeError(''); }
         return true;
     };
-    const handleStart = () => { if (validatePostalCode(postalCode, true)) { setCurrentStep(2); } };
-    const startOver = () => {
-        setPostalCode(''); setPostalCodeError(''); setProjectType(''); setRooms([]); setExteriorItems([]);
-        setSelectedPrep(''); setSelectedPaintQuality(''); setCurrentStep(1);
-    };
-    const handleSaveRoom = (roomData: Room) => {
-        const index = rooms.findIndex(r => r.id === roomData.id);
-        if (index > -1) { setRooms(rooms.map(r => r.id === roomData.id ? roomData : r)); } 
-        else { setRooms([...rooms, roomData]); }
-        setIsRoomModalOpen(false); setEditingRoom(null);
-    };
-    const handleSaveExterior = (itemData: ExteriorItem) => {
-        const index = exteriorItems.findIndex(i => i.id === itemData.id);
-        if (index > -1) { setExteriorItems(exteriorItems.map(i => i.id === itemData.id ? itemData : i)); } 
-        else { setExteriorItems([...exteriorItems, itemData]); }
-        setIsExteriorModalOpen(false); setEditingExteriorItem(null);
-    };
     const formatCurrency = (num: number) => `$${num.toLocaleString()}`;
 
+    // --- RENDER METHODS FOR STEPS ---
     const renderStep1 = () => (
-        <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-serif font-semibold text-[#162733] mb-4">Your Project, Your Price</h1>
-            <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">Get a transparent cost estimate in 90 seconds. This tool provides a realistic price range for a professional, high-quality paint job.</p>
-            <div className="max-w-sm mx-auto">
-                <label htmlFor="zip-code" className="block text-sm font-medium text-gray-700 mb-2">Project Postal Code</label>
-                <input type="text" id="zip-code" value={postalCode} onChange={handlePostalCodeChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#0F52BA] focus:border-[#0F52BA]" placeholder="A1A 1A1" />
-                <p className="text-red-600 text-sm mt-1 h-5">{postalCodeError}</p>
+        <div className="relative text-center text-white rounded-2xl overflow-hidden flex flex-col items-center justify-center min-h-[500px] -m-6 md:-m-10">
+            <div className="absolute inset-0 bg-cover bg-center z-0" style={{backgroundImage: "url('https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')"}}></div>
+            <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
+            <div className="relative z-20 p-8">
+                <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">Your Project, Your Price</h1>
+                <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">Get a transparent cost estimate in 90 seconds. This tool provides a realistic price range for a professional, high-quality paint job.</p>
+                <div className="max-w-sm mx-auto">
+                    <label htmlFor="zip-code" className="block text-sm font-medium text-gray-200 mb-2">Project Postal Code</label>
+                    <input type="text" id="zip-code" value={postalCode} onChange={handlePostalCodeChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#0F52BA] focus:border-[#0F52BA] text-gray-800" placeholder="A1A 1A1" />
+                    <p className="text-red-400 text-sm mt-1 h-5">{postalCodeError}</p>
+                </div>
+                <button onClick={handleStart} className="btn-primary font-bold py-3 px-8 rounded-lg mt-8 text-lg shadow-lg transform hover:scale-105 transition-transform duration-200 flex items-center gap-2 mx-auto">
+                    Let's Get Started
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+                </button>
             </div>
-            <button onClick={handleStart} className="btn-primary font-bold py-3 px-8 rounded-lg mt-8 text-lg shadow-lg">Let&apos;s Get Started</button>
         </div>
     );
+    
     const renderStep2 = () => (
         <div className="text-center">
             <h2 className="text-2xl md:text-3xl font-serif font-semibold text-[#162733] mb-8">What are we painting today?</h2>
@@ -340,32 +442,33 @@ export default function App() {
             </div>
         </div>
     );
+
     const renderStep3 = () => (
         <div>
             <h2 className="text-2xl md:text-3xl font-serif font-semibold text-center text-[#162733] mb-6">Build Your Project</h2>
             <div className="md:grid md:grid-cols-12 md:gap-8">
-                <div className="md:col-span-7">
+                <div className="md:col-span-7 space-y-8">
                     {(projectType === 'interior' || projectType === 'both') && (
                         <div>
                             <h3 className="text-xl font-semibold mb-4 text-gray-700">Interior Spaces</h3>
                             <div className="space-y-4 mb-6">{rooms.length > 0 ? rooms.map(room => (
                                 <div key={room.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-                                    <div><p className="font-bold text-lg text-[#162733]">{room.type}</p><p className="text-sm text-gray-600">{room.length}&apos;x{room.width}&apos; {room.paintCabinets && `+ ${((room.cabinetDoors as number) || 0) + ((room.cabinetDrawers as number) || 0)} cabinets`}</p></div>
+                                    <div><p className="font-bold text-lg text-[#162733]">{room.type}</p><p className="text-sm text-gray-600">{room.length}&apos;x{room.width}&apos;</p></div>
                                     <div className="flex gap-2"><button onClick={() => { setEditingRoom(room); setIsRoomModalOpen(true); }} className="text-blue-600 hover:text-blue-800 font-semibold">Edit</button><button onClick={() => setRooms(rooms.filter(r => r.id !== room.id))} className="text-red-600 hover:text-red-800 font-semibold">Delete</button></div>
                                 </div>
-                            )) : <p className="text-center text-gray-500">No rooms added yet.</p>}</div>
-                            <button onClick={() => { setEditingRoom(null); setIsRoomModalOpen(true); }} className="w-full btn-secondary font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>Add Interior Room</button>
+                            )) : <p className="text-center text-gray-500 py-4">No spaces added yet.</p>}</div>
+                            <button onClick={() => { setEditingRoom(null); setIsRoomModalOpen(true); }} className="w-full btn-secondary font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>Add Interior Space</button>
                         </div>
                     )}
-                    {(projectType === 'exterior' || projectType === 'both') && (
-                        <div className="mt-6">
+                     {(projectType === 'exterior' || projectType === 'both') && (
+                        <div>
                             <h3 className="text-xl font-semibold mb-4 text-gray-700">Exterior Surfaces</h3>
                             <div className="space-y-4 mb-6">{exteriorItems.length > 0 ? exteriorItems.map(item => (
                                 <div key={item.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-                                    <div><p className="font-bold text-lg text-[#162733]">{item.sqft} sq ft of {item.siding}</p><p className="text-sm text-gray-600">{item.stories} Story, {item.trimLft} lft Trim, {item.doors} Doors</p></div>
+                                    <div><p className="font-bold text-lg text-[#162733]">{item.sqft} sq ft {item.siding}</p><p className="text-sm text-gray-600">{item.stories}-story</p></div>
                                     <div className="flex gap-2"><button onClick={() => { setEditingExteriorItem(item); setIsExteriorModalOpen(true); }} className="text-blue-600 hover:text-blue-800 font-semibold">Edit</button><button onClick={() => setExteriorItems(exteriorItems.filter(i => i.id !== item.id))} className="text-red-600 hover:text-red-800 font-semibold">Delete</button></div>
                                 </div>
-                            )) : <p className="text-center text-gray-500">No exterior surfaces added yet.</p>}</div>
+                            )) : <p className="text-center text-gray-500 py-4">No surfaces added yet.</p>}</div>
                             <button onClick={() => { setEditingExteriorItem(null); setIsExteriorModalOpen(true); }} className="w-full btn-secondary font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>Add Exterior Surface</button>
                         </div>
                     )}
@@ -382,7 +485,8 @@ export default function App() {
             </div>
         </div>
     );
-    const renderStep4 = () => (
+     
+     const renderStep4 = () => (
         <div>
             <h2 className="text-2xl md:text-3xl font-serif font-semibold text-center text-[#162733] mb-8">The Details That Matter</h2>
             <div className="mb-10">
@@ -407,26 +511,13 @@ export default function App() {
             </div>
         </div>
     );
-    const renderStep5 = () => (
+     const renderStep5 = () => (
         <div className="text-center">
             <h2 className="text-2xl font-serif text-[#162733] mb-2">Your Estimated Project Range</h2>
             <div className="text-4xl md:text-6xl font-bold text-[#0F52BA] my-4">{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</div>
-            <div className="bg-gray-100 rounded-lg p-4 max-w-md mx-auto mb-8 space-y-1">
-                <div className="flex justify-between text-gray-700"><span>Estimated Materials:</span><span className="font-semibold">{formatCurrency(estimate.materialsLow)} - {formatCurrency(estimate.materialsHigh)}</span></div>
-                <hr className="my-2 border-gray-300"/>
-                <div className="flex justify-between text-gray-700 font-bold"><span>Estimated Labor:</span><span className="font-semibold">{formatCurrency(estimate.laborLow)} - {formatCurrency(estimate.laborHigh)}</span></div>
-                <div className="flex justify-between text-gray-600 pl-4 text-sm"><span>- Prep & Cleanup:</span><span className="font-medium">{formatCurrency(estimate.prepLow)} - {formatCurrency(estimate.prepHigh)}</span></div>
-                <div className="flex justify-between text-gray-600 pl-4 text-sm"><span>- Painting & Add-ons:</span><span className="font-medium">{formatCurrency(estimate.paintJobLow)} - {formatCurrency(estimate.paintJobHigh)}</span></div>
-            </div>
             <div className="text-left max-w-2xl mx-auto">
                 <h3 className="text-xl font-serif font-semibold text-[#162733] mb-4">Understanding Your Estimate</h3>
                 <p className="text-gray-600 mb-4">Our estimates assume a professional, insured crew that properly prepares all surfaces (the single most important factor for a lasting paint job) and uses high-quality materials.</p>
-                <h4 className="font-bold text-lg text-red-700 mb-2">Red Flags with Lowball Bids:</h4>
-                <ul className="list-disc list-inside text-gray-600 space-y-2">
-                    <li><strong>Inadequate Preparation:</strong> Skipping sanding, cleaning, and proper patching leads to peeling and cracking within a year.</li>
-                    <li><strong>Low-Quality Paint:</strong> Cheap paints require more coats, offer poor coverage, and don&apos;t hold up to cleaning or wear-and-tear.</li>
-                    <li><strong>No Insurance:</strong> If a painter is uninsured and an accident happens on your property, you could be liable.</li>
-                </ul>
             </div>
             <div className="mt-8 flex flex-col items-center gap-4">
                 <button className="btn-primary font-bold py-4 px-10 rounded-lg text-xl shadow-xl">Schedule a Free, Exact Quote</button>
@@ -437,24 +528,28 @@ export default function App() {
             </div>
         </div>
     );
-    
+
+
     return (
-        <div className="bg-[#f9f6f2] p-4 md:p-6 min-h-screen flex items-center justify-center">
+        <div className="bg-[#f0f2f5] p-4 md:p-6 min-h-screen flex items-center justify-center font-sans">
             <style>{`
                 .btn-primary { background-color: #0F52BA; color: #ffffff; }
                 .btn-primary:hover { background-color: #0c4194; }
                 .btn-secondary { background-color: #e0e7ff; color: #162733; }
                 .btn-secondary:hover { background-color: #c7d2fe; }
+                @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Inter:wght@400;700&display=swap');
+                .font-serif { font-family: 'Lora', serif; }
+                .font-sans { font-family: 'Inter', sans-serif; }
                 @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
                 .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
             `}</style>
-            <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-6 md:p-10">
-                <div className="relative app-container min-h-[650px]">
-                    <div className={`step ${currentStep === 1 ? 'visible' : 'hidden'}`}>{renderStep1()}</div>
-                    <div className={`step ${currentStep === 2 ? 'visible' : 'hidden'}`}>{renderStep2()}</div>
-                    <div className={`step ${currentStep === 3 ? 'visible' : 'hidden'}`}>{renderStep3()}</div>
-                    <div className={`step ${currentStep === 4 ? 'visible' : 'hidden'}`}>{renderStep4()}</div>
-                    <div className={`step ${currentStep === 5 ? 'visible' : 'hidden'}`}>{renderStep5()}</div>
+            <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl">
+                <div className="relative app-container p-6 md:p-10">
+                    {currentStep === 1 && renderStep1()}
+                    {currentStep === 2 && renderStep2()}
+                    {currentStep === 3 && renderStep3()}
+                    {currentStep === 4 && renderStep4()}
+                    {currentStep === 5 && renderStep5()}
                 </div>
             </div>
             {isRoomModalOpen && <RoomModal room={editingRoom} onSave={handleSaveRoom} onClose={() => { setIsRoomModalOpen(false); setEditingRoom(null); }} />}
