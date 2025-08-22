@@ -115,11 +115,11 @@ const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) =>
           <label htmlFor="currentCondition" className="sr-only">Current Condition</label>
           <select name="currentCondition" id="currentCondition" value={formData.currentCondition} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${formData.currentCondition === "" ? 'text-gray-500' : 'text-gray-900'} ${errors.currentCondition && touched.currentCondition ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur}>
             <option value="" disabled>What is your current plan? *</option>
-            <option value="hire_now">I'm planning to hire a painter now</option>
-            <option value="hire_3_months">I'm planning to paint within 3 months</option>
+            <option value="hire_now">I&apos;m planning to hire a painter now</option>
+            <option value="hire_3_months">I&apos;m planning to paint within 3 months</option>
             <option value="diy">I am planning to DIY</option>
-            <option value="budgeting">I'm budgeting for a future project</option>
-            <option value="contractor">I'm a contractor</option>
+            <option value="budgeting">I&apos;m budgeting for a future project</option>
+            <option value="contractor">I&apos;m a contractor</option>
           </select>
           {errors.currentCondition && touched.currentCondition && <p className="mt-1 text-xs text-red-600">{errors.currentCondition}</p>}
         </div>
@@ -207,13 +207,13 @@ const handleFormSubmission = async (data: FormData) => {
   return (
     <>
       <Head>
-        <title>The Homeowner's Shield: Free Paint Cost Estimator - Richmond Hill</title>
+        <title>The Homeowner&apos;s Shield: Free Paint Cost Estimator - Richmond Hill</title>
         <meta name="description" content="Avoid overpaying for your next painting project in Richmond Hill. Get a free, transparent price estimate in 60 seconds and protect yourself from scams." />
       </Head>
       <div className="flex flex-col items-center min-h-screen relative bg-gray-900 text-white pb-20">
         <div className="w-full text-center bg-gradient-to-b from-gray-800 to-gray-900 py-16 px-4">
           <p className="font-semibold text-yellow-400 mb-4">TRUSTED BY HUNDREDS OF HOMEOWNERS</p>
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight uppercase">THE HOMEOWNER'S SHIELD</h1>
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight uppercase">THE HOMEOWNER&apos;S SHIELD</h1>
           <p className="mt-4 text-2xl md:text-4xl text-gray-300 max-w-4xl mx-auto">Get a Fair & Accurate Price Estimate For Your Richmond Hill Home In 60 Seconds.</p>
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
             <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border-2 border-white/50 rounded-lg">
@@ -238,7 +238,7 @@ const handleFormSubmission = async (data: FormData) => {
                     <div className="text-2xl flex-shrink-0 text-yellow-400 mt-1">✓</div>
                     <div>
                         <h3 className="font-bold">Understand Material Costs</h3>
-                        <p className="text-gray-400">We'll show you the typical costs for different paint qualities so you can have an intelligent conversation with your painter about your options.</p>
+                        <p className="text-gray-400">We&apos;ll show you the typical costs for different paint qualities so you can have an intelligent conversation with your painter about your options.</p>
                     </div>
                 </div>
                 <div className="flex items-start space-x-4">

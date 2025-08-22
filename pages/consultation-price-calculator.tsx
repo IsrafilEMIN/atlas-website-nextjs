@@ -51,8 +51,8 @@ const ConsultationPriceCalculator: NextPageWithLayout = () => {
 
           {/* --- NEW: Email Confirmation Message --- */}
           <div className="bg-emerald-100 text-emerald-900 p-4 rounded-lg mb-8 text-center border border-emerald-200">
-            <p className="font-semibold">✅ Success! We've sent the estimator to your email.</p>
-            <p className="text-sm">If you don't see it in the next few minutes, please check your spam folder.</p>
+            <p className="font-semibold">✅ Success! We&apos;ve sent the estimator to your email.</p>
+            <p className="text-sm">If you don&apos;t see it in the next few minutes, please check your spam folder.</p>
           </div>
 
           {/* --- UPDATED: Headline and Sub-headline --- */}
