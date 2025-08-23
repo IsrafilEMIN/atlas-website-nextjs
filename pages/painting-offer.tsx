@@ -5,7 +5,7 @@ import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
 import * as fpixel from '../lib/fpixel';
-import GoogleReviewPill from '@/components/GoogleReviewPill';
+// import GoogleReviewPill from '@/components/GoogleReviewPill';
 
 // --- TYPE DEFINITIONS (Copied from landing-estimator.tsx) ---
 type FormData = {
@@ -124,7 +124,7 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
                     {errors.currentCondition && touched.currentCondition && <p className="mt-1 text-xs text-red-600">{errors.currentCondition}</p>}
                 </div>
                 <div className="pt-2">
-                    <button type="submit" className="w-full bg-[#0F52BA] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Submit & Schedule</button>
+                    <button type="submit" className="w-full bg-[#093373] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Submit & Schedule</button>
                 </div>
             </form>
         </div>
@@ -232,11 +232,11 @@ const PaintingOfferPage: NextPageWithLayout = () => {
                 <meta name="description" content="Experience a seamless booking process for your next painting project. Atlas HomeServices guarantees quality and satisfaction." />
             </Head>
 
-            <GoogleReviewPill 
+            {/* <GoogleReviewPill 
                 reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review" 
                 rating={5} 
                 reviewCount={5}
-            />
+            /> */}
             
             <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
                 <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">

@@ -17,10 +17,10 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks: NavLinkItem[] = [
-    { href: "/booking", label: "Booking" },
-    { href: "/guides", label: "Free Guides" },
+    { href: "/painting-offer", label: "Book a Call" },
+    // { href: "/guides", label: "Free Guides" },
     // { href: "/socials", label: "Socials" },
-    { href: "/gallery", label: "Gallery" },
+    // { href: "/gallery", label: "Gallery" },
     // { href: "/partner-with-us", label: "Partner With Us" },
   ];
 
@@ -113,7 +113,7 @@ export default function Header() {
                 <Link key={`mobile-${link.label}`} href={link.href} passHref legacyBehavior>
                   <a
                     onClick={handleLinkClick(link.href)}
-                    className="w-full max-w-xs rounded-2xl py-4 px-8 text-xl font-semibold bg-[#0F52BA] text-white shadow-xl hover:bg-[#0F52BA] hover:text-white transition-colors duration-200 text-center"
+                    className="w-full max-w-xs rounded-2xl py-4 px-8 text-xl font-semibold bg-[#093373] text-white shadow-xl hover:bg-[#093373] hover:text-white transition-colors duration-200 text-center"
                   >
                     {link.label}
                   </a>

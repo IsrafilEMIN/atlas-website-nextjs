@@ -124,7 +124,7 @@ const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) =>
           {errors.currentCondition && touched.currentCondition && <p className="mt-1 text-xs text-red-600">{errors.currentCondition}</p>}
         </div>
         <div className="pt-2">
-          <button type="submit" className="w-full bg-[#0F52BA] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Reveal My Price Range</button>
+          <button type="submit" className="w-full bg-[#093373] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Reveal My Price Range</button>
           <p className="text-xs text-gray-500 text-center mt-3">100% Free. We respect your privacy.</p>
         </div>
       </form>

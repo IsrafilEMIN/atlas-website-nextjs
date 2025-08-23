@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion"; // AnimatePresence not used here
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
 interface NavLinkItem {
   href: string;
@@ -21,7 +22,7 @@ export default function Footer() {
   const backgroundColor = useTransform(
     scrollY,
     [0, 100],
-    ["rgba(15,82,186,1)", "rgba(15,82,186,1)"] // This is a solid blue, no actual transform
+    ["rgba(9,51,115,1)", "rgba(9,51,115,1)"] // This is a solid blue, no actual transform
   );
   // isMenuOpen and related mobile menu logic are not typical for a footer like this.
   // If you don't intend a collapsible mobile menu in the footer, this can be removed.
@@ -46,19 +47,24 @@ export default function Footer() {
 
   const primaryNavLinks: NavLinkItem[] = [
     { href: "/booking", label: "Booking" },
-    { href: "/guides", label: "Free Guides" },
-    { href: "/gallery", label: "Gallery" },
-    { href: "/contact", label: "Contact Us" },
+    // { href: "/guides", label: "Free Guides" },
+    // { href: "/gallery", label: "Gallery" },
+    // { href: "/contact", label: "Contact Us" },
   ];
 
   const secondaryNavLinks: NavLinkItem[] = [
     { href: "/terms-of-service", label: "Terms of Service" },
     { href: "/privacy-policy", label: "Privacy Policy" },
-    { href: "/disclosure", label: "Disclosure" },
+    // { href: "/disclosure", label: "Disclosure" },
     // Add more links as needed
   ];
 
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState<number | null>(null); // 👈 Use state to hold the year
+
+  useEffect(() => {
+    // 👈 This code only runs on the client after the component mounts
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   return (
     <motion.footer
