@@ -3,8 +3,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button"; // Assuming this path is correct
 
 // Define image sources
-const DESKTOP_IMAGE_SRC = "/heroImages/atlas-hero-image.png"; 
-const MOBILE_IMAGE_SRC = "/heroImages/atlas-mobile-hero-image.png";
+const DESKTOP_IMAGE_SRC = "/heroImages/atlas-hero-image.jpeg"; 
+const MOBILE_IMAGE_SRC = "/heroImages/atlas-hero-image.jpeg";
 const MOBILE_IMAGE_WIDTH = 2048;
 const MOBILE_IMAGE_HEIGHT = 1632;
 
@@ -26,7 +26,7 @@ export default function Hero() {
           <h1
             className="
               font-['SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif]
-              font-black uppercase text-[#162733]
+              font-black uppercase text-[#131628]
               mb-6 leading-tight
               text-4xl sm:text-3xl {/* Mobile-specific H1 sizes */}
             "
@@ -36,7 +36,7 @@ export default function Hero() {
           <p
             className="
               font-['SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif]
-              text-[#162733]
+              text-[#131628]
               text-xl sm:text-xl {/* Mobile-specific P sizes */}
               mb-8
             "
@@ -53,7 +53,7 @@ export default function Hero() {
                 font-bold
                 text-base sm:text-lg    /* Mobile-specific button text sizes */
                 bg-[#093373] text-white
-                hover:bg-[#093373] hover:text-white transition
+                hover:bg-[#131628] hover:text-white transition
               "
               onClick={() => (window.location.href = bookingLink)}
             >
@@ -82,8 +82,8 @@ export default function Hero() {
       <section
         className="
           hidden md:flex items-center overflow-hidden bg-white
-          w-full max-w-[1920px]
-          h-[550px]
+          w-full max-w-[1280px]
+          h-[650px]
           mx-auto
           relative /* For absolute positioning of children */
         "
@@ -93,7 +93,7 @@ export default function Hero() {
           alt="Atlas HomeServices – Luxury Painting (desktop view)"
           fill
           priority
-          sizes="(max-width: 1920px) 100vw, 1920px"
+          sizes="(max-width: 1920px) 102vw, 1920px"
           quality={90}
           className="object-cover object-top"
         />
@@ -105,7 +105,7 @@ export default function Hero() {
             <h1
               className="
                 font-['SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif]
-                font-black uppercase text-[#162733]
+                font-black uppercase text-[#131628]
                 mb-6 leading-tight
                 text-6xl {/* Desktop H1 size (was md:text-6xl, simplified) */}
               "
@@ -115,7 +115,7 @@ export default function Hero() {
             <p
               className="
                 font-['SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif]
-                text-[#162733]
+                text-[#131628]
                 text-2xl {/* Desktop P size (was md:text-2xl, simplified) */}
                 mb-8
               "

@@ -1,23 +1,19 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-// import GoogleReviewPill from "@/components/GoogleReviewPill";
+
+// --- Import your new home page sections ---
+import Hero from "@/components/home/Hero";
+import TrustBadges from "@/components/home/TrustBadges";
+import OurProcess from "@/components/home/OurProcess";
 import DownloadGuides from "@/components/home/DownloadGuides";
 
-const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
-
 export default function Home() {
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const schemaPayload = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "description": "Professional painting services for residential and commercial properties in Toronto.",
+    "@type": "PaintingContractor", // More specific type for your business
     "name": "Atlas HomeServices",
+    "description": "Professional residential and commercial painting services in Toronto and the Greater Toronto Area. We deliver high-quality results with a focus on customer satisfaction.",
     "@id": "https://atlas-paint.com/",
     "logo": "https://atlas-paint.com/assets/apple-touch-icon.png",
     "url": "https://atlas-paint.com/",
@@ -39,6 +35,29 @@ export default function Home() {
       "postalCode": "L2H 3E9",
       "addressCountry": "CA"
     },
+    // --- SEO ENHANCEMENT: Specify areas you serve ---
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Toronto"
+      },
+      {
+        "@type": "City",
+        "name": "Mississauga"
+      },
+      {
+        "@type": "City",
+        "name": "Vaughan"
+      },
+      {
+        "@type": "City",
+        "name": "Hamilton"
+      },
+      {
+        "@type": "City",
+        "name": "Niagara"
+      }
+    ],
     "image": "https://atlas-paint.com/assets/apple-touch-icon.png",
     "sameAs": [
       "https://www.instagram.com/atlas_homeservices/",
@@ -62,19 +81,14 @@ export default function Home() {
         />
       </Head>
 
-      {mounted && (
-        <div className="bg-white min-h-screen">
-          <main className="w-full">
-            <Hero />
-            <DownloadGuides />
-            {/* <GoogleReviewPill 
-              reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review" 
-              rating={5} 
-              reviewCount={5}
-            /> */}
-          </main>
-        </div>
-      )}
+      <div className="bg-white">
+        <main className="w-full">
+          <Hero />
+          <TrustBadges />
+          <OurProcess />
+          <DownloadGuides /> {/* Kept your original component */}
+        </main>
+      </div>
     </>
   );
 }
