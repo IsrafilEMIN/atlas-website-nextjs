@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app';
-import Image from 'next/image';
 
 const ThankYouEstimatorPage: NextPageWithLayout = () => {
     const router = useRouter();
@@ -24,17 +23,17 @@ const ThankYouEstimatorPage: NextPageWithLayout = () => {
                     </div>
 
                     <h1 className="text-4xl md:text-5xl font-extrabold text-white">
-                        You're All Set!
+                        You&apos;re All Set!
                     </h1>
                     <p className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
-                        We've just sent the **Homeowner's Shield Estimator** to your email inbox. Please check your spam or promotions folder if you don't see it in the next few minutes.
+                        We&apos;ve just sent the **Homeowner&apos;s Shield Estimator** to your email inbox. Please check your spam or promotions folder if you don&apos;t see it in the next few minutes.
                     </p>
 
                     {/* Value-add Section for Nurture Leads */}
                     <div className="mt-12 bg-gray-800 border border-gray-700 rounded-2xl p-8 max-w-2xl mx-auto">
                         <h2 className="text-2xl font-bold text-yellow-400 mb-4">Planning Your Perfect Project</h2>
                         <p className="text-gray-400 mb-6">
-                            Whether you're budgeting for the future or planning a DIY project, having the right information is key. Here are some resources to help you get started.
+                            Whether you&apos;re budgeting for the future or planning a DIY project, having the right information is key. Here are some resources to help you get started.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <button 
