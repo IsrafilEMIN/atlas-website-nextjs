@@ -207,7 +207,7 @@ const PaintingOfferPage: NextPageWithLayout = () => {
       body: JSON.stringify(submissionData),
     }).catch(error => console.error('Non-critical: Notification failed.', error));
 
-    fetch('/api/add-lead-to-notion', {
+    fetch('/api/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(submissionData),
