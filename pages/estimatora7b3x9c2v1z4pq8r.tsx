@@ -48,7 +48,7 @@ interface ExteriorModalProps { item: ExteriorItem | null; onSave: (itemData: Ext
 
 // --- HELPER & MODAL COMPONENTS ---
 const SelectableCard: React.FC<SelectableCardProps> = ({ label, selected, onClick, children = null }) => (
-    <div className={`selectable-card border-2 rounded-lg p-4 cursor-pointer text-center transition-all duration-200 ${selected ? 'border-[#0F52BA] shadow-lg scale-105' : 'border-gray-200 hover:border-blue-400'}`} onClick={onClick}>
+    <div className={`selectable-card border-2 rounded-lg p-4 cursor-pointer text-center transition-all duration-200 ${selected ? 'border-[#093373] shadow-lg scale-105' : 'border-gray-200 hover:border-blue-400'}`} onClick={onClick}>
         <h4 className="font-bold text-lg text-[#162733]">{label}</h4>
         {children}
     </div>
@@ -93,17 +93,17 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
         switch (formData.type) {
             case 'Bedroom':
                 return (
-                    <div><label htmlFor="closet-doors" className="block text-sm text-gray-600">Closet Doors (qty)</label><input type="number" id="closet-doors" name="closetDoors" value={formData.closetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                    <div><label htmlFor="closet-doors" className="block text-sm text-gray-600">Closet Doors (qty)</label><input type="number" id="closet-doors" name="closetDoors" value={formData.closetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
                 );
             case 'Bathroom':
                 return (
                     <div className="space-y-4">
-                        <label className="flex items-center"><input type="checkbox" name="useMoldResistantPaint" checked={formData.useMoldResistantPaint} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Use Mold-Resistant Paint (Recommended)</label>
-                        <label className="flex items-center"><input type="checkbox" name="paintVanity" checked={formData.paintVanity} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Vanity</label>
+                        <label className="flex items-center"><input type="checkbox" name="useMoldResistantPaint" checked={formData.useMoldResistantPaint} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Use Mold-Resistant Paint (Recommended)</label>
+                        <label className="flex items-center"><input type="checkbox" name="paintVanity" checked={formData.paintVanity} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Paint Vanity</label>
                         {formData.paintVanity && (
                             <div className="grid grid-cols-2 gap-4 pl-6">
-                                <div><label htmlFor="vanity-doors" className="block text-sm text-gray-600">Vanity Doors</label><input type="number" id="vanity-doors" name="vanityDoors" value={formData.vanityDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
-                                <div><label htmlFor="vanity-drawers" className="block text-sm text-gray-600">Vanity Drawers</label><input type="number" id="vanity-drawers" name="vanityDrawers" value={formData.vanityDrawers} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                                <div><label htmlFor="vanity-doors" className="block text-sm text-gray-600">Vanity Doors</label><input type="number" id="vanity-doors" name="vanityDoors" value={formData.vanityDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
+                                <div><label htmlFor="vanity-drawers" className="block text-sm text-gray-600">Vanity Drawers</label><input type="number" id="vanity-drawers" name="vanityDrawers" value={formData.vanityDrawers} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
                             </div>
                         )}
                     </div>
@@ -112,23 +112,23 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
             case 'Dining Room':
                 return (
                     <div className="space-y-2">
-                        <label className="flex items-center"><input type="checkbox" name="paintCrownMolding" checked={formData.paintCrownMolding} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Crown Molding</label>
-                        <label className="flex items-center"><input type="checkbox" name="paintFireplaceMantel" checked={formData.paintFireplaceMantel} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Fireplace Mantel</label>
+                        <label className="flex items-center"><input type="checkbox" name="paintCrownMolding" checked={formData.paintCrownMolding} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Paint Crown Molding</label>
+                        <label className="flex items-center"><input type="checkbox" name="paintFireplaceMantel" checked={formData.paintFireplaceMantel} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Paint Fireplace Mantel</label>
                     </div>
                 );
             case 'Hallway':
             case 'Entryway':
                 return (
-                     <label className="flex items-center"><input type="checkbox" name="paintStairwell" checked={formData.paintStairwell} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Includes Stairwell Walls / Risers</label>
+                     <label className="flex items-center"><input type="checkbox" name="paintStairwell" checked={formData.paintStairwell} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Includes Stairwell Walls / Risers</label>
                 );
             case 'Kitchen':
                 return (
                     <div className="space-y-2">
-                        <label className="flex items-center"><input type="checkbox" name="paintCabinets" checked={formData.paintCabinets} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Refinish Kitchen Cabinets</label>
+                        <label className="flex items-center"><input type="checkbox" name="paintCabinets" checked={formData.paintCabinets} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Refinish Kitchen Cabinets</label>
                         {formData.paintCabinets && (
                             <div className="grid grid-cols-2 gap-4 pl-6">
-                                <div><label htmlFor="cabinet-doors" className="block text-sm text-gray-600">Cabinet Doors</label><input type="number" id="cabinet-doors" name="cabinetDoors" value={formData.cabinetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
-                                <div><label htmlFor="cabinet-drawers" className="block text-sm text-gray-600">Cabinet Drawers</label><input type="number" id="cabinet-drawers" name="cabinetDrawers" value={formData.cabinetDrawers} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                                <div><label htmlFor="cabinet-doors" className="block text-sm text-gray-600">Cabinet Doors</label><input type="number" id="cabinet-doors" name="cabinetDoors" value={formData.cabinetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
+                                <div><label htmlFor="cabinet-drawers" className="block text-sm text-gray-600">Cabinet Drawers</label><input type="number" id="cabinet-drawers" name="cabinetDrawers" value={formData.cabinetDrawers} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
                             </div>
                         )}
                     </div>
@@ -145,24 +145,24 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
                 <div className="space-y-4">
                     <div>
                         <label htmlFor="room-type" className="block text-sm font-medium text-gray-700">Room Type</label>
-                        <select id="room-type" name="type" value={formData.type} onChange={handleTypeChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]">
+                        <select id="room-type" name="type" value={formData.type} onChange={handleTypeChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#093373] focus:border-[#093373]">
                             <option>Bedroom</option><option>Living Room</option><option>Kitchen</option><option>Bathroom</option><option>Hallway</option><option>Entryway</option><option>Office</option><option>Dining Room</option>
                         </select>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                        <div><label htmlFor="room-length" className="block text-sm font-medium text-gray-700">Length (ft)</label><input type="number" id="room-length" name="length" value={formData.length} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="e.g., 12" /></div>
-                        <div><label htmlFor="room-width" className="block text-sm font-medium text-gray-700">Width (ft)</label><input type="number" id="room-width" name="width" value={formData.width} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="e.g., 15" /></div>
+                        <div><label htmlFor="room-length" className="block text-sm font-medium text-gray-700">Length (ft)</label><input type="number" id="room-length" name="length" value={formData.length} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" placeholder="e.g., 12" /></div>
+                        <div><label htmlFor="room-width" className="block text-sm font-medium text-gray-700">Width (ft)</label><input type="number" id="room-width" name="width" value={formData.width} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" placeholder="e.g., 15" /></div>
                     </div>
-                    <div><label htmlFor="ceiling-height" className="block text-sm font-medium text-gray-700">Ceiling Height (ft)</label><select id="ceiling-height" name="ceilingHeight" value={String(formData.ceilingHeight)} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]"><option value="8">8 ft (Standard)</option><option value="9">9 ft</option><option value="10">10 ft</option><option value="12">12+ ft (High/Vaulted)</option></select></div>
+                    <div><label htmlFor="ceiling-height" className="block text-sm font-medium text-gray-700">Ceiling Height (ft)</label><select id="ceiling-height" name="ceilingHeight" value={String(formData.ceilingHeight)} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#093373] focus:border-[#093373]"><option value="8">8 ft (Standard)</option><option value="9">9 ft</option><option value="10">10 ft</option><option value="12">12+ ft (High/Vaulted)</option></select></div>
                     <div>
                         <p className="block text-sm font-medium text-gray-700 mb-2">Standard Items to Paint</p>
                         <div className="space-y-2">
-                            <label className="flex items-center"><input type="checkbox" name="paintWalls" checked={formData.paintWalls} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Walls</label>
-                            <label className="flex items-center"><input type="checkbox" name="paintCeiling" checked={formData.paintCeiling} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Ceiling</label>
-                            <label className="flex items-center"><input type="checkbox" name="paintTrim" checked={formData.paintTrim} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Trim & Baseboards</label>
+                            <label className="flex items-center"><input type="checkbox" name="paintWalls" checked={formData.paintWalls} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Walls</label>
+                            <label className="flex items-center"><input type="checkbox" name="paintCeiling" checked={formData.paintCeiling} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Ceiling</label>
+                            <label className="flex items-center"><input type="checkbox" name="paintTrim" checked={formData.paintTrim} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Trim & Baseboards</label>
                             <div className="flex items-center gap-4">
-                                <label className="flex items-center"><input type="checkbox" name="paintDoorsCheck" checked={formData.paintDoorsCheck} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Room Doors</label>
-                                <input type="number" name="doors" value={formData.doors} onChange={handleChange} className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="Qty" disabled={!formData.paintDoorsCheck} />
+                                <label className="flex items-center"><input type="checkbox" name="paintDoorsCheck" checked={formData.paintDoorsCheck} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#093373] focus:ring-[#093373] mr-2" />Room Doors</label>
+                                <input type="number" name="doors" value={formData.doors} onChange={handleChange} className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" placeholder="Qty" disabled={!formData.paintDoorsCheck} />
                             </div>
                         </div>
                     </div>
@@ -195,17 +195,17 @@ const ExteriorModal: React.FC<ExteriorModalProps> = ({ item, onSave, onClose }) 
             <div className="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full animate-fade-in-up max-h-[90vh] overflow-y-auto">
                 <h3 className="text-2xl font-serif font-semibold text-[#162733] mb-6">{item ? 'Edit' : 'Add'} Exterior Surface</h3>
                 <div className="space-y-4">
-                    <div><label htmlFor="siding-type" className="block text-sm font-medium text-gray-700">Siding Material</label><select id="siding-type" name="siding" value={formData.siding} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]"><option>Vinyl</option><option>Wood</option><option>Stucco</option><option>Brick</option><option>Metal</option><option>Fiber Cement</option></select></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label htmlFor="surface-sqft" className="block text-sm font-medium text-gray-700">Siding Area (sq ft)</label><input type="number" id="surface-sqft" name="sqft" value={formData.sqft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="e.g., 1500" /></div><div><label htmlFor="stories" className="block text-sm font-medium text-gray-700">Number of Stories</label><select id="stories" name="stories" value={formData.stories} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]"><option value="1">1 Story</option><option value="2">2 Stories</option><option value="3">3 Stories</option></select></div></div>
-                    <div><label htmlFor="exterior-trim-lft" className="block text-sm font-medium text-gray-700">Trim (linear ft)</label><input type="number" id="exterior-trim-lft" name="trimLft" value={formData.trimLft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
-                    <div><label htmlFor="exterior-doors-qty" className="block text-sm font-medium text-gray-700">Exterior Doors (qty)</label><input type="number" id="exterior-doors-qty" name="doors" value={formData.doors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                    <div><label htmlFor="siding-type" className="block text-sm font-medium text-gray-700">Siding Material</label><select id="siding-type" name="siding" value={formData.siding} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#093373] focus:border-[#093373]"><option>Vinyl</option><option>Wood</option><option>Stucco</option><option>Brick</option><option>Metal</option><option>Fiber Cement</option></select></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label htmlFor="surface-sqft" className="block text-sm font-medium text-gray-700">Siding Area (sq ft)</label><input type="number" id="surface-sqft" name="sqft" value={formData.sqft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" placeholder="e.g., 1500" /></div><div><label htmlFor="stories" className="block text-sm font-medium text-gray-700">Number of Stories</label><select id="stories" name="stories" value={formData.stories} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#093373] focus:border-[#093373]"><option value="1">1 Story</option><option value="2">2 Stories</option><option value="3">3 Stories</option></select></div></div>
+                    <div><label htmlFor="exterior-trim-lft" className="block text-sm font-medium text-gray-700">Trim (linear ft)</label><input type="number" id="exterior-trim-lft" name="trimLft" value={formData.trimLft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
+                    <div><label htmlFor="exterior-doors-qty" className="block text-sm font-medium text-gray-700">Exterior Doors (qty)</label><input type="number" id="exterior-doors-qty" name="doors" value={formData.doors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
                     <div className="pt-4 border-t">
                         <p className="block text-sm font-medium text-gray-700 mb-2">Additional Exterior Items (Optional)</p>
                         <div className="grid grid-cols-2 gap-4">
-                            <div><label htmlFor="shutters" className="block text-sm text-gray-600">Shutters (qty)</label><input type="number" id="shutters" name="shutters" value={formData.shutters} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
-                            <div><label htmlFor="window-frames" className="block text-sm text-gray-600">Window Frames (qty)</label><input type="number" id="window-frames" name="windowFrames" value={formData.windowFrames} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
-                            <div><label htmlFor="gutter-lft" className="block text-sm text-gray-600">Gutters/Fascia (lft)</label><input type="number" id="gutter-lft" name="gutterLft" value={formData.gutterLft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
-                            <div><label htmlFor="deck-sqft" className="block text-sm text-gray-600">Deck Staining (sq ft)</label><input type="number" id="deck-sqft" name="deckSqft" value={formData.deckSqft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                            <div><label htmlFor="shutters" className="block text-sm text-gray-600">Shutters (qty)</label><input type="number" id="shutters" name="shutters" value={formData.shutters} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
+                            <div><label htmlFor="window-frames" className="block text-sm text-gray-600">Window Frames (qty)</label><input type="number" id="window-frames" name="windowFrames" value={formData.windowFrames} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
+                            <div><label htmlFor="gutter-lft" className="block text-sm text-gray-600">Gutters/Fascia (lft)</label><input type="number" id="gutter-lft" name="gutterLft" value={formData.gutterLft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
+                            <div><label htmlFor="deck-sqft" className="block text-sm text-gray-600">Deck Staining (sq ft)</label><input type="number" id="deck-sqft" name="deckSqft" value={formData.deckSqft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#093373] focus:ring-[#093373]" /></div>
                         </div>
                     </div>
                 </div>
@@ -307,7 +307,7 @@ export default function App() {
                 <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">Get a transparent cost estimate in 90 seconds. This tool provides a realistic price range for a professional, high-quality paint job.</p>
                 <div className="max-w-sm mx-auto">
                     <label htmlFor="zip-code" className="block text-sm font-medium text-gray-200 mb-2">Project Postal Code</label>
-                    <input type="text" id="zip-code" value={postalCode} onChange={handlePostalCodeChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#0F52BA] focus:border-[#0F52BA] text-gray-800" placeholder="A1A 1A1" />
+                    <input type="text" id="zip-code" value={postalCode} onChange={handlePostalCodeChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#093373] focus:border-[#093373] text-gray-800" placeholder="A1A 1A1" />
                     <p className="text-red-400 text-sm mt-1 h-5">{postalCodeError}</p>
                 </div>
                 <button onClick={handleStart} className="btn-primary font-bold py-3 px-8 rounded-lg mt-8 text-lg shadow-lg transform hover:scale-105 transition-transform duration-200 flex items-center gap-2 mx-auto">
@@ -402,7 +402,7 @@ export default function App() {
      const renderStep5 = () => (
         <div className="text-center">
             <h2 className="text-2xl font-serif text-[#162733] mb-2">Your Estimated Project Range</h2>
-            <div className="text-4xl md:text-6xl font-bold text-[#0F52BA] my-4 min-h-[72px] flex items-center justify-center">
+            <div className="text-4xl md:text-6xl font-bold text-[#093373] my-4 min-h-[72px] flex items-center justify-center">
                 {isLoading ? (
                     <span className="animate-pulse">Calculating...</span>
                 ) : (
@@ -428,7 +428,7 @@ export default function App() {
     return (
         <div className="bg-[#f0f2f5] p-4 md:p-6 min-h-screen flex items-center justify-center font-sans">
             <style>{`
-                .btn-primary { background-color: #0F52BA; color: #ffffff; }
+                .btn-primary { background-color: #093373; color: #ffffff; }
                 .btn-primary:hover { background-color: #0c4194; }
                 .btn-secondary { background-color: #e0e7ff; color: #162733; }
                 .btn-secondary:hover { background-color: #c7d2fe; }

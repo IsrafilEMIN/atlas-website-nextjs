@@ -51,7 +51,7 @@ export default function DownloadGuides() {
               <form onSubmit={handleGuideFormSubmit} className="mt-4">
                 <button
                   type="submit"
-                  className="mt-2 w-full bg-[#0F52BA] text-white px-6 py-2 rounded-full font-medium hover:bg-[#0F52BA]/90 transition"
+                  className="mt-2 w-full bg-[#093373] text-white px-6 py-2 rounded-full font-medium hover:bg-[#093373]/90 transition"
                 >
                   Download Guide
                 </button>

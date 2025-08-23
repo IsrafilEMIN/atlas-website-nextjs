@@ -10,8 +10,8 @@ const MOBILE_IMAGE_HEIGHT = 1632;
 
 export default function Hero() {
   // Common text content can be defined once if you prefer
-  const headingText = <>ARE YOU A REALTOR LOOKING FOR A PAINTER?</>;
-  const paragraphText = "We help realtors make their properties ready for listing in 72 hours.";
+  const headingText = <>ARE YOU A HOMEOWNER?</>;
+  const paragraphText = "We paint homeowner's visions into reality with precision and care.";
   const buttonText = "GET A QUOTE";
   // const bookingLink = "/booking";
   const bookingLink = "/painting-offer";
@@ -52,8 +52,8 @@ export default function Hero() {
                 px-8 py-4              /* Mobile-specific button padding */
                 font-bold
                 text-base sm:text-lg    /* Mobile-specific button text sizes */
-                bg-[#0F52BA] text-white
-                hover:bg-[#0F52BA] hover:text-white transition
+                bg-[#093373] text-white
+                hover:bg-[#093373] hover:text-white transition
               "
               onClick={() => (window.location.href = bookingLink)}
             >
@@ -130,8 +130,8 @@ export default function Hero() {
                   px-20 py-7              /* Desktop button padding */
                   font-bold
                   text-xl                 /* Desktop button text size (was md:text-xl, simplified) */
-                  bg-[#0F52BA] text-white
-                  hover:bg-[#0F52BA] hover:text-white transition
+                  bg-[#093373] text-white
+                  hover:bg-[#093373] hover:text-white transition
                 "
                 onClick={() => (window.location.href = bookingLink)}
               >

@@ -18,7 +18,7 @@ const TopStickyBanner: React.FC = () => {
           left: 0,
           right: 0,
           height: BANNER_HEIGHT,
-          backgroundColor: '#0F52BA', 
+          backgroundColor: '#093373', 
           color: '#ffffff',
           display: 'flex',
           alignItems: 'center',
@@ -27,7 +27,7 @@ const TopStickyBanner: React.FC = () => {
           textAlign: 'center',
           padding: '0 15px',
           textDecoration: 'none',
-          fontSize: '0.9rem',
+          fontSize: '1rem',
           fontWeight: '600',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           cursor: 'pointer',
@@ -35,7 +35,7 @@ const TopStickyBanner: React.FC = () => {
         className="transition-opacity duration-150" 
       >
         {/* Customize your CTA text below */}
-        Book Your 100% Money-Back Guaranteed Transformation. Click Here!
+        Book a Call For Your Free Estimate Today! Click Here to Get Started.
       </Link>
       
       {/* Spacer div remains the same */}

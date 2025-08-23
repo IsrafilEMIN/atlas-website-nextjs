@@ -1,7 +1,7 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import GoogleReviewPill from "@/components/GoogleReviewPill";
+// import GoogleReviewPill from "@/components/GoogleReviewPill";
 import DownloadGuides from "@/components/home/DownloadGuides";
 
 const Hero = dynamic(() => import("@/components/home/Hero"), { ssr: false });
@@ -67,11 +67,11 @@ export default function Home() {
           <main className="w-full">
             <Hero />
             <DownloadGuides />
-            <GoogleReviewPill 
+            {/* <GoogleReviewPill 
               reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review" 
               rating={5} 
               reviewCount={5}
-            />
+            /> */}
           </main>
         </div>
       )}

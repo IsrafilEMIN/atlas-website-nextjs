@@ -21,7 +21,7 @@ export default function Footer() {
   const backgroundColor = useTransform(
     scrollY,
     [0, 100],
-    ["rgba(15,82,186,1)", "rgba(15,82,186,1)"] // This is a solid blue, no actual transform
+    ["rgba(9,51,115,1)", "rgba(9,51,115,1)"] // This is a solid blue, no actual transform
   );
   // isMenuOpen and related mobile menu logic are not typical for a footer like this.
   // If you don't intend a collapsible mobile menu in the footer, this can be removed.
