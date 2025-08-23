@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.0",
+    "@hubspot/api-client": "^13.1.0",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.2.4",

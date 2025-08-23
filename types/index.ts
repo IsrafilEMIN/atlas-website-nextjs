@@ -12,3 +12,19 @@ export interface LeadFormData {
   email: string;
   phone: string;
 }
+
+// Defines the structure for your analytics event data
+export interface DataLayerEvent {
+  event: string;
+  form_data: {
+    lead_source: string;
+    user_intent?: string; // This now allows the 'user_intent' property
+  };
+}
+
+// Extends the global Window interface to make TypeScript aware of dataLayer
+declare global {
+  interface Window {
+    dataLayer: DataLayerEvent[];
+  }
+}

@@ -1,4 +1,4 @@
-// pages/thank-you.tsx
+// pages/consultation-estimator.tsx
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -10,41 +10,28 @@ import HubSpotWidget from '@/components/HubSpotWidget';
 type LeadData = {
   name: string;
   email: string;
-  // you can add other fields here if needed by the widget
 };
 
-const ThankYouPage: NextPageWithLayout = () => {
+const ConsultationPriceCalculator: NextPageWithLayout = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [leadData, setLeadData] = useState<LeadData | null>(null);
 
   useEffect(() => {
-    // This effect runs on the client-side after the page loads
     const canAccess = sessionStorage.getItem('canAccessThankYou');
-
     if (canAccess === 'true') {
-      // --- ACCESS GRANTED ---
-      // 1. Retrieve the user's data from sessionStorage
       const dataString = sessionStorage.getItem('leadDataForThankYou');
       if (dataString) {
         setLeadData(JSON.parse(dataString));
       }
-
-      // 2. IMPORTANT: Remove the items to make this a one-time access
       sessionStorage.removeItem('canAccessThankYou');
       sessionStorage.removeItem('leadDataForThankYou');
-
-      // 3. Allow the page to render
       setIsLoading(false);
     } else {
-      // --- ACCESS DENIED ---
-      // Redirect user away because they didn't come from the form.
-      // router.replace() prevents them from using the 'back' button to return here.
-      router.replace('/painting-offer'); // Or redirect to your homepage '/'
+      router.replace('/landing-estimator');
     }
   }, [router]);
 
-  // While checking for permission, show a loading state to prevent content flash
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -53,24 +40,31 @@ const ThankYouPage: NextPageWithLayout = () => {
     );
   }
 
-  // If the check passes, render the full page
   return (
     <>
       <Head>
-        <title>Schedule Your Call With Us - Atlas HomeServices</title>
+        <title>Schedule Your Consultation - Atlas HomeServices</title>
         <meta name="robots" content="noindex" />
       </Head>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 py-12">
         <div className="w-full max-w-4xl mx-auto text-center">
+
+          {/* --- NEW: Email Confirmation Message --- */}
+          <div className="bg-emerald-100 text-emerald-900 p-4 rounded-lg mb-8 text-center border border-emerald-200">
+            <p className="font-semibold">✅ Success! We&apos;ve sent the estimator to your email.</p>
+            <p className="text-sm">If you don&apos;t see it in the next few minutes, please check your spam folder.</p>
+          </div>
+
+          {/* --- UPDATED: Headline and Sub-headline --- */}
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
-            You&apos;re Almost Done!
+            Want Help Planning Your Project?
           </h1>
-          <p className="mt-4 text-lg text-gray-600">
-            Please book your consultation time below. Your details have been pre-filled for you.
+          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+            Let our experts take care of everything from planning to the final coat. Schedule a free, no-obligation consultation call with our team below.
           </p>
 
+          {/* --- EXISTING: HubSpot Widget --- */}
           <div className="mt-8 relative h-[650px] w-full">
-            {/* Render the HubSpot widget using the secure data from state */}
             <HubSpotWidget 
               name={leadData?.name}
               email={leadData?.email}
@@ -82,8 +76,8 @@ const ThankYouPage: NextPageWithLayout = () => {
   );
 };
 
-ThankYouPage.getLayout = function getLayout(page: React.ReactElement) {
+ConsultationPriceCalculator.getLayout = function getLayout(page: React.ReactElement) {
   return <MinimalLayout>{page}</MinimalLayout>;
 };
 
-export default ThankYouPage;
+export default ConsultationPriceCalculator;

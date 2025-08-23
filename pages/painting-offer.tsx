@@ -7,20 +7,6 @@ import Image from 'next/image';
 import * as fpixel from '../lib/fpixel';
 import GoogleReviewPill from '@/components/GoogleReviewPill';
 
-// Define the dataLayer event structure
-declare global {
-  interface DataLayerEvent {
-    event: string;
-    form_data?: {
-      lead_source: string;
-    };
-  }
-
-  interface Window {
-    dataLayer: DataLayerEvent[];
-  }
-}
-
 // --- TYPE DEFINITIONS ---
 type FormData = {
   name: string;
