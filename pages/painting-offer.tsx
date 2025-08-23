@@ -115,11 +115,11 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
                     <label htmlFor="currentCondition" className="sr-only">Current Condition</label>
                     <select name="currentCondition" id="currentCondition" value={formData.currentCondition} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${formData.currentCondition === "" ? 'text-gray-500' : 'text-gray-900'} ${errors.currentCondition && touched.currentCondition ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur}>
                         <option value="" disabled>What is your current plan? *</option>
-                        <option value="hire_now">I'm planning to hire a painter now</option>
-                        <option value="hire_3_months">I'm planning to paint within 3 months</option>
+                        <option value="hire_now">I&apos;m planning to hire a painter now</option>
+                        <option value="hire_3_months">I&apos;m planning to paint within 3 months</option>
                         <option value="diy">I am planning to DIY</option>
-                        <option value="budgeting">I'm budgeting for a future project</option>
-                        <option value="contractor">I'm a contractor</option>
+                        <option value="budgeting">I&apos;m budgeting for a future project</option>
+                        <option value="contractor">I&apos;m a contractor</option>
                     </select>
                     {errors.currentCondition && touched.currentCondition && <p className="mt-1 text-xs text-red-600">{errors.currentCondition}</p>}
                 </div>
@@ -148,7 +148,6 @@ const PaintingOfferPage: NextPageWithLayout = () => {
     };
     const properLocation = locationMap[normalizedLocation];
     const headerTitle = properLocation ? `${properLocation} Homeowner's Trusted Painter` : 'Homeowner\'s Trusted Painter';
-    const subTextLocation = properLocation ? `homeowners in ${properLocation}` : 'homeowners';
 
     const reviews = useMemo(() => [
         { src: "/testimonialImages/testimonial-image-08.png", alt: "Google review for Atlas HomeServices", width: 800, height: 400 },

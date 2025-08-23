@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 // --- TYPE DEFINITIONS ---
 interface Room {
@@ -311,7 +311,7 @@ export default function App() {
                     <p className="text-red-400 text-sm mt-1 h-5">{postalCodeError}</p>
                 </div>
                 <button onClick={handleStart} className="btn-primary font-bold py-3 px-8 rounded-lg mt-8 text-lg shadow-lg transform hover:scale-105 transition-transform duration-200 flex items-center gap-2 mx-auto">
-                    Let's Get Started
+                    Let&apos;s Get Started
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
                 </button>
             </div>
