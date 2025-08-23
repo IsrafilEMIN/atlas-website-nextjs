@@ -46,7 +46,7 @@ interface SelectableCardProps { label: string; selected: boolean; onClick: () =>
 interface RoomModalProps { room: Room | null; onSave: (roomData: Room) => void; onClose: () => void; }
 interface ExteriorModalProps { item: ExteriorItem | null; onSave: (itemData: ExteriorItem) => void; onClose: () => void; }
 
-// --- HELPER & MODAL COMPONENTS (Full implementation) ---
+// --- HELPER & MODAL COMPONENTS ---
 const SelectableCard: React.FC<SelectableCardProps> = ({ label, selected, onClick, children = null }) => (
     <div className={`selectable-card border-2 rounded-lg p-4 cursor-pointer text-center transition-all duration-200 ${selected ? 'border-[#0F52BA] shadow-lg scale-105' : 'border-gray-200 hover:border-blue-400'}`} onClick={onClick}>
         <h4 className="font-bold text-lg text-[#162733]">{label}</h4>
@@ -73,20 +73,28 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
     const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newType = e.target.value as Room['type'];
         setFormData(prev => ({
-            ...initialRoomState, id: prev.id, length: prev.length, width: prev.width,
-            ceilingHeight: prev.ceilingHeight, type: newType,
+            ...initialRoomState,
+            id: prev.id,
+            length: prev.length,
+            width: prev.width,
+            ceilingHeight: prev.ceilingHeight,
+            type: newType,
         }));
     };
 
     const handleSave = () => {
-        if (!formData.length || !formData.width) { alert("Please enter valid room dimensions."); return; }
+        if (!formData.length || !formData.width) {
+            alert("Please enter valid room dimensions."); return;
+        }
         onSave(formData);
     };
 
     const renderCustomFields = () => {
         switch (formData.type) {
             case 'Bedroom':
-                return ( <div><label htmlFor="closet-doors" className="block text-sm text-gray-600">Closet Doors (qty)</label><input type="number" id="closet-doors" name="closetDoors" value={formData.closetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div> );
+                return (
+                    <div><label htmlFor="closet-doors" className="block text-sm text-gray-600">Closet Doors (qty)</label><input type="number" id="closet-doors" name="closetDoors" value={formData.closetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
+                );
             case 'Bathroom':
                 return (
                     <div className="space-y-4">
@@ -100,15 +108,19 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
                         )}
                     </div>
                 );
-            case 'Living Room': case 'Dining Room':
+            case 'Living Room':
+            case 'Dining Room':
                 return (
                     <div className="space-y-2">
                         <label className="flex items-center"><input type="checkbox" name="paintCrownMolding" checked={formData.paintCrownMolding} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Crown Molding</label>
                         <label className="flex items-center"><input type="checkbox" name="paintFireplaceMantel" checked={formData.paintFireplaceMantel} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Fireplace Mantel</label>
                     </div>
                 );
-            case 'Hallway': case 'Entryway':
-                return ( <label className="flex items-center"><input type="checkbox" name="paintStairwell" checked={formData.paintStairwell} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Includes Stairwell Walls / Risers</label> );
+            case 'Hallway':
+            case 'Entryway':
+                return (
+                     <label className="flex items-center"><input type="checkbox" name="paintStairwell" checked={formData.paintStairwell} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Includes Stairwell Walls / Risers</label>
+                );
             case 'Kitchen':
                 return (
                     <div className="space-y-2">
@@ -121,7 +133,8 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
                         )}
                     </div>
                 );
-            default: return null;
+            default:
+                return null;
         }
     };
 
@@ -233,7 +246,8 @@ export default function App() {
         setIsLoading(true);
         setHasCalculated(true);
         try {
-            const response = await fetch('/api/calculate-estimate', {
+            const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+            const response = await fetch(`${baseUrl}/api/calculate-estimate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ rooms, exteriorItems, projectType, selectedPrep, selectedPaintQuality }),
@@ -304,7 +318,7 @@ export default function App() {
                     <p className="text-red-400 text-sm mt-1 h-5">{postalCodeError}</p>
                 </div>
                 <button onClick={handleStart} className="btn-primary font-bold py-3 px-8 rounded-lg mt-8 text-lg shadow-lg transform hover:scale-105 transition-transform duration-200 flex items-center gap-2 mx-auto">
-                    Let&apos;s Get Started
+                    Let's Get Started
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
                 </button>
             </div>
@@ -365,7 +379,7 @@ export default function App() {
                             ) : hasCalculated ? (
                                 <span>{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</span>
                             ) : (
-                                <span className="text-lg text-gray-500 text-center">Price range appears after the final step</span>
+                                <span className="text-lg text-gray-500 text-center">Price range appears after final step</span>
                             )}
                         </div>
                         <p className="text-sm text-gray-500 mb-6">This price will update in real-time.</p>
@@ -406,8 +420,12 @@ export default function App() {
      const renderStep5 = () => (
         <div className="text-center">
             <h2 className="text-2xl font-serif text-[#162733] mb-2">Your Estimated Project Range</h2>
-            <div className="text-4xl md:text-6xl font-bold text-[#0F52BA] my-4">
-                {isLoading ? <span className="animate-pulse">Calculating...</span> : `${formatCurrency(estimate.low)} - ${formatCurrency(estimate.high)}`}
+            <div className="text-4xl md:text-6xl font-bold text-[#0F52BA] my-4 min-h-[72px] flex items-center justify-center">
+                {hasCalculated && !isLoading ? (
+                    <span>{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</span>
+                ) : (
+                    <span className="animate-pulse">Calculating...</span>
+                )}
             </div>
             <div className="text-left max-w-2xl mx-auto">
                 <h3 className="text-xl font-serif font-semibold text-[#162733] mb-4">Understanding Your Estimate</h3>
