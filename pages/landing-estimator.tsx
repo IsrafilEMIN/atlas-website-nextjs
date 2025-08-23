@@ -1,4 +1,4 @@
-// pages/landing-price-calculator.tsx
+// pages/landing-estimator.tsx
 
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
@@ -10,15 +10,15 @@ import * as fpixel from '../lib/fpixel';
 
 // --- TYPE DEFINITIONS ---
 type FormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  currentCondition: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    currentCondition: string;
 };
 
 type EmbeddedFormProps = {
-  onSubmit: (data: FormData) => void;
+    onSubmit: (data: FormData) => void;
 };
 
 // --- EMBEDDED FORM COMPONENT (No changes needed here) ---
@@ -134,125 +134,113 @@ const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) =>
 
 // --- THE MAIN PAGE COMPONENT (LOGIC FIXED) ---
 const HomeownersShieldPage: NextPageWithLayout = () => {
-  const router = useRouter();
-  const [leadSource, setLeadSource] = useState('Organic Traffic');
-  
-  useEffect(() => {
-    if (router.isReady) {
-      const source = router.query.utm_source as string;
-      if (source) {
-        if (source.toLowerCase().includes('facebook')) setLeadSource('Facebook Ads');
-        else if (source.toLowerCase().includes('google')) setLeadSource('Google Ads');
-      }
-    }
-  }, [router.isReady, router.query]);
+    const router = useRouter();
+    const [leadSource, setLeadSource] = useState('Organic Traffic');
 
-// pages/landing-price-calculator.tsx
+    useEffect(() => {
+        if (router.isReady) {
+            const source = router.query.utm_source as string;
+            if (source) {
+                if (source.toLowerCase().includes('facebook')) setLeadSource('Facebook Ads');
+                else if (source.toLowerCase().includes('google')) setLeadSource('Google Ads');
+            }
+        }
+    }, [router.isReady, router.query]);
 
-const handleFormSubmission = async (data: FormData) => {
-  console.log('--- Step 1: Form submission initiated ---', data);
+    const handleFormSubmission = async (data: FormData) => {
+        if (data.currentCondition === 'contractor') {
+            alert("Thank you for your interest. This tool is intended for homeowners.");
+            return; 
+        }
 
-  // Analytics events
-  try {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: 'tool_lead_form_submit',
-      form_data: { lead_source: leadSource, user_intent: data.currentCondition },
-    });
-    console.log('--- Step 2: Google Analytics data pushed ---');
-    
-    fpixel.event('Lead');
-    console.log('--- Step 3: Facebook Pixel event sent ---');
+        try {
+            // --- Step 1: Add lead to CRM and perform analytics ---
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: 'tool_lead_form_submit',
+                form_data: { lead_source: leadSource, user_intent: data.currentCondition },
+            });
+            fpixel.event('Lead');
 
-  } catch (analyticsError) {
-    console.error('🛑 ERROR during analytics tracking:', analyticsError);
-    // We don't stop execution for analytics errors, but we log them.
-  }
+            const response = await fetch('/api/process-lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...data, leadSource, tool: "Homeowner's Shield Estimator" })
+            });
 
-  try {
-    console.log('--- Step 4: Attempting to call /api/process-lead ---');
-    const response = await fetch('/api/process-lead', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, leadSource, tool: "Homeowner's Shield Estimator" })
-    });
-    
-    console.log(`--- Step 5: API responded with status: ${response.status} ---`);
+            if (!response.ok) {
+                throw new Error('Failed to process lead in CRM.');
+            }
 
-    if (!response.ok) {
-      // This is a likely point of failure.
-      console.error('🛑 ERROR: API call was not successful. Halting execution.', response);
-      alert('There was an error submitting your information. Please try again.');
-      return; 
-    }
+            // --- Step 2: Redirect based on the user's intent ---
+            const highIntentConditions = ['hire_now', 'hire_3_months'];
+            const nurtureConditions = ['diy', 'budgeting'];
 
-    console.log('--- Step 6: API call successful. Proceeding to redirect logic. ---');
-    const highIntentConditions = ['hire_now', 'hire_3_months'];
+            if (highIntentConditions.includes(data.currentCondition)) {
+                // CORRECTLY SET THE FLAGS BEFORE REDIRECTING
+                sessionStorage.setItem('canAccessThankYou', 'true');
+                sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email }));
+                router.push('/consultation-estimator');
 
-    if (highIntentConditions.includes(data.currentCondition)) {
-      console.log('--- Step 7: High-intent user detected. Redirecting to /consultation-price-calculator ---');
-      sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email }));
-      sessionStorage.setItem('canAccessThankYou', 'true');
-      router.push('/consultation-price-calculator');
-    } else {
-      console.log('--- Step 7: Low-intent user detected. Redirecting to /thank-you-estimator ---');
-      router.push('/thank-you-estimator');
-    }
-  } catch (error) {
-    console.error('🛑 FATAL ERROR during form submission fetch:', error);
-    alert('A network error occurred. Please check your connection and try again.');
-  }
-};
+            } else if (nurtureConditions.includes(data.currentCondition)) {
+                router.push('/thank-you-estimator');
+            }
 
-  return (
-    <>
-      <Head>
-        <title>The Homeowner&apos;s Shield: Free Paint Cost Estimator - Richmond Hill</title>
-        <meta name="description" content="Avoid overpaying for your next painting project in Richmond Hill. Get a free, transparent price estimate in 60 seconds and protect yourself from scams." />
-      </Head>
-      <div className="flex flex-col items-center min-h-screen relative bg-gray-900 text-white pb-20">
-        <div className="w-full text-center bg-gradient-to-b from-gray-800 to-gray-900 py-16 px-4">
-          <p className="font-semibold text-yellow-400 mb-4">TRUSTED BY HUNDREDS OF HOMEOWNERS</p>
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight uppercase">THE HOMEOWNER&apos;S SHIELD</h1>
-          <p className="mt-4 text-2xl md:text-4xl text-gray-300 max-w-4xl mx-auto">Get a Fair & Accurate Price Estimate For Your Richmond Hill Home In 60 Seconds.</p>
-          <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
-            <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border-2 border-white/50 rounded-lg">
-              <Image src="/paintingOfferImages/painting-offer-image-01.jpg" alt="Demonstration of the free paint cost estimator tool" className="w-full h-full object-cover" width={1280} height={720} priority unoptimized />
-            </div>
-            <div className="w-full max-w-md mx-auto">
-              <EmbeddedQualificationForm onSubmit={handleFormSubmission} />
-            </div>
-          </div>
-        </div>
-        <div className="w-full max-w-5xl mx-auto py-20 px-4 text-left">
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-center mb-12">WHAT THIS FREE TOOL UNLOCKS FOR YOU</h2>
-            <div className="space-y-10 text-lg">
-                <div className="flex items-start space-x-4">
-                    <div className="text-2xl flex-shrink-0 text-yellow-400 mt-1">✓</div>
-                    <div>
-                        <h3 className="font-bold">Instantly Spot an Inflated Quote</h3>
-                        <p className="text-gray-400">Get an unbiased price range based on local Richmond Hill data, so you know if a quote is fair, overpriced, or too good to be true.</p>
+        } catch (error) {
+            console.error('Error during form submission process:', error);
+            alert('An error occurred while submitting your information. Please try again.');
+        }
+    };
+
+    return (
+        <>
+            <Head>
+                <title>The Homeowner&apos;s Shield: Free Paint Cost Estimator - Richmond Hill</title>
+                <meta name="description" content="Avoid overpaying for your next painting project in Richmond Hill. Get a free, transparent price estimate in 60 seconds and protect yourself from scams." />
+            </Head>
+            <div className="flex flex-col items-center min-h-screen relative bg-gray-900 text-white pb-20">
+                <div className="w-full text-center bg-gradient-to-b from-gray-800 to-gray-900 py-16 px-4">
+                    <p className="font-semibold text-yellow-400 mb-4">TRUSTED BY HUNDREDS OF HOMEOWNERS</p>
+                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight uppercase">THE HOMEOWNER&apos;S SHIELD</h1>
+                    <p className="mt-4 text-2xl md:text-4xl text-gray-300 max-w-4xl mx-auto">Get a Fair & Accurate Price Estimate For Your Richmond Hill Home In 60 Seconds.</p>
+                    <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
+                        <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border-2 border-white/50 rounded-lg">
+                            <Image src="/paintingOfferImages/painting-offer-image-01.jpg" alt="Demonstration of the free paint cost estimator tool" className="w-full h-full object-cover" width={1280} height={720} priority unoptimized />
+                        </div>
+                        <div className="w-full max-w-md mx-auto">
+                            <EmbeddedQualificationForm onSubmit={handleFormSubmission} />
+                        </div>
                     </div>
                 </div>
-                <div className="flex items-start space-x-4">
-                    <div className="text-2xl flex-shrink-0 text-yellow-400 mt-1">✓</div>
-                    <div>
-                        <h3 className="font-bold">Understand Material Costs</h3>
-                        <p className="text-gray-400">We&apos;ll show you the typical costs for different paint qualities so you can have an intelligent conversation with your painter about your options.</p>
-                    </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                    <div className="text-2xl flex-shrink-0 text-yellow-400 mt-1">✓</div>
-                    <div>
-                        <h3 className="font-bold">Hire With 100% Confidence</h3>
-                        <p className="text-gray-400">Stop guessing. Walk into any conversation knowing exactly what your project <em>should</em> cost and negotiate from a position of power.</p>
+                <div className="w-full max-w-5xl mx-auto py-20 px-4 text-left">
+                    <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-center mb-12">WHAT THIS FREE TOOL UNLOCKS FOR YOU</h2>
+                    <div className="space-y-10 text-lg">
+                        <div className="flex items-start space-x-4">
+                            <div className="text-2xl flex-shrink-0 text-yellow-400 mt-1">✓</div>
+                            <div>
+                                <h3 className="font-bold">Instantly Spot an Inflated Quote</h3>
+                                <p className="text-gray-400">Get an unbiased price range based on local Richmond Hill data, so you know if a quote is fair, overpriced, or too good to be true.</p>
+                            </div>
+                        </div>
+                        <div className="flex items-start space-x-4">
+                            <div className="text-2xl flex-shrink-0 text-yellow-400 mt-1">✓</div>
+                            <div>
+                                <h3 className="font-bold">Understand Material Costs</h3>
+                                <p className="text-gray-400">We&apos;ll show you the typical costs for different paint qualities so you can have an intelligent conversation with your painter about your options.</p>
+                            </div>
+                        </div>
+                        <div className="flex items-start space-x-4">
+                            <div className="text-2xl flex-shrink-0 text-yellow-400 mt-1">✓</div>
+                            <div>
+                                <h3 className="font-bold">Hire With 100% Confidence</h3>
+                                <p className="text-gray-400">Stop guessing. Walk into any conversation knowing exactly what your project <em>should</em> cost and negotiate from a position of power.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-      </div>
-    </>
-  );
+        </>
+    );
 };
 
 HomeownersShieldPage.getLayout = function getLayout(page: React.ReactElement) {

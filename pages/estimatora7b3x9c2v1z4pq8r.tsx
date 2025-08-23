@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
-// --- TYPE DEFINITIONS (EXPANDED FOR EXTERIOR) ---
+// --- TYPE DEFINITIONS ---
 interface Room {
     id: number;
     type: 'Bedroom' | 'Bathroom' | 'Living Room' | 'Dining Room' | 'Kitchen' | 'Hallway' | 'Entryway' | 'Office';
@@ -32,7 +32,6 @@ interface ExteriorItem {
     stories: string;
     trimLft: number | string;
     doors: number | string;
-    // New detailed exterior items
     shutters?: number | string;
     windowFrames?: number | string;
     gutterLft?: number | string;
@@ -41,69 +40,15 @@ interface ExteriorItem {
 
 type PrepCondition = 'good' | 'fair' | 'poor' | '';
 type PaintQuality = 'good' | 'better' | 'best' | '';
-type SidingType = 'Vinyl' | 'Wood' | 'Stucco' | 'Brick' | 'Metal' | 'Fiber Cement';
-type StoryCount = '1' | '2' | '3';
 
 // --- PROPS TYPE DEFINITIONS ---
-interface SelectableCardProps {
-    label: string;
-    selected: boolean;
-    onClick: () => void;
-    children?: React.ReactNode;
-}
+interface SelectableCardProps { label: string; selected: boolean; onClick: () => void; children?: React.ReactNode; }
+interface RoomModalProps { room: Room | null; onSave: (roomData: Room) => void; onClose: () => void; }
+interface ExteriorModalProps { item: ExteriorItem | null; onSave: (itemData: ExteriorItem) => void; onClose: () => void; }
 
-interface RoomModalProps {
-    room: Room | null;
-    onSave: (roomData: Room) => void;
-    onClose: () => void;
-}
-
-interface ExteriorModalProps {
-    item: ExteriorItem | null;
-    onSave: (itemData: ExteriorItem) => void;
-    onClose: () => void;
-}
-
-// --- CONFIGURATION & CONSTANTS (UPDATED WITH EXTERIOR COSTS) ---
-const PRICING = {
-    PROFIT_MARKUP: 2.0,
-    PAINTER_BURDENED_HOURLY_COST: 40.00,
-    PAINT_COST_PER_GALLON: { good: 30, better: 50, best: 65 },
-    SUPPLIES_PERCENTAGE: 0.15,
-    PAINTING_SQFT_PER_HOUR: 175,
-    BASE_PREP_HOURS_PER_ROOM: 2.0,
-    BASE_PREP_HOURS_EXTERIOR: 4.0,
-    // --- Cost of Goods Sold (COGS) for Add-ons ---
-    COST_PER_DOOR: 75.00,
-    COST_PER_EXTERIOR_DOOR: 125.00,
-    COST_PER_CABINET_PIECE: 100.00,
-    COST_PER_CLOSET_DOOR: 40.00,
-    COST_PER_VANITY_PIECE: 60.00,
-    COST_MOLD_RESISTANT_PAINT_UPCHARGE: 75.00,
-    COST_CROWN_MOLDING: 250.00,
-    COST_FIREPLACE_MANTEL: 200.00,
-    COST_STAIRWELL: 450.00,
-    // New Exterior COGS
-    COST_PER_SHUTTER: 25.00,
-    COST_PER_WINDOW_FRAME: 40.00,
-    COST_GUTTERS_PER_LFT: 3.00,
-    COST_DECK_STAIN_PER_SQFT: 2.50,
-    // --- Multipliers ---
-    PREP_CONDITION_MULTIPLIERS: { good: 1.0, fair: 1.5, poor: 2.5 },
-    HIGH_CEILING_MULTIPLIER: 1.20,
-    SIDING_LABOR_MULTIPLIERS: { 'Vinyl': 1.0, 'Wood': 1.4, 'Stucco': 1.6, 'Brick': 1.7, 'Metal': 1.1, 'Fiber Cement': 1.1 },
-    STORY_MULTIPLIERS: { '1': 1.0, '2': 1.25, '3': 1.5 },
-    COVERAGE_PER_GALLON: 350,
-    RANGE_MULTIPLIER_LOW: 0.95,
-    RANGE_MULTIPLIER_HIGH: 1.20,
-};
-
-// --- HELPER & MODAL COMPONENTS ---
+// --- HELPER & MODAL COMPONENTS (Full implementation) ---
 const SelectableCard: React.FC<SelectableCardProps> = ({ label, selected, onClick, children = null }) => (
-    <div
-        className={`selectable-card border-2 rounded-lg p-4 cursor-pointer text-center transition-all duration-200 ${selected ? 'border-[#0F52BA] shadow-lg scale-105' : 'border-gray-200 hover:border-blue-400'}`}
-        onClick={onClick}
-    >
+    <div className={`selectable-card border-2 rounded-lg p-4 cursor-pointer text-center transition-all duration-200 ${selected ? 'border-[#0F52BA] shadow-lg scale-105' : 'border-gray-200 hover:border-blue-400'}`} onClick={onClick}>
         <h4 className="font-bold text-lg text-[#162733]">{label}</h4>
         {children}
     </div>
@@ -128,28 +73,20 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
     const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newType = e.target.value as Room['type'];
         setFormData(prev => ({
-            ...initialRoomState,
-            id: prev.id,
-            length: prev.length,
-            width: prev.width,
-            ceilingHeight: prev.ceilingHeight,
-            type: newType,
+            ...initialRoomState, id: prev.id, length: prev.length, width: prev.width,
+            ceilingHeight: prev.ceilingHeight, type: newType,
         }));
     };
 
     const handleSave = () => {
-        if (!formData.length || !formData.width) {
-            alert("Please enter valid room dimensions."); return;
-        }
+        if (!formData.length || !formData.width) { alert("Please enter valid room dimensions."); return; }
         onSave(formData);
     };
 
     const renderCustomFields = () => {
         switch (formData.type) {
             case 'Bedroom':
-                return (
-                    <div><label htmlFor="closet-doors" className="block text-sm text-gray-600">Closet Doors (qty)</label><input type="number" id="closet-doors" name="closetDoors" value={formData.closetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
-                );
+                return ( <div><label htmlFor="closet-doors" className="block text-sm text-gray-600">Closet Doors (qty)</label><input type="number" id="closet-doors" name="closetDoors" value={formData.closetDoors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div> );
             case 'Bathroom':
                 return (
                     <div className="space-y-4">
@@ -163,19 +100,15 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
                         )}
                     </div>
                 );
-            case 'Living Room':
-            case 'Dining Room':
+            case 'Living Room': case 'Dining Room':
                 return (
                     <div className="space-y-2">
                         <label className="flex items-center"><input type="checkbox" name="paintCrownMolding" checked={formData.paintCrownMolding} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Crown Molding</label>
                         <label className="flex items-center"><input type="checkbox" name="paintFireplaceMantel" checked={formData.paintFireplaceMantel} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Paint Fireplace Mantel</label>
                     </div>
                 );
-            case 'Hallway':
-            case 'Entryway':
-                return (
-                     <label className="flex items-center"><input type="checkbox" name="paintStairwell" checked={formData.paintStairwell} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Includes Stairwell Walls / Risers</label>
-                );
+            case 'Hallway': case 'Entryway':
+                return ( <label className="flex items-center"><input type="checkbox" name="paintStairwell" checked={formData.paintStairwell} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-[#0F52BA] focus:ring-[#0F52BA] mr-2" />Includes Stairwell Walls / Risers</label> );
             case 'Kitchen':
                 return (
                     <div className="space-y-2">
@@ -188,8 +121,7 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
                         )}
                     </div>
                 );
-            default:
-                return null;
+            default: return null;
         }
     };
 
@@ -250,7 +182,7 @@ const ExteriorModal: React.FC<ExteriorModalProps> = ({ item, onSave, onClose }) 
             <div className="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full animate-fade-in-up max-h-[90vh] overflow-y-auto">
                 <h3 className="text-2xl font-serif font-semibold text-[#162733] mb-6">{item ? 'Edit' : 'Add'} Exterior Surface</h3>
                 <div className="space-y-4">
-                    <div><label htmlFor="siding-type" className="block text-sm font-medium text-gray-700">Siding Material</label><select id="siding-type" name="siding" value={formData.siding} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]">{Object.keys(PRICING.SIDING_LABOR_MULTIPLIERS).map(s => <option key={s}>{s}</option>)}</select></div>
+                    <div><label htmlFor="siding-type" className="block text-sm font-medium text-gray-700">Siding Material</label><select id="siding-type" name="siding" value={formData.siding} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]"><option>Vinyl</option><option>Wood</option><option>Stucco</option><option>Brick</option><option>Metal</option><option>Fiber Cement</option></select></div>
                     <div className="grid grid-cols-2 gap-4"><div><label htmlFor="surface-sqft" className="block text-sm font-medium text-gray-700">Siding Area (sq ft)</label><input type="number" id="surface-sqft" name="sqft" value={formData.sqft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" placeholder="e.g., 1500" /></div><div><label htmlFor="stories" className="block text-sm font-medium text-gray-700">Number of Stories</label><select id="stories" name="stories" value={formData.stories} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#0F52BA] focus:border-[#0F52BA]"><option value="1">1 Story</option><option value="2">2 Stories</option><option value="3">3 Stories</option></select></div></div>
                     <div><label htmlFor="exterior-trim-lft" className="block text-sm font-medium text-gray-700">Trim (linear ft)</label><input type="number" id="exterior-trim-lft" name="trimLft" value={formData.trimLft} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
                     <div><label htmlFor="exterior-doors-qty" className="block text-sm font-medium text-gray-700">Exterior Doors (qty)</label><input type="number" id="exterior-doors-qty" name="doors" value={formData.doors} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0F52BA] focus:ring-[#0F52BA]" /></div>
@@ -287,91 +219,42 @@ export default function App() {
     const [isExteriorModalOpen, setIsExteriorModalOpen] = useState(false);
     const [editingRoom, setEditingRoom] = useState<Room | null>(null);
     const [editingExteriorItem, setEditingExteriorItem] = useState<ExteriorItem | null>(null);
+    
+    const [estimate, setEstimate] = useState({ low: 0, high: 0 });
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasCalculated, setHasCalculated] = useState(false);
 
-    const estimate = useMemo(() => {
-        if (rooms.length === 0 && exteriorItems.length === 0) return { low: 0, high: 0 };
-
-        let totalPaintableSqFt = 0, totalPaintingHours = 0, totalPrepHours = 0, addonCOGS = 0;
-        const prepMultiplier = PRICING.PREP_CONDITION_MULTIPLIERS[selectedPrep as keyof typeof PRICING.PREP_CONDITION_MULTIPLIERS] || 1.0;
-
-        // --- INTERIOR CALCULATION ---
-        if (projectType === 'interior' || projectType === 'both') {
-            rooms.forEach(room => {
-                const length = parseFloat(String(room.length)) || 0;
-                const width = parseFloat(String(room.width)) || 0;
-                const ceilingHeight = parseFloat(String(room.ceilingHeight)) || 8;
-                
-                let roomSqFt = 0;
-                const ceilingMultiplier = ceilingHeight > 10 ? PRICING.HIGH_CEILING_MULTIPLIER : 1;
-
-                if (room.paintWalls) roomSqFt += (length + width) * 2 * ceilingHeight;
-                if (room.paintCeiling) roomSqFt += length * width;
-                if (room.paintTrim) totalPaintingHours += ((length + width) * 2) / 40;
-
-                totalPaintableSqFt += roomSqFt;
-                totalPaintingHours += (roomSqFt * 2 * ceilingMultiplier) / PRICING.PAINTING_SQFT_PER_HOUR;
-                totalPrepHours += PRICING.BASE_PREP_HOURS_PER_ROOM;
-
-                if (room.paintDoorsCheck) addonCOGS += (parseFloat(String(room.doors)) || 0) * PRICING.COST_PER_DOOR;
-                if (room.closetDoors) addonCOGS += (parseFloat(String(room.closetDoors)) || 0) * PRICING.COST_PER_CLOSET_DOOR;
-                if (room.useMoldResistantPaint) addonCOGS += PRICING.COST_MOLD_RESISTANT_PAINT_UPCHARGE;
-                if (room.paintVanity) {
-                    const vanityCount = (parseFloat(String(room.vanityDoors)) || 0) + (parseFloat(String(room.vanityDrawers)) || 0);
-                    addonCOGS += vanityCount * PRICING.COST_PER_VANITY_PIECE;
-                }
-                if (room.paintCrownMolding) addonCOGS += PRICING.COST_CROWN_MOLDING;
-                if (room.paintFireplaceMantel) addonCOGS += PRICING.COST_FIREPLACE_MANTEL;
-                if (room.paintStairwell) addonCOGS += PRICING.COST_STAIRWELL;
-                if (room.paintCabinets) {
-                    const cabinetCount = (parseFloat(String(room.cabinetDoors)) || 0) + (parseFloat(String(room.cabinetDrawers)) || 0);
-                    addonCOGS += cabinetCount * PRICING.COST_PER_CABINET_PIECE;
-                }
+    const fetchEstimate = useCallback(async () => {
+        if ((rooms.length === 0 && exteriorItems.length === 0) || !selectedPrep || !selectedPaintQuality) {
+            setEstimate({ low: 0, high: 0 });
+            setHasCalculated(false);
+            return;
+        }
+        setIsLoading(true);
+        setHasCalculated(true);
+        try {
+            const response = await fetch('/api/calculate-estimate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rooms, exteriorItems, projectType, selectedPrep, selectedPaintQuality }),
             });
+            if (!response.ok) throw new Error('API Error');
+            const data = await response.json();
+            setEstimate(data);
+        } catch (error) {
+            console.error("Failed to fetch estimate:", error);
         }
-
-        // --- EXTERIOR CALCULATION ---
-        if (projectType === 'exterior' || projectType === 'both') {
-            exteriorItems.forEach(item => {
-                const sqft = parseFloat(String(item.sqft)) || 0;
-                const sidingMultiplier = PRICING.SIDING_LABOR_MULTIPLIERS[item.siding as SidingType] || 1;
-                const storyMultiplier = PRICING.STORY_MULTIPLIERS[item.stories as StoryCount] || 1;
-                
-                totalPaintableSqFt += sqft;
-                totalPaintingHours += (sqft * 2 * sidingMultiplier * storyMultiplier) / PRICING.PAINTING_SQFT_PER_HOUR;
-                totalPrepHours += PRICING.BASE_PREP_HOURS_EXTERIOR;
-
-                if (item.trimLft) totalPaintingHours += (parseFloat(String(item.trimLft)) || 0) / 30;
-                if (item.doors) addonCOGS += (parseFloat(String(item.doors)) || 0) * PRICING.COST_PER_EXTERIOR_DOOR;
-                if (item.shutters) addonCOGS += (parseFloat(String(item.shutters)) || 0) * PRICING.COST_PER_SHUTTER;
-                if (item.windowFrames) addonCOGS += (parseFloat(String(item.windowFrames)) || 0) * PRICING.COST_PER_WINDOW_FRAME;
-                if (item.gutterLft) addonCOGS += (parseFloat(String(item.gutterLft)) || 0) * PRICING.COST_GUTTERS_PER_LFT;
-                if (item.deckSqft) addonCOGS += (parseFloat(String(item.deckSqft)) || 0) * PRICING.COST_DECK_STAIN_PER_SQFT;
-            });
-        }
-        
-        // --- FINAL COGS & PRICE CALCULATION ---
-        const finalPrepHours = totalPrepHours * prepMultiplier;
-        const totalLaborHours = totalPaintingHours + finalPrepHours;
-        const laborCOGS = totalLaborHours * PRICING.PAINTER_BURDENED_HOURLY_COST;
-        
-        let materialCOGS = 0;
-        if (selectedPaintQuality) {
-            const paintCostPerGallon = PRICING.PAINT_COST_PER_GALLON[selectedPaintQuality];
-            const gallonsNeeded = Math.ceil((totalPaintableSqFt * 2) / PRICING.COVERAGE_PER_GALLON);
-            const totalPaintCost = gallonsNeeded * paintCostPerGallon;
-            const suppliesCost = totalPaintCost * PRICING.SUPPLIES_PERCENTAGE;
-            materialCOGS = totalPaintCost + suppliesCost;
-        }
-
-        const totalCOGS = laborCOGS + materialCOGS + addonCOGS;
-        const price = totalCOGS * PRICING.PROFIT_MARKUP;
-        const roundTo = (num: number, nearest: number) => Math.round(num / nearest) * nearest;
-
-        return {
-            low: roundTo(price * PRICING.RANGE_MULTIPLIER_LOW, 25),
-            high: roundTo(price * PRICING.RANGE_MULTIPLIER_HIGH, 25),
-        };
+        setIsLoading(false);
     }, [rooms, exteriorItems, projectType, selectedPrep, selectedPaintQuality]);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            if (currentStep >= 3) {
+                 fetchEstimate();
+            }
+        }, 500);
+        return () => clearTimeout(handler);
+    }, [fetchEstimate, currentStep]);
 
     const handleSaveRoom = (roomData: Room) => {
         const index = rooms.findIndex(r => r.id === roomData.id);
@@ -407,7 +290,7 @@ export default function App() {
     };
     const formatCurrency = (num: number) => `$${num.toLocaleString()}`;
 
-    // --- RENDER METHODS FOR STEPS ---
+    // --- RENDER METHODS ---
     const renderStep1 = () => (
         <div className="relative text-center text-white rounded-2xl overflow-hidden flex flex-col items-center justify-center min-h-[500px] -m-6 md:-m-10">
             <div className="absolute inset-0 bg-cover bg-center z-0" style={{backgroundImage: "url('https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')"}}></div>
@@ -421,7 +304,7 @@ export default function App() {
                     <p className="text-red-400 text-sm mt-1 h-5">{postalCodeError}</p>
                 </div>
                 <button onClick={handleStart} className="btn-primary font-bold py-3 px-8 rounded-lg mt-8 text-lg shadow-lg transform hover:scale-105 transition-transform duration-200 flex items-center gap-2 mx-auto">
-                    Let&apos;s Get Started
+                    Let's Get Started
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
                 </button>
             </div>
@@ -476,9 +359,17 @@ export default function App() {
                 <div className="md:col-span-5 mt-8 md:mt-0">
                     <div className="bg-[#f9f6f2] p-6 rounded-xl sticky top-8">
                         <h3 className="font-serif text-xl font-semibold text-[#162733] mb-4">Estimated Range</h3>
-                        <div className="text-3xl md:text-4xl font-bold text-[#162733] mb-4">{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</div>
+                        <div className="text-3xl md:text-4xl font-bold text-[#162733] mb-4 min-h-[50px] flex items-center justify-center">
+                            {isLoading ? (
+                                <span className="text-2xl text-gray-400 animate-pulse">Calculating...</span>
+                            ) : hasCalculated ? (
+                                <span>{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</span>
+                            ) : (
+                                <span className="text-lg text-gray-500 text-center">Price range appears after the final step</span>
+                            )}
+                        </div>
                         <p className="text-sm text-gray-500 mb-6">This price will update in real-time.</p>
-                        <button onClick={() => setCurrentStep(4)} className="w-full btn-primary font-bold py-3 px-6 rounded-lg shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={rooms.length === 0 && exteriorItems.length === 0}>Next: Prep & Quality</button>
+                        <button onClick={() => setCurrentStep(4)} className="w-full btn-primary font-bold py-3 px-6 rounded-lg shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={(rooms.length === 0 && exteriorItems.length === 0)}>Next: Prep & Quality</button>
                         <button onClick={() => setCurrentStep(2)} className="w-full btn-secondary text-center font-bold py-2 px-6 rounded-lg mt-4">Back</button>
                     </div>
                 </div>
@@ -511,10 +402,13 @@ export default function App() {
             </div>
         </div>
     );
+
      const renderStep5 = () => (
         <div className="text-center">
             <h2 className="text-2xl font-serif text-[#162733] mb-2">Your Estimated Project Range</h2>
-            <div className="text-4xl md:text-6xl font-bold text-[#0F52BA] my-4">{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</div>
+            <div className="text-4xl md:text-6xl font-bold text-[#0F52BA] my-4">
+                {isLoading ? <span className="animate-pulse">Calculating...</span> : `${formatCurrency(estimate.low)} - ${formatCurrency(estimate.high)}`}
+            </div>
             <div className="text-left max-w-2xl mx-auto">
                 <h3 className="text-xl font-serif font-semibold text-[#162733] mb-4">Understanding Your Estimate</h3>
                 <p className="text-gray-600 mb-4">Our estimates assume a professional, insured crew that properly prepares all surfaces (the single most important factor for a lasting paint job) and uses high-quality materials.</p>
@@ -528,7 +422,6 @@ export default function App() {
             </div>
         </div>
     );
-
 
     return (
         <div className="bg-[#f0f2f5] p-4 md:p-6 min-h-screen flex items-center justify-center font-sans">

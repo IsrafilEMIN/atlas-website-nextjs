@@ -1,4 +1,4 @@
-// pages/thank-you.tsx
+// pages/consultation-estimator.tsx
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -28,7 +28,7 @@ const ConsultationPriceCalculator: NextPageWithLayout = () => {
       sessionStorage.removeItem('leadDataForThankYou');
       setIsLoading(false);
     } else {
-      router.replace('/landing-price-calculator');
+      router.replace('/landing-estimator');
     }
   }, [router]);
 
