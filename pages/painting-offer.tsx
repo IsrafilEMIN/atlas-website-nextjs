@@ -7,310 +7,315 @@ import Image from 'next/image';
 import * as fpixel from '../lib/fpixel';
 import GoogleReviewPill from '@/components/GoogleReviewPill';
 
-// --- TYPE DEFINITIONS ---
+// --- TYPE DEFINITIONS (Copied from landing-estimator.tsx) ---
 type FormData = {
-  name: string;
-  phone: string;
-  email: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    currentCondition: string;
 };
 
 type QualificationFormProps = {
-  onSubmit: (data: FormData) => void;
+    onSubmit: (data: FormData) => void;
 };
 
-// --- EMBEDDED QUALIFICATION FORM COMPONENT ---
+// --- QUALIFICATION FORM COMPONENT (Copied from landing-estimator.tsx) ---
 const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    phone: '',
-    email: '',
-  });
+    const [formData, setFormData] = useState<FormData>({ 
+        firstName: '', 
+        lastName: '',
+        email: '', 
+        phone: '', 
+        currentCondition: '' 
+    });
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const validateField = (name: keyof FormData, value: string) => {
+        switch (name) {
+            case 'firstName': return value.trim() ? '' : 'First name is required.';
+            case 'lastName': return value.trim() ? '' : 'Last name is required.';
+            case 'email': return /\S+@\S+\.\S+/.test(value) ? '' : 'Please enter a valid email format.';
+            case 'phone': const phoneDigits = value.replace(/\D/g, ''); return phoneDigits.length === 10 ? '' : 'Phone number must be 10 digits.';
+            case 'currentCondition': return value ? '' : 'Please select your current plan.';
+            default: return '';
+        }
+    };
     
-    let processedValue = value;
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target as { name: keyof FormData; value: string };
+        let processedValue = value;
+        if (name === 'phone') {
+            const cleaned = value.replace(/\D/g, '');
+            const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+            if (match) {
+                let formatted = '';
+                if (match[1]) formatted += `(${match[1]}`;
+                if (match[2]) formatted += `) ${match[2]}`;
+                if (match[3]) formatted += `-${match[3]}`;
+                processedValue = formatted;
+            }
+        }
+        setFormData((prev) => ({ ...prev, [name]: processedValue }));
+        if (errors[name]) setErrors(prev => ({...prev, [name]: ''}));
+    };
 
-    if (name === 'phone') {
-      const cleaned = value.replace(/\D/g, '');
-      const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
-      if (match) {
-        let formatted = '';
-        if (match[1]) formatted += `(${match[1]}`;
-        if (match[2]) formatted += `) ${match[2]}`;
-        if (match[3]) formatted += `-${match[3]}`;
-        processedValue = formatted;
-      }
-    }
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target as { name: keyof FormData; value: string };
+        setTouched(prev => ({ ...prev, [name]: true }));
+        setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+    };
 
-    setFormData((prev) => ({ ...prev, [name]: processedValue }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
-  };
+    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const newErrors: { [key: string]: string } = {};
+        const newTouched: { [key: string]: boolean } = {};
+        (Object.keys(formData) as Array<keyof FormData>).forEach((key) => {
+            newTouched[key] = true;
+            const error = validateField(key, formData[key]);
+            if (error) newErrors[key] = error;
+        });
+        setErrors(newErrors);
+        setTouched(newTouched);
+        if (Object.keys(newErrors).length === 0) {
+            onSubmit(formData);
+        }
+    };
 
-  const validate = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!formData.name.trim()) newErrors.name = 'Name is required.';
-    if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email format.';
-    
-    const phoneDigits = formData.phone.replace(/\D/g, '');
-    if (phoneDigits.length !== 10) newErrors.phone = 'Phone number must be 10 digits.';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (validate()) {
-      onSubmit(formData);
-    } else {
-      console.log('Validation failed', errors);
-    }
-  };
-
-  return (
-    <div className="bg-white rounded-3xl p-6 md:p-8 text-gray-800">
-      <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
-        Get Your Free Estimate
-      </h2>
-      <form onSubmit={handleFormSubmit} className="space-y-5" noValidate>
-        <div>
-          <label htmlFor="name" className="text-left block text-sm font-medium text-gray-700">Name <span className="text-red-500">*</span></label>
-          <input type="text" name="name" id="name" value={formData.name} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
-          {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
-        </div>
-        <div>
-          <label htmlFor="email" className="text-left block text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
-          <input type="email" name="email" id="email" value={formData.email} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} />
-          {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
-        </div>
-        <div>
-          <label htmlFor="phone" className="text-left block text-sm font-medium text-gray-700">Phone <span className="text-red-500">*</span></label>
-          <input type="tel" name="phone" id="phone" value={formData.phone} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={14} />
-          {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
-        </div>
-        {/* <div>
-          <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code <span className="text-red-500">*</span></label>
-          <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} required className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.postalCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} maxLength={7} />
-          {errors.postalCode && <p className="mt-1 text-xs text-red-600">{errors.postalCode}</p>}
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Do you plan to paint other areas in your house?</label>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-            {paintAreaOptions.map((area) => (
-              <div
-                key={area}
-                onClick={() => handleAreaSelection(area)}
-                className="flex items-center p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100"
-              >
-                <div className={`w-5 h-5 border-2 rounded flex-shrink-0 flex items-center justify-center mr-3 ${
-                  formData.otherAreasToPaint.includes(area) ? 'bg-[#0F52BA] border-[#0F52BA]' : 'bg-white border-gray-400'
-                }`}>
-                  {formData.otherAreasToPaint.includes(area) && (
-                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                    </svg>
-                  )}
+    return (
+        <div className="bg-white rounded-3xl p-6 md:p-8 text-gray-800">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
+                Get Your Free Estimate
+            </h2>
+            <form onSubmit={handleFormSubmit} className="space-y-4" noValidate>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label htmlFor="firstName" className="sr-only">First Name</label>
+                        <input type="text" name="firstName" id="firstName" placeholder="First Name *" value={formData.firstName} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.firstName && touched.firstName ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
+                        {errors.firstName && touched.firstName && <p className="mt-1 text-xs text-red-600">{errors.firstName}</p>}
+                    </div>
+                    <div>
+                        <label htmlFor="lastName" className="sr-only">Last Name</label>
+                        <input type="text" name="lastName" id="lastName" placeholder="Last Name *" value={formData.lastName} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.lastName && touched.lastName ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
+                        {errors.lastName && touched.lastName && <p className="mt-1 text-xs text-red-600">{errors.lastName}</p>}
+                    </div>
                 </div>
-                <span className="text-gray-800 select-none">{area}</span>
-              </div>
-            ))}
-          </div>
-        </div> */}
-        <div className="pt-4">
-          <button type="submit" className="w-full bg-[#0F52BA] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Submit & Schedule</button>
+                <div>
+                    <label htmlFor="email" className="sr-only">Email</label>
+                    <input type="email" name="email" id="email" placeholder="Email Address *" value={formData.email} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
+                    {errors.email && touched.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
+                </div>
+                <div>
+                    <label htmlFor="phone" className="sr-only">Phone</label>
+                    <input type="tel" name="phone" id="phone" placeholder="Phone Number *" value={formData.phone} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone && touched.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} maxLength={14} />
+                    {errors.phone && touched.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
+                </div>
+                <div>
+                    <label htmlFor="currentCondition" className="sr-only">Current Condition</label>
+                    <select name="currentCondition" id="currentCondition" value={formData.currentCondition} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${formData.currentCondition === "" ? 'text-gray-500' : 'text-gray-900'} ${errors.currentCondition && touched.currentCondition ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur}>
+                        <option value="" disabled>What is your current plan? *</option>
+                        <option value="hire_now">I'm planning to hire a painter now</option>
+                        <option value="hire_3_months">I'm planning to paint within 3 months</option>
+                        <option value="diy">I am planning to DIY</option>
+                        <option value="budgeting">I'm budgeting for a future project</option>
+                        <option value="contractor">I'm a contractor</option>
+                    </select>
+                    {errors.currentCondition && touched.currentCondition && <p className="mt-1 text-xs text-red-600">{errors.currentCondition}</p>}
+                </div>
+                <div className="pt-2">
+                    <button type="submit" className="w-full bg-[#0F52BA] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Submit & Schedule</button>
+                </div>
+            </form>
         </div>
-      </form>
-    </div>
-  );
+    );
 };
+
 
 // --- THE MAIN PAGE COMPONENT ---
 const PaintingOfferPage: NextPageWithLayout = () => {
-  const router = useRouter();
-  const [leadSource, setLeadSource] = useState('Organic Traffic');
+    const router = useRouter();
+    const [leadSource, setLeadSource] = useState('Organic Traffic');
+    const pageContainerRef = useRef<HTMLDivElement>(null);
+    const firstReviewRef = useRef<HTMLDivElement>(null);
 
-  const pageContainerRef = useRef<HTMLDivElement>(null);
-  const firstReviewRef = useRef<HTMLDivElement>(null);
+    const location = router.query.location as string;
+    const normalizedLocation = location ? location.toLowerCase() : '';
+    const locationMap: { [key: string]: string } = {
+        'vaughan': 'Vaughan',
+        'markham': 'Markham',
+        'richmond hill': 'Richmond Hill',
+    };
+    const properLocation = locationMap[normalizedLocation];
+    const headerTitle = properLocation ? `${properLocation} Homeowner's Trusted Painter` : 'Homeowner\'s Trusted Painter';
+    const subTextLocation = properLocation ? `homeowners in ${properLocation}` : 'homeowners';
 
-  const location = router.query.location as string;
-  const normalizedLocation = location ? location.toLowerCase() : '';
-  const locationMap: { [key: string]: string } = {
-    'vaughan': 'Vaughan',
-    'markham': 'Markham',
-    'richmond hill': 'Richmond Hill',
-  };
-  const properLocation = locationMap[normalizedLocation];
-  const headerTitle = properLocation ? `${properLocation} Realtor\'s Trusted Painter` : 'Realtor\'s Trusted Painter';
-  const subTextLocation = properLocation ? `${properLocation} realtors` : 'realtors';
+    const reviews = useMemo(() => [
+        { src: "/testimonialImages/testimonial-image-08.png", alt: "Google review for Atlas HomeServices", width: 800, height: 400 },
+        { src: "/testimonialImages/testimonial-image-01.png", alt: "HomeStars review for Atlas HomeServices", width: 800, height: 400 },
+        { src: "/testimonialImages/testimonial-image-02.png", alt: "HomeStars review for Atlas HomeServices", width: 800, height: 550 },
+        { src: "/testimonialImages/testimonial-image-03.png", alt: "HomeStars review for Atlas HomeServices", width: 800, height: 420 },
+        { src: "/testimonialImages/testimonial-image-04.png", alt: "HomeStars Review for Atlas HomeServices", width: 800, height: 500 },
+        { src: "/testimonialImages/testimonial-image-05.png", alt: "HomeStars Review for Atlas HomeServices", width: 800, height: 450 },
+        { src: "/testimonialImages/testimonial-image-06.png", alt: "Google Review for Atlas HomeServices", width: 800, height: 520 },
+        { src: "/testimonialImages/testimonial-image-07.png", alt: "Google Review for Atlas HomeServices", width: 800, height: 410 }
+    ], []);
 
-  const reviews = useMemo(() => [
-    { src: "/testimonialImages/testimonial-image-08.png", alt: "Google review for Atlas HomeServices", width: 800, height: 400 },
-    { src: "/testimonialImages/testimonial-image-01.png", alt: "HomeStars review for Atlas HomeServices", width: 800, height: 400 },
-    { src: "/testimonialImages/testimonial-image-02.png", alt: "HomeStars review for Atlas HomeServices", width: 800, height: 550 },
-    { src: "/testimonialImages/testimonial-image-03.png", alt: "HomeStars review for Atlas HomeServices", width: 800, height: 420 },
-    { src: "/testimonialImages/testimonial-image-04.png", alt: "HomeStars Review for Atlas HomeServices", width: 800, height: 500 },
-    { src: "/testimonialImages/testimonial-image-05.png", alt: "HomeStars Review for Atlas HomeServices", width: 800, height: 450 },
-    { src: "/testimonialImages/testimonial-image-06.png", alt: "Google Review for Atlas HomeServices", width: 800, height: 520 },
-    { src: "/testimonialImages/testimonial-image-07.png", alt: "Google Review for Atlas HomeServices", width: 800, height: 410 }
-  ], []);
+    useEffect(() => {
+        if (router.isReady) {
+            const source = router.query.utm_source as string;
+            if (source) {
+                if (source.toLowerCase().includes('facebook')) setLeadSource('Facebook Ads');
+                else if (source.toLowerCase().includes('google')) setLeadSource('Google Ads');
+            }
+        }
+    }, [router.isReady, router.query]);
+    
+    useEffect(() => {
+        const calculateGradient = () => {
+            const pageContainer = pageContainerRef.current;
+            const firstReview = firstReviewRef.current;
+            if (!pageContainer || !firstReview) return;
 
-  useEffect(() => {
-    if (router.isReady) {
-      const source = router.query.utm_source as string;
-      if (source) {
-        if (source.toLowerCase().includes('facebook')) setLeadSource('Facebook Ads');
-        else if (source.toLowerCase().includes('google')) setLeadSource('Google Ads');
-      }
-    }
-  }, [router.isReady, router.query]);
-  
-  useEffect(() => {
-    const calculateGradient = () => {
-      const pageContainer = pageContainerRef.current;
-      const firstReview = firstReviewRef.current;
-      if (!pageContainer || !firstReview) return;
+            const firstReviewTop = firstReview.offsetTop;
+            const firstReviewHeight = firstReview.clientHeight;
+            const gradientMidpoint = firstReviewTop + (firstReviewHeight / 2);
+            const gradientStart = gradientMidpoint - 125;
+            const gradientEnd = gradientMidpoint + 125;
+            
+            pageContainer.style.setProperty('--gradient-start', `${gradientStart}px`);
+            pageContainer.style.setProperty('--gradient-end', `${gradientEnd}px`);
+        };
 
-      const firstReviewTop = firstReview.offsetTop;
-      const firstReviewHeight = firstReview.clientHeight;
-      const gradientMidpoint = firstReviewTop + (firstReviewHeight / 2);
-      const gradientStart = gradientMidpoint - 125;
-      const gradientEnd = gradientMidpoint + 125;
-      
-      pageContainer.style.setProperty('--gradient-start', `${gradientStart}px`);
-      pageContainer.style.setProperty('--gradient-end', `${gradientEnd}px`);
+        calculateGradient();
+        window.addEventListener('resize', calculateGradient);
+        return () => window.removeEventListener('resize', calculateGradient);
+    }, [reviews]);
+
+    const handleFormSubmission = async (data: FormData) => {
+        // Analytics events
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'google_lead_form_submit',
+            form_data: { lead_source: leadSource },
+        });
+        fpixel.event('Lead');
+
+        // Prepare data for the API
+        const submissionData = { 
+            ...data, 
+            leadSource, 
+            tool: "Painting Offer Page" 
+            // `currentCondition` is now submitted directly from the form
+        };
+        
+        try {
+            await fetch('/api/process-lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(submissionData),
+            });
+        
+            sessionStorage.setItem('canAccessThankYou', 'true');
+            sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email }));
+            router.push('/consultation-painting');
+
+        } catch(error) {
+             console.error("Form submission error:", error);
+            alert("There was an error submitting your request. Please try again.");
+        }
     };
 
-    calculateGradient();
-    window.addEventListener('resize', calculateGradient);
-    return () => window.removeEventListener('resize', calculateGradient);
-  }, [reviews]);
+    return (
+        <>
+            <Head>
+                <title>Book a call with us - Atlas HomeServices</title>
+                <meta name="description" content="Experience a seamless booking process for your next painting project. Atlas HomeServices guarantees quality and satisfaction." />
+            </Head>
 
-  const handleFormSubmission = async (data: FormData) => {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: 'google_lead_form_submit',
-      form_data: { lead_source: leadSource },
-    });
-    console.log('DataLayer event pushed: google_lead_form_submit');
-
-    fpixel.event('Lead');
-    console.log("Meta Pixel 'Lead' event fired.");
-
-    const submissionData = { ...data, leadSource };
-    fetch('/api/send-email-notification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(submissionData),
-    }).catch(error => console.error('Non-critical: Notification failed.', error));
-
-    fetch('/api/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(submissionData),
-    }).catch(error => console.error('Non-critical: Notion sync failed.', error));
-    
-    sessionStorage.setItem('canAccessThankYou', 'true');
-    sessionStorage.setItem('leadDataForThankYou', JSON.stringify(data));
-    router.push('/thank-you');
-  };
-
-  return (
-    <>
-      <Head>
-        <title>Book a call with us - Atlas HomeServices</title>
-        <meta name="description" content="Experience a seamless booking process for your next painting project. Atlas HomeServices guarantees quality and satisfaction." />
-      </Head>
-
-      <GoogleReviewPill 
-        reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review" 
-        rating={5} 
-        reviewCount={5}
-      />
-      
-      <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
-        <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
-          <div className="space-y-2 md:space-y-8">
-            <h1 className="mt-0 my-4 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto uppercase">
-              {headerTitle}
-            </h1>
-            <p className="mt-3 text-2xl md:text-5xl text-white max-w-6xl mx-auto">
-              Have your properties ready for listing in 72 hours.
-            </p>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                <Image
-                  src="/paintingOfferImages/painting-offer-image-01.jpg"
-                  alt="Beautifully painted interior by Atlas HomeServices - Image 1"
-                  className="w-full h-full object-cover"
-                  width={1600}
-                  height={900}
-                  priority
-                />
-              </div>
-              <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                <Image
-                  src="/paintingOfferImages/painting-offer-image-02.jpg"
-                  alt="Beautifully painted interior by Atlas HomeServices - Image 2"
-                  className="w-full h-full object-cover"
-                  width={1600}
-                  height={900}
-                  priority
-                />
-              </div>
-              <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                <Image
-                  src="/paintingOfferImages/painting-offer-image-03.jpg"
-                  alt="Beautifully painted interior by Atlas HomeServices - Image 3"
-                  className="w-full h-full object-cover"
-                  width={1600}
-                  height={900}
-                  priority
-                />
-              </div>
-            </div>
-            <p className="mt-3 text-lg md:text-3xl text-white max-w-5xl mx-auto text-center">
-              It&apos;s a <strong><u>fixed price</u></strong>, <u>72-hour</u> ready-for-listing guaranteed painting for {subTextLocation}.
-            </p>
-            <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
-              <QualificationForm onSubmit={handleFormSubmission} />
-            </div>
-          </div>
-          
-          <div className="pt-12 sm:pt-28 text-center">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
-              What Our Happy Clients Say
-            </h2>
-            <div className="mt-12 mx-auto w-full max-w-3xl space-y-0">
-              {reviews.map((review, index) => (
-                <div 
-                  key={index}
-                  ref={index === 0 ? firstReviewRef : null} 
-                  className="bg-black/10 rounded-lg shadow-2xl"
-                >
-                  <Image
-                    src={review.src}
-                    alt={review.alt}
-                    className="w-full h-auto border-2 border-gray-400/50 rounded-md"
-                    width={review.width}
-                    height={review.height}
-                    unoptimized
-                  />
+            <GoogleReviewPill 
+                reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review" 
+                rating={5} 
+                reviewCount={5}
+            />
+            
+            <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
+                <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
+                    <div className="space-y-2 md:space-y-8">
+                        <h1 className="mt-0 my-4 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto uppercase">
+                            {headerTitle}
+                        </h1>
+                        <p className="mt-3 text-2xl md:text-5xl text-white max-w-6xl mx-auto">
+                            Experience a truly <strong><u>hassle-free</u></strong> painting service.
+                        </p>
+                        <div className="flex flex-col md:flex-row gap-4">
+                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                                <Image
+                                    src="/paintingOfferImages/painting-offer-image-01.jpg"
+                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
+                                    className="w-full h-full object-cover"
+                                    width={1600}
+                                    height={900}
+                                    priority
+                                />
+                            </div>
+                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                                <Image
+                                    src="/paintingOfferImages/painting-offer-image-02.jpg"
+                                    alt="Beautifully painted interior by Atlas HomeServices - Image 2"
+                                    className="w-full h-full object-cover"
+                                    width={1600}
+                                    height={900}
+                                    priority
+                                />
+                            </div>
+                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                                <Image
+                                    src="/paintingOfferImages/painting-offer-image-03.jpg"
+                                    alt="Beautifully painted interior by Atlas HomeServices - Image 3"
+                                    className="w-full h-full object-cover"
+                                    width={1600}
+                                    height={900}
+                                    priority
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
+                            <QualificationForm onSubmit={handleFormSubmission} />
+                        </div>
+                    </div>
+                    
+                    <div className="pt-12 sm:pt-28 text-center">
+                        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
+                            What Our Happy Clients Say
+                        </h2>
+                        <div className="mt-12 mx-auto w-full max-w-3xl space-y-0">
+                            {reviews.map((review, index) => (
+                                <div 
+                                    key={index}
+                                    ref={index === 0 ? firstReviewRef : null} 
+                                    className="bg-black/10 rounded-lg shadow-2xl"
+                                >
+                                    <Image
+                                        src={review.src}
+                                        alt={review.alt}
+                                        className="w-full h-auto border-2 border-gray-400/50 rounded-md"
+                                        width={review.width}
+                                        height={review.height}
+                                        unoptimized
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
-              ))}
             </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+        </>
+    );
 };
 
 PaintingOfferPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <MinimalLayout>{page}</MinimalLayout>;
+    return <MinimalLayout>{page}</MinimalLayout>;
 };
 
 export default PaintingOfferPage;
