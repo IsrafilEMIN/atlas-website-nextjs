@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 // --- TYPE DEFINITIONS ---
 interface Room {
@@ -235,16 +235,13 @@ export default function App() {
     
     const [estimate, setEstimate] = useState({ low: 0, high: 0 });
     const [isLoading, setIsLoading] = useState(false);
-    const [hasCalculated, setHasCalculated] = useState(false);
 
     const fetchEstimate = useCallback(async () => {
         if ((rooms.length === 0 && exteriorItems.length === 0) || !selectedPrep || !selectedPaintQuality) {
-            setEstimate({ low: 0, high: 0 });
-            setHasCalculated(false);
+            alert("Please select prep condition and paint quality before calculating.");
             return;
         }
         setIsLoading(true);
-        setHasCalculated(true);
         try {
             const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
             const response = await fetch(`${baseUrl}/api/calculate-estimate`, {
@@ -261,14 +258,10 @@ export default function App() {
         setIsLoading(false);
     }, [rooms, exteriorItems, projectType, selectedPrep, selectedPaintQuality]);
 
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            if (currentStep >= 3) {
-                 fetchEstimate();
-            }
-        }, 500);
-        return () => clearTimeout(handler);
-    }, [fetchEstimate, currentStep]);
+    const handleFinalCalculate = async () => {
+        await fetchEstimate();
+        setCurrentStep(5);
+    };
 
     const handleSaveRoom = (roomData: Room) => {
         const index = rooms.findIndex(r => r.id === roomData.id);
@@ -343,8 +336,8 @@ export default function App() {
     const renderStep3 = () => (
         <div>
             <h2 className="text-2xl md:text-3xl font-serif font-semibold text-center text-[#162733] mb-6">Build Your Project</h2>
-            <div className="md:grid md:grid-cols-12 md:gap-8">
-                <div className="md:col-span-7 space-y-8">
+            <div className="max-w-3xl mx-auto">
+                <div className="space-y-8">
                     {(projectType === 'interior' || projectType === 'both') && (
                         <div>
                             <h3 className="text-xl font-semibold mb-4 text-gray-700">Interior Spaces</h3>
@@ -370,29 +363,16 @@ export default function App() {
                         </div>
                     )}
                 </div>
-                <div className="md:col-span-5 mt-8 md:mt-0">
-                    <div className="bg-[#f9f6f2] p-6 rounded-xl sticky top-8">
-                        <h3 className="font-serif text-xl font-semibold text-[#162733] mb-4">Estimated Range</h3>
-                        <div className="text-3xl md:text-4xl font-bold text-[#162733] mb-4 min-h-[50px] flex items-center justify-center">
-                            {isLoading ? (
-                                <span className="text-2xl text-gray-400 animate-pulse">Calculating...</span>
-                            ) : hasCalculated ? (
-                                <span>{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</span>
-                            ) : (
-                                <span className="text-lg text-gray-500 text-center">Price range appears after final step</span>
-                            )}
-                        </div>
-                        <p className="text-sm text-gray-500 mb-6">This price will update in real-time.</p>
-                        <button onClick={() => setCurrentStep(4)} className="w-full btn-primary font-bold py-3 px-6 rounded-lg shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={(rooms.length === 0 && exteriorItems.length === 0)}>Next: Prep & Quality</button>
-                        <button onClick={() => setCurrentStep(2)} className="w-full btn-secondary text-center font-bold py-2 px-6 rounded-lg mt-4">Back</button>
-                    </div>
+                <div className="mt-10 flex justify-center gap-4">
+                    <button onClick={() => setCurrentStep(2)} className="btn-secondary font-bold py-2 px-6 rounded-lg">Back</button>
+                    <button onClick={() => setCurrentStep(4)} className="btn-primary font-bold py-3 px-6 rounded-lg shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={(rooms.length === 0 && exteriorItems.length === 0)}>Next: Prep & Quality</button>
                 </div>
             </div>
         </div>
     );
      
      const renderStep4 = () => (
-        <div>
+        <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-serif font-semibold text-center text-[#162733] mb-8">The Details That Matter</h2>
             <div className="mb-10">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">How much prep work is needed?</h3>
@@ -412,7 +392,9 @@ export default function App() {
             </div>
             <div className="text-center mt-10 flex justify-center gap-4">
                 <button onClick={() => setCurrentStep(3)} className="btn-secondary font-bold py-3 px-8 rounded-lg text-lg">Back</button>
-                <button onClick={() => setCurrentStep(5)} className="btn-primary font-bold py-3 px-8 rounded-lg text-lg shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!selectedPrep || !selectedPaintQuality}>See My Estimate</button>
+                <button onClick={handleFinalCalculate} className="btn-primary font-bold py-3 px-8 rounded-lg text-lg shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!selectedPrep || !selectedPaintQuality}>
+                    See My Estimate
+                </button>
             </div>
         </div>
     );
@@ -421,18 +403,20 @@ export default function App() {
         <div className="text-center">
             <h2 className="text-2xl font-serif text-[#162733] mb-2">Your Estimated Project Range</h2>
             <div className="text-4xl md:text-6xl font-bold text-[#0F52BA] my-4 min-h-[72px] flex items-center justify-center">
-                {hasCalculated && !isLoading ? (
-                    <span>{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</span>
-                ) : (
+                {isLoading ? (
                     <span className="animate-pulse">Calculating...</span>
+                ) : (
+                    <span>{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</span>
                 )}
             </div>
             <div className="text-left max-w-2xl mx-auto">
                 <h3 className="text-xl font-serif font-semibold text-[#162733] mb-4">Understanding Your Estimate</h3>
-                <p className="text-gray-600 mb-4">Our estimates assume a professional, insured crew that properly prepares all surfaces (the single most important factor for a lasting paint job) and uses high-quality materials.</p>
+                <p className="text-gray-600 mb-4">Our estimates assume a professional, insured crew that properly prepares all surfaces and uses high-quality materials.</p>
             </div>
             <div className="mt-8 flex flex-col items-center gap-4">
-                <button className="btn-primary font-bold py-4 px-10 rounded-lg text-xl shadow-xl">Schedule a Free, Exact Quote</button>
+                <button onClick={() => window.location.href = '/painting-offer'} className="btn-primary font-bold py-4 px-10 rounded-lg text-xl shadow-xl">
+                    Schedule a Free, Exact Quote
+                </button>
                 <div className="flex items-center gap-4">
                     <button onClick={() => setCurrentStep(4)} className="btn-secondary font-bold py-2 px-6 rounded-lg">Back</button>
                     <button onClick={startOver} className="btn-secondary font-bold py-2 px-6 rounded-lg">Start Over</button>
