@@ -26,27 +26,21 @@ const ThankYouEstimatorPage: NextPageWithLayout = () => {
                         You&apos;re All Set!
                     </h1>
                     <p className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
-                        We&apos;ve just sent the **Homeowner&apos;s Shield Estimator** to your email inbox. Please check your spam or promotions folder if you don&apos;t see it in the next few minutes.
+                        We&apos;ve just sent the <strong><u>Homeowner&apos;s Shield Estimator</u></strong> to your email inbox. Please check your spam or promotions folder if you don&apos;t see it in the next few minutes.
                     </p>
 
                     {/* Value-add Section for Nurture Leads */}
                     <div className="mt-12 bg-gray-800 border border-gray-700 rounded-2xl p-8 max-w-2xl mx-auto">
                         <h2 className="text-2xl font-bold text-yellow-400 mb-4">Planning Your Perfect Project</h2>
                         <p className="text-gray-400 mb-6">
-                            Whether you&apos;re budgeting for the future or planning a DIY project, having the right information is key. Here are some resources to help you get started.
+                            Whether you&apos;re budgeting for the future or planning a DIY project, having the right information is key. Have a quick consultation call with us.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <button 
-                                onClick={() => router.push('/blog/painting-guide')} // Replace with your actual blog URL
+                                onClick={() => router.push('/painting-offer')} // Replace with your actual blog URL
                                 className="bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-600 transition-colors"
                             >
-                                Read Our Home Painting Guide
-                            </button>
-                            <button 
-                                onClick={() => router.push('/gallery')} // Replace with your gallery URL
-                                className="bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold py-3 px-6 rounded-full hover:bg-yellow-400 hover:text-gray-900 transition-colors"
-                            >
-                                Explore Our Work
+                                Schedule a Call With Us
                             </button>
                         </div>
                     </div>
