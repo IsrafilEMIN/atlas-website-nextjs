@@ -21,7 +21,7 @@ type EmbeddedFormProps = {
     onSubmit: (data: FormData) => void;
 };
 
-// --- EMBEDDED FORM COMPONENT (No changes needed here) ---
+// --- EMBEDDED FORM COMPONENT (Updated Styling) ---
 const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState<FormData>({ 
     firstName: '', 
@@ -85,9 +85,11 @@ const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) =>
   };
 
   return (
-    <div className="bg-white rounded-3xl p-6 md:p-8 text-gray-800 shadow-2xl">
-      <h3 className="text-xl md:text-2xl font-bold text-center mb-2">Get Your Free Estimate Now</h3>
-      <p className="text-center text-gray-600 mb-6 text-sm">Enter your info for instant access to the tool.</p>
+    // The main container's background, shadow, and rounding have been removed.
+    // Padding is kept to maintain spacing.
+    <div className="">
+      {/* Text colors updated to be visible on a dark background */}
+      <h3 className="text-xl lg:text-3xl font-bold text-center mb-2 py-4 text-white">Enter Your Info Below To Access</h3>
       <form onSubmit={handleFormSubmit} className="space-y-4" noValidate>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -124,8 +126,9 @@ const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) =>
           {errors.currentCondition && touched.currentCondition && <p className="mt-1 text-xs text-red-600">{errors.currentCondition}</p>}
         </div>
         <div className="pt-2">
-          <button type="submit" className="w-full bg-[#093373] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Reveal My Price Range</button>
-          <p className="text-xs text-gray-500 text-center mt-3">100% Free. We respect your privacy.</p>
+          <button type="submit" className="w-full bg-[#093373] text-white font-bold py-3 px-6 rounded-full text-lg transition-colors">Access The Estimator Tool</button>
+          {/* Text color updated to be visible on a dark background */}
+          <p className="text-xs text-gray-400 text-center mt-3">100% Free. We respect your privacy.</p>
         </div>
       </form>
     </div>
@@ -148,13 +151,8 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
     }, [router.isReady, router.query]);
 
     const handleFormSubmission = async (data: FormData) => {
-        if (data.currentCondition === 'contractor') {
-            alert("Thank you for your interest. This tool is intended for homeowners.");
-            return; 
-        }
-
         try {
-            // --- Step 1: Add lead to CRM and perform analytics ---
+            // --- Analytics and Tracking ---
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
                 event: 'tool_lead_form_submit',
@@ -162,32 +160,64 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
             });
             fpixel.event('Lead');
 
-            const response = await fetch('/api/process-lead', {
+            // --- Step 1: Sync lead with the CRM ---
+            const crmResponse = await fetch('/api/process-lead', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...data, leadSource, tool: "Homeowner's Shield Estimator" })
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to process lead in CRM.');
+            if (!crmResponse.ok) {
+                // If CRM sync fails, stop the entire process.
+                throw new Error('Experienced technical issue. Please try again or contact us at info@atlas-paint.com');
+            }
+            
+            // 2. ADDED: Call the send-estimator-tool API after the CRM sync succeeds.
+            const emailResponse = await fetch('/api/send-estimator-tool', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: data.email,
+                    firstName: data.firstName
+                })
+            });
+
+            if (!emailResponse.ok) {
+                // If email fails, stop the process. The lead is in the CRM, but the user should be notified.
+                throw new Error('Your info was saved, but we could not send the tool email. Please contact us at info@atlas-paint.com.');
             }
 
-            // --- Step 2: Redirect based on the user's intent ---
+            // --- Step 3: Redirect based on user's intent ---
             const highIntentConditions = ['hire_now', 'hire_3_months'];
-            const nurtureConditions = ['diy', 'budgeting'];
+            // 3. MODIFIED: Added 'contractor' to the nurture conditions array.
+            const nurtureConditions = ['diy', 'budgeting', 'contractor'];
 
             if (highIntentConditions.includes(data.currentCondition)) {
-                // CORRECTLY SET THE FLAGS BEFORE REDIRECTING
                 sessionStorage.setItem('canAccessThankYou', 'true');
                 sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email }));
                 router.push('/consultation-estimator');
-
             } else if (nurtureConditions.includes(data.currentCondition)) {
+                // Contractors will now be redirected here along with DIY and budgeting leads.
                 router.push('/thank-you-estimator');
             }
 
         } catch (error) {
             console.error('Error during form submission process:', error);
+            // --- ADD THIS NOTIFICATION LOGIC ---
+            // We trigger this notification in the background. 
+            // We don't use 'await' because we don't want to hold up the user's error message
+            // while we wait for the notification email to send. This is "fire-and-forget".
+            fetch('/api/send-error-notification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    error: (error as Error).message, // Send the error message
+                    leadData: data // Send the complete form data
+                }),
+                }).catch(notificationError => {
+                // This logs an error if the notification API itself fails.
+                console.error('Failed to send error notification:', notificationError);
+            });
             alert('An error occurred while submitting your information. Please try again.');
         }
     };
@@ -199,15 +229,15 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
                 <meta name="description" content="Avoid overpaying for your next painting project in Richmond Hill. Get a free, transparent price estimate in 60 seconds and protect yourself from scams." />
             </Head>
             <div className="flex flex-col items-center min-h-screen relative bg-gray-900 text-white pb-20">
-                <div className="w-full text-center bg-gradient-to-b from-gray-800 to-gray-900 py-16 px-4">
-                    <p className="font-semibold text-yellow-400 mb-4">TRUSTED BY HUNDREDS OF HOMEOWNERS</p>
-                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight uppercase">THE HOMEOWNER&apos;S SHIELD</h1>
-                    <p className="mt-4 text-2xl md:text-4xl text-gray-300 max-w-4xl mx-auto">Get a Fair & Accurate Price Estimate For Your Richmond Hill Home In 60 Seconds.</p>
-                    <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
-                        <div className="aspect-video bg-slate-800 shadow-2xl overflow-hidden border-2 border-white/50 rounded-lg">
-                            <Image src="/paintingOfferImages/painting-offer-image-01.jpg" alt="Demonstration of the free paint cost estimator tool" className="w-full h-full object-cover" width={1280} height={720} priority unoptimized />
+                <div className="w-full text-center bg-gradient-to-b from-gray-800 to-gray-900 py-4 md:py-8 px-4">
+                    <p className="font-bold text-yellow-400 mb-2">TRUSTED BY HUNDREDS OF HOMEOWNERS</p>
+                    <h1 className="text-3xl lg:text-5xl font-extrabold tracking-tight uppercase">FREE TOOL: THE HOMEOWNER&apos;S SHIELD</h1>
+                    <p className="mt-4 text-sm lg:text-xl text-white max-w-4xl mx-auto">Free Estimator Tool Will Give You An Unfair Advantage When Hiring Painters. With A Fair & Clear Estimate In 60 Seconds, No More Doubt, No More Guesses.</p>
+                    <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
+                        <div className="aspect-video overflow-hidden">
+                            <Image src="/paintingOfferImages/estimator-tool-demo.png" alt="Demonstration of the free paint cost estimator tool" className="w-full h-full object-cover" width={1280} height={720} priority unoptimized />
                         </div>
-                        <div className="w-full max-w-md mx-auto">
+                        <div className="w-full max-w-lg mx-auto">
                             <EmbeddedQualificationForm onSubmit={handleFormSubmission} />
                         </div>
                     </div>
@@ -239,6 +269,24 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
                     </div>
                 </div>
             </div>
+            <footer className="w-full bg-gray-900 py-12 px-4">
+              <div className="max-w-4xl mx-auto text-center">
+                
+                <Image src="/assets/Header - Atlas HomeServices Transparent-White.png" alt="Company Logo" width={300} height={100} className="mx-auto mb-4" unoptimized />
+
+                <div className="space-y-4 text-md text-gray-400">
+                  <p>
+                    This website is NOT endorsed by YouTube, Google or Facebook in any way. FACEBOOK is a trademark of FACEBOOK Inc. YOUTUBE is a trademark of GOOGLE Inc.
+                  </p>
+                  <p>
+                    Individual experiences presented here may not be typical. Their background, education, effort, and application affected their experience. The information shared here are for example purposes and not a guarantee of a rate of return or a specific result. Your results may vary.
+                  </p>
+                  <p className="pt-4 text-gray-500">
+                    © {new Date().getFullYear()} Atlas HomeServices Inc. | Richmond Hill, ON. All Rights Reserved.
+                  </p>
+                </div>
+              </div>
+            </footer>
         </>
     );
 };
