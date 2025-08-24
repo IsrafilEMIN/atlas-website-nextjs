@@ -15,7 +15,7 @@ export default async function handler(
   }
 
   const hubspotClient = new Client({ accessToken: process.env.HUBSPOT_API_KEY });
-  const { email, firstName, lastName, phone, currentCondition } = req.body;
+  const { email, firstName, lastName, phone, currentCondition, platform } = req.body;
 
   // Exclude contractors from being added to the CRM
   if (currentCondition === 'contractor') {
@@ -38,6 +38,7 @@ export default async function handler(
     phone,
     hs_lead_status: leadStatus,
     user_intent: currentCondition, // This saves the user's selection to your new custom property
+    platform: platform || 'Website', 
   };
 
   try {

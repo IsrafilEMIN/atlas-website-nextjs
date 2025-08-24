@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 
 // --- TYPE DEFINITIONS ---
 interface Room {
@@ -221,6 +221,7 @@ const ExteriorModal: React.FC<ExteriorModalProps> = ({ item, onSave, onClose }) 
 // --- MAIN APP COMPONENT ---
 export default function App() {
     const [currentStep, setCurrentStep] = useState(1);
+    const estimatorRef = useRef<HTMLDivElement>(null);
     const [postalCode, setPostalCode] = useState('');
     const [postalCodeError, setPostalCodeError] = useState('');
     const [projectType, setProjectType] = useState('');
@@ -235,6 +236,20 @@ export default function App() {
     
     const [estimate, setEstimate] = useState({ low: 0, high: 0 });
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (estimatorRef.current) {
+            const headerOffset = 300; 
+
+            const elementPosition = estimatorRef.current.getBoundingClientRect().top + window.scrollY;
+            const offsetPosition = elementPosition - headerOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }, [currentStep]);
 
     const fetchEstimate = useCallback(async () => {
         if ((rooms.length === 0 && exteriorItems.length === 0) || !selectedPrep || !selectedPaintQuality) {
@@ -426,7 +441,7 @@ export default function App() {
     );
 
     return (
-        <div className="bg-[#f0f2f5] p-4 md:p-6 min-h-screen flex items-center justify-center font-sans">
+        <div className="bg-[#f0f2f5] min-h-screen px-6 py-24 font-sans">
             <style>{`
                 .btn-primary { background-color: #093373; color: #ffffff; }
                 .btn-primary:hover { background-color: #0c4194; }
@@ -438,7 +453,7 @@ export default function App() {
                 @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
                 .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
             `}</style>
-            <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl">
+            <div ref={estimatorRef} className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl">
                 <div className="relative app-container p-6 md:p-10">
                     {currentStep === 1 && renderStep1()}
                     {currentStep === 2 && renderStep2()}
