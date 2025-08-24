@@ -70,7 +70,7 @@ const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
         if (type === 'checkbox') {
             checked = (e.target as HTMLInputElement).checked;
         }
-        let newValue = type === 'checkbox' ? checked : value;
+        const newValue = type === 'checkbox' ? checked : value; // Changed from let to const
         if (type === 'number') {
             const num = parseFloat(value);
             if (value !== '' && !isNaN(num) && num < 0) {
