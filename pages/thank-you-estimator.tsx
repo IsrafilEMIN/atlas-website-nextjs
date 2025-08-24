@@ -8,7 +8,6 @@ import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
 
 const ThankYouEstimatorPage: NextPageWithLayout = () => {
-    const router = useRouter();
 
     return (
         <>
