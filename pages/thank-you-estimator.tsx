@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
 import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
