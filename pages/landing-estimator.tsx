@@ -164,7 +164,7 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
             const crmResponse = await fetch('/api/process-lead', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...data, leadSource, tool: "Homeowner's Shield Estimator" })
+                body: JSON.stringify({ ...data, leadSource, tool: "Homeowner's Shield Estimator", platform: 'estimator tool' })
             });
 
             if (!crmResponse.ok) {

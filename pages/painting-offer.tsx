@@ -204,8 +204,8 @@ const PaintingOfferPage: NextPageWithLayout = () => {
         const submissionData = { 
             ...data, 
             leadSource, 
-            tool: "Painting Offer Page" 
-            // `currentCondition` is now submitted directly from the form
+            tool: "Painting Offer Page", 
+            platform: 'painting offer', 
         };
         
         try {
