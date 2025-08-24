@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     await resend.emails.send({
       // 2. Set the 'from' address. IMPORTANT: This must be a verified domain in your Resend account.
-      from: 'Atlas HomeServices <info@atlas-paint.com>',
+      from: 'Atlas HomeServices <notification@atlas-paint.com>',
       
       // 3. Set the recipient to the user's email address.
       to: email,
