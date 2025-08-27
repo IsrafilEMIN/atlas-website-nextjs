@@ -138,14 +138,29 @@ const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) =>
 // --- THE MAIN PAGE COMPONENT (LOGIC FIXED) ---
 const HomeownersShieldPage: NextPageWithLayout = () => {
     const router = useRouter();
-    const [leadSource, setLeadSource] = useState('Organic Traffic');
+    const [platform, setPlatform] = useState('');
+    const [leadSource, setLeadSource] = useState('');
 
     useEffect(() => {
         if (router.isReady) {
-            const source = router.query.utm_source as string;
-            if (source) {
-                if (source.toLowerCase().includes('facebook')) setLeadSource('Facebook Ads');
-                else if (source.toLowerCase().includes('google')) setLeadSource('Google Ads');
+            const utm_source = (router.query.utm_source as string || '').toLowerCase();
+            const utm_medium = (router.query.utm_medium as string || '').toLowerCase();
+
+            let newPlatform = 'website';
+            if (utm_source.includes('facebook') || utm_source.includes('fb')) {
+                newPlatform = 'fb';
+            } else if (utm_source.includes('instagram') || utm_source.includes('ig')) {
+                newPlatform = 'ig';
+            } else if (utm_source.includes('google')) {
+                newPlatform = 'google';
+            }
+
+            setPlatform(newPlatform);
+
+            if (utm_medium.includes('ad')) {
+              setLeadSource('estimator_tool_ad');
+            } else if (utm_medium.includes('organic') || utm_medium == '') {
+              setLeadSource('estimator_tool_organic');
             }
         }
     }, [router.isReady, router.query]);
@@ -156,7 +171,7 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
                 event: 'tool_lead_form_submit',
-                form_data: { lead_source: leadSource, start_date: data.currentCondition },
+                form_data: { platform: platform, lead_source: leadSource, start_date: data.currentCondition },
             });
             fpixel.event('Lead');
 
@@ -164,7 +179,7 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
             const crmResponse = await fetch('/api/process-lead', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...data, leadSource, tool: "Homeowner's Shield Estimator", platform: 'estimator tool' })
+                body: JSON.stringify({ ...data, platform, lead_source: leadSource, start_date: data.currentCondition })
             });
 
             if (!crmResponse.ok) {

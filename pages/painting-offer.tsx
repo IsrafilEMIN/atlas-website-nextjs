@@ -136,6 +136,7 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
 const PaintingOfferPage: NextPageWithLayout = () => {
     const router = useRouter();
     const [leadSource, setLeadSource] = useState('Organic Traffic');
+    const [platform] = useState('website');
     const pageContainerRef = useRef<HTMLDivElement>(null);
     const firstReviewRef = useRef<HTMLDivElement>(null);
 
@@ -196,7 +197,7 @@ const PaintingOfferPage: NextPageWithLayout = () => {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
             event: 'google_lead_form_submit',
-            form_data: { lead_source: leadSource },
+            form_data: { platform: platform, lead_source: leadSource },
         });
         fpixel.event('Lead');
 

@@ -17,6 +17,7 @@ export interface LeadFormData {
 export interface DataLayerEvent {
   event: string;
   form_data: {
+    platform: string;
     lead_source: string;
     start_date?: string; // This now allows the 'start_date' property
   };
