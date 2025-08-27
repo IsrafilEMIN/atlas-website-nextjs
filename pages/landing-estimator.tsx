@@ -156,7 +156,7 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
                 event: 'tool_lead_form_submit',
-                form_data: { lead_source: leadSource, user_intent: data.currentCondition },
+                form_data: { lead_source: leadSource, start_date: data.currentCondition },
             });
             fpixel.event('Lead');
 

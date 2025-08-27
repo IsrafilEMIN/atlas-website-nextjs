@@ -18,7 +18,7 @@ export interface DataLayerEvent {
   event: string;
   form_data: {
     lead_source: string;
-    user_intent?: string; // This now allows the 'user_intent' property
+    start_date?: string; // This now allows the 'start_date' property
   };
 }
 
