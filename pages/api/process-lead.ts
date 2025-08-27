@@ -30,14 +30,14 @@ export default async function handler(
   }
 
   // Define the properties to be set on the HubSpot contact record.
-  // This now includes the new user_intent property.
+  // This now includes the new start_date property.
   const contactProperties = {
     email,
     firstname: firstName,
     lastname: lastName,
     phone,
     hs_lead_status: leadStatus,
-    user_intent: currentCondition, // This saves the user's selection to your new custom property
+    start_date: currentCondition, // This saves the user's selection to your new custom property
     platform: platform || 'Website', 
   };
 
