@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { Client } from '@hubspot/api-client';
 import { PublicObjectSearchRequest } from '@hubspot/api-client/lib/codegen/crm/contacts';
 import { FilterOperatorEnum } from '@hubspot/api-client/lib/codegen/crm/contacts';
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -13,29 +12,25 @@ export default async function handler(
     console.error('HubSpot API key is not set in environment variables.');
     return res.status(500).json({ message: 'Server configuration error.' });
   }
-
   const hubspotClient = new Client({ accessToken: process.env.HUBSPOT_API_KEY });
-  const { email, firstName, lastName, phone, currentCondition, platform, leadSource } = req.body;
-
+  const { email, firstName, lastName, cleanedPhone, currentCondition, platform, leadSource } = req.body;
   // Exclude contractors from being added to the CRM
   if (currentCondition === 'contractor') {
     return res.status(200).json({ message: 'Lead processed (excluded from CRM).' });
   }
-
   // Define the properties to be set on the HubSpot contact record.
   // This now includes the new start_date property.
   const contactProperties = {
     email,
     firstname: firstName,
     lastname: lastName,
-    phone,
+    phone: cleanedPhone,
     hs_lead_status: 'New Lead',
     customer_journey: 'New',
     start_date: currentCondition, // This saves the user's selection to your new custom property
-    platform: platform || 'website', 
+    platform: platform || 'website',
     lead_source: leadSource || 'organic',
   };
-
   try {
     // Step 1: Search for an existing contact by email
     const searchRequest: PublicObjectSearchRequest = {
@@ -44,7 +39,6 @@ export default async function handler(
       limit: 1,
     };
     const searchResult = await hubspotClient.crm.contacts.searchApi.doSearch(searchRequest);
-
     // Step 2: Update the contact if they exist, or create them if they don't
     if (searchResult.total > 0) {
       const existingContactId = searchResult.results[0].id;
