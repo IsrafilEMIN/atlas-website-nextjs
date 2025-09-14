@@ -7,41 +7,43 @@ import type { NextPageWithLayout } from '@/pages/_app';
 import Image from 'next/image';
 import * as fpixel from '../lib/fpixel';
 // import GoogleReviewPill from '@/components/GoogleReviewPill';
-
 type FormData = {
     firstName: string;
     lastName: string;
     email: string;
     phone: string;
+    countryCode: string;
     currentCondition: string;
 };
-
 type QualificationFormProps = {
     onSubmit: (data: FormData) => void;
 };
-
+const generateEventId = () => {
+    return 'event-' + Date.now() + '-' + Math.random().toString(36).substring(2, 9);
+};
 const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
-    const [formData, setFormData] = useState<FormData>({ 
-        firstName: '', 
+    const [formData, setFormData] = useState<FormData>({
+        firstName: '',
         lastName: '',
-        email: '', 
-        phone: '', 
-        currentCondition: '' 
+        email: '',
+        phone: '',
+        countryCode: '+1',
+        currentCondition: ''
     });
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
-
     const validateField = (name: keyof FormData, value: string) => {
         switch (name) {
             case 'firstName': return value.trim() ? '' : 'First name is required.';
             case 'lastName': return value.trim() ? '' : 'Last name is required.';
             case 'email': return /\S+@\S+\.\S+/.test(value) ? '' : 'Please enter a valid email format.';
             case 'phone': const phoneDigits = value.replace(/\D/g, ''); return phoneDigits.length === 10 ? '' : 'Phone number must be 10 digits.';
+            case 'countryCode': return value ? '' : 'Country code is required.';
             case 'currentCondition': return value ? '' : 'Please select your current plan.';
             default: return '';
         }
     };
-    
+   
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target as { name: keyof FormData; value: string };
         let processedValue = value;
@@ -59,13 +61,11 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
         setFormData((prev) => ({ ...prev, [name]: processedValue }));
         if (errors[name]) setErrors(prev => ({...prev, [name]: ''}));
     };
-
     const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target as { name: keyof FormData; value: string };
         setTouched(prev => ({ ...prev, [name]: true }));
         setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
     };
-
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const newErrors: { [key: string]: string } = {};
@@ -81,7 +81,6 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
             onSubmit(formData);
         }
     };
-
     return (
         <div className="bg-white rounded-3xl p-6 md:p-8 text-gray-800">
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
@@ -105,10 +104,23 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
                     <input type="email" name="email" id="email" placeholder="Email Address *" value={formData.email} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
                     {errors.email && touched.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
                 </div>
-                <div>
-                    <label htmlFor="phone" className="sr-only">Phone</label>
-                    <input type="tel" name="phone" id="phone" placeholder="Phone Number *" value={formData.phone} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone && touched.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} maxLength={14} />
-                    {errors.phone && touched.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
+                <div className="grid grid-cols-3 gap-2">
+                    <div>
+                        <label htmlFor="countryCode" className="sr-only">Country Code</label>
+                        <select name="countryCode" id="countryCode" value={formData.countryCode} className={`block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.countryCode && touched.countryCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur}>
+                            <option value="+1">+1 (Canada/US)</option>
+                            <option value="+44">+44 (UK)</option>
+                            <option value="+61">+61 (Australia)</option>
+                            <option value="+49">+49 (Germany)</option>
+                            <option value="+33">+33 (France)</option>
+                        </select>
+                        {errors.countryCode && touched.countryCode && <p className="mt-1 text-xs text-red-600">{errors.countryCode}</p>}
+                    </div>
+                    <div className="col-span-2">
+                        <label htmlFor="phone" className="sr-only">Phone</label>
+                        <input type="tel" name="phone" id="phone" placeholder="Phone Number *" value={formData.phone} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone && touched.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} maxLength={14} />
+                        {errors.phone && touched.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
+                    </div>
                 </div>
                 <div>
                     <label htmlFor="currentCondition" className="sr-only">Current Condition</label>
@@ -129,8 +141,6 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
         </div>
     );
 };
-
-
 // --- THE MAIN PAGE COMPONENT ---
 const PaintingLandingPage: NextPageWithLayout = () => {
     const router = useRouter();
@@ -138,9 +148,7 @@ const PaintingLandingPage: NextPageWithLayout = () => {
     const [platform] = useState('website');
     const pageContainerRef = useRef<HTMLDivElement>(null);
     const firstReviewRef = useRef<HTMLDivElement>(null);
-
     const headerTitle = 'Homeowner\'s Trusted Painter';
-
     const reviews = useMemo(() => [
         { src: "/testimonialImages/testimonial-image-08.png", alt: "Google review for Atlas HomeServices", width: 800, height: 400 },
         { src: "/testimonialImages/testimonial-image-01.png", alt: "HomeStars review for Atlas HomeServices", width: 800, height: 400 },
@@ -151,7 +159,6 @@ const PaintingLandingPage: NextPageWithLayout = () => {
         { src: "/testimonialImages/testimonial-image-06.png", alt: "Google Review for Atlas HomeServices", width: 800, height: 520 },
         { src: "/testimonialImages/testimonial-image-07.png", alt: "Google Review for Atlas HomeServices", width: 800, height: 410 }
     ], []);
-
     useEffect(() => {
         if (router.isReady) {
             const source = router.query.utm_source as string;
@@ -164,52 +171,58 @@ const PaintingLandingPage: NextPageWithLayout = () => {
             }
         }
     }, [router.isReady, router.query]);
-    
+   
     useEffect(() => {
         const calculateGradient = () => {
             const pageContainer = pageContainerRef.current;
             const firstReview = firstReviewRef.current;
             if (!pageContainer || !firstReview) return;
-
             const firstReviewTop = firstReview.offsetTop;
             const firstReviewHeight = firstReview.clientHeight;
             const gradientMidpoint = firstReviewTop + (firstReviewHeight / 2);
             const gradientStart = gradientMidpoint - 125;
             const gradientEnd = gradientMidpoint + 125;
-            
+           
             pageContainer.style.setProperty('--gradient-start', `${gradientStart}px`);
             pageContainer.style.setProperty('--gradient-end', `${gradientEnd}px`);
         };
-
         calculateGradient();
         window.addEventListener('resize', calculateGradient);
         return () => window.removeEventListener('resize', calculateGradient);
     }, [reviews]);
-
     const handleFormSubmission = async (data: FormData) => {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
             event: 'google_lead_form_submit',
             form_data: { platform: platform, lead_source: leadSource },
         });
-        fpixel.event('Lead');
-
-        const submissionData = { 
-            ...data, 
-            leadSource, 
-            tool: "Painting Offer Page", 
-            platform: platform,
+        const phoneDigits = data.phone.replace(/\D/g, '');
+        const countryDigits = data.countryCode.replace(/\D/g, '');
+        const fullPhoneDigits = countryDigits + phoneDigits;
+        const advancedMatchingData = {
+            em: data.email,       // Email
+            ph: fullPhoneDigits, // Phone number (digits only, E.164 format without +)
+            fn: data.firstName,   // First name
+            ln: data.lastName,    // Last name
         };
-        
+        const eventId = generateEventId();
+        fpixel.event('Lead', advancedMatchingData, eventId);
+        const submissionData = {
+            ...data,
+            leadSource,
+            tool: "Painting Offer Page",
+            platform: platform,
+            cleanedPhone: fullPhoneDigits,
+        };
+      
         try {
             await fetch('/api/process-lead', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(submissionData),
             });
-        
+      
             sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email }));
-
             const now = new Date();
             const formatter = new Intl.DateTimeFormat('en-US', {
                 timeZone: 'America/Toronto',
@@ -224,26 +237,23 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                 sessionStorage.setItem('canAccessThankYou', 'true');
                 router.push('/painting-consultation');
             }
-
         } catch(error) {
-             console.error("Form submission error:", error);
-            alert("There was an error submitting your request. Please try again.");
+           console.error("Form submission error:", error);
+           alert("There was an error submitting your request. Please try again.");
         }
     };
-
     return (
         <>
             <Head>
                 <title>Book a call with us - Atlas HomeServices</title>
                 <meta name="description" content="Experience a seamless booking process for your next painting project. Atlas HomeServices guarantees quality and satisfaction." />
             </Head>
-
-            {/* <GoogleReviewPill 
-                reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review" 
-                rating={5} 
+            {/* <GoogleReviewPill
+                reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review"
+                rating={5}
                 reviewCount={5}
             /> */}
-            
+           
             <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
                 <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
                     <div className="space-y-2 md:space-y-8">
@@ -333,19 +343,19 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                         </h2>
                         <div className="mt-12 mx-auto w-full max-w-3xl space-y-0">
                             {reviews.map((review, index) => (
-                                <div 
+                                <div
                                     key={index}
-                                    ref={index === 0 ? firstReviewRef : null} 
+                                    ref={index === 0 ? firstReviewRef : null}
                                     className="bg-black/10 rounded-lg shadow-2xl"
                                 >
-                                    <Image
-                                        src={review.src}
-                                        alt={review.alt}
-                                        className="w-full h-auto border-2 border-gray-400/50 rounded-md"
-                                        width={review.width}
-                                        height={review.height}
-                                        unoptimized
-                                    />
+                                <Image
+                                    src={review.src}
+                                    alt={review.alt}
+                                    className="w-full h-auto border-2 border-gray-400/50 rounded-md"
+                                    width={review.width}
+                                    height={review.height}
+                                    unoptimized
+                                />
                                 </div>
                             ))}
                         </div>
@@ -354,28 +364,25 @@ const PaintingLandingPage: NextPageWithLayout = () => {
             </div>
             <footer className="w-full bg-gray-900 py-12 px-4">
               <div className="max-w-4xl mx-auto text-center">
-                
+              
                 <Image src="/assets/Header - Atlas HomeServices Transparent-White.png" alt="Company Logo" width={300} height={100} className="mx-auto mb-4" unoptimized />
-
                 <div className="space-y-4 text-md text-gray-400">
-                  <p>
-                    This website is NOT endorsed by YouTube, Google or Facebook in any way. FACEBOOK is a trademark of FACEBOOK Inc. YOUTUBE is a trademark of GOOGLE Inc.
-                  </p>
-                  <p>
-                    Individual experiences presented here may not be typical. Their background, education, effort, and application affected their experience. The information shared here are for example purposes and not a guarantee of a rate of return or a specific result. Your results may vary.
-                  </p>
-                  <p className="pt-4 text-gray-500">
-                    © {new Date().getFullYear()} Atlas HomeServices Inc. | Richmond Hill, ON. All Rights Reserved.
-                  </p>
+                 <p>
+                   This website is NOT endorsed by YouTube, Google or Facebook in any way. FACEBOOK is a trademark of FACEBOOK Inc. YOUTUBE is a trademark of GOOGLE Inc.
+                 </p>
+                 <p>
+                   Individual experiences presented here may not be typical. Their background, education, effort, and application affected their experience. The information shared here are for example purposes and not a guarantee of a rate of return or a specific result. Your results may vary.
+                 </p>
+                 <p className="pt-4 text-gray-500">
+                   © {new Date().getFullYear()} Atlas HomeServices Inc. | Richmond Hill, ON. All Rights Reserved.
+                 </p>
                 </div>
               </div>
             </footer>
         </>
     );
 };
-
 PaintingLandingPage.getLayout = function getLayout(page: React.ReactElement) {
     return <MinimalLayout>{page}</MinimalLayout>;
 };
-
 export default PaintingLandingPage;

@@ -1,26 +1,29 @@
-// lib/fpixel.ts
+// In lib/fpixel.ts
 
-// https://developers.facebook.com/docs/facebook-pixel/advanced/
-// This is the type definition for the fbq function
 declare global {
   interface Window {
-    fbq: (...args: ['init', string] | ['track', string, object?]) => void;
+    // Update the 'track' signature to include event ID options
+    fbq: (...args: ['init', string] | ['track', string, object?] | ['track', string, object, { eventID: string }]) => void;
   }
 }
 
 export const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
 
-// Standard PageView event
 export const pageview = () => {
   if (window.fbq) {
     window.fbq('track', 'PageView');
   }
 };
 
-// Custom event
-// https://developers.facebook.com/docs/facebook-pixel/implementation/conversion-tracking#custom-conversions
-export const event = (name: string, options = {}) => {
+// --- FIX STARTS HERE ---
+// Update the event function to accept the optional eventId
+export const event = (name: string, options = {}, eventId?: string) => {
   if (window.fbq) {
-    window.fbq('track', name, options);
+    if (eventId) {
+      window.fbq('track', name, options, { eventID: eventId });
+    } else {
+      window.fbq('track', name, options);
+    }
   }
 };
+// --- FIX ENDS HERE ---
