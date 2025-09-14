@@ -533,7 +533,7 @@ export default function App() {
                 <p className="text-gray-600 mb-4">Our estimates assume a professional, insured crew that properly prepares all surfaces and uses high-quality materials.</p>
             </div>
             <div className="mt-8 flex flex-col items-center gap-4">
-                <button onClick={() => window.location.href = '/painting-offer'} className="btn-primary font-bold py-4 px-10 rounded-lg text-xl shadow-xl">
+                <button onClick={() => window.location.href = '/painting-landing'} className="btn-primary font-bold py-4 px-10 rounded-lg text-xl shadow-xl">
                     Schedule a Free, Exact Quote
                 </button>
                 <div className="flex items-center gap-4">

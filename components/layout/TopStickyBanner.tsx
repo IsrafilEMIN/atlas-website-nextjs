@@ -11,7 +11,7 @@ const TopStickyBanner: React.FC = () => {
         We have removed `legacyBehavior`, `passHref`, and the inner `<a>` tag.
       */}
       <Link 
-        href="/painting-offer"
+        href="/painting-landing"
         style={{
           position: 'fixed',
           top: 0,
