@@ -23,11 +23,7 @@ export default async function handler(
   }
 
   // Determine the lead status based on intent
-  let leadStatus = 'Long Term Nurture';
-  const highIntentConditions = ['hire_now', 'hire_3_months'];
-  if (highIntentConditions.includes(currentCondition)) {
-    leadStatus = 'New Lead';
-  }
+  let leadStatus = 'New Lead';
 
   // Define the properties to be set on the HubSpot contact record.
   // This now includes the new start_date property.
@@ -37,6 +33,7 @@ export default async function handler(
     lastname: lastName,
     phone,
     hs_lead_status: leadStatus,
+    customer_journey: 'New',
     start_date: currentCondition, // This saves the user's selection to your new custom property
     platform: platform || 'website', 
     lead_source: leadSource || 'organic',

@@ -14,7 +14,7 @@ export default function Hero() {
   const paragraphText = "We paint homeowner's visions into reality with precision and care.";
   const buttonText = "GET A QUOTE";
   // const bookingLink = "/booking";
-  const bookingLink = "/painting-offer";
+  const bookingLink = "/painting-landing";
 
   return (
     <>
