@@ -28,14 +28,14 @@ const PaintingThankYou: NextPageWithLayout = () => {
                 <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
                     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
                         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight uppercase">Thank You, {name}!</h1>
-                        <p className="text-2xl md:text-4xl">You've made an <strong>amazing decision</strong> by choosing Atlas HomeServices for your painting project.</p>
+                        <p className="text-2xl md:text-4xl">You&apos;ve made an <strong>amazing decision</strong> by choosing Atlas HomeServices for your painting project.</p>
                         <div className="flex justify-center">
                             <svg className="w-32 h-32 text-green-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <p className="text-xl md:text-2xl">Our team of experts is thrilled to bring your vision to life with our hassle-free, high-quality painting services.</p>
-                        <p className="text-xl md:text-2xl font-semibold bg-white/10 p-4 rounded-lg shadow-md">We'll reach out to you as soon as possible—typically within 1 hour—to discuss your needs and provide a free estimate.</p>
+                        <p className="text-xl md:text-2xl font-semibold bg-white/10 p-4 rounded-lg shadow-md">We&apos;ll reach out to you as soon as possible—typically within 1 hour—to discuss your needs and provide a free estimate.</p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                             <div className="bg-white/5 backdrop-blur-sm p-4 rounded-xl shadow-xl transform hover:scale-105 transition-transform">
                                 <Image
