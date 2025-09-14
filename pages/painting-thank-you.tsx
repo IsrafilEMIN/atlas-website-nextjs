@@ -1,5 +1,5 @@
 // src/pages/painting-thank-you.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react'; // Import useState
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import MinimalLayout from '@/components/layout/MinimalLayout';
@@ -8,15 +8,33 @@ import Image from 'next/image';
 
 const PaintingThankYou: NextPageWithLayout = () => {
     const router = useRouter();
+    // 1. Use state for the name, with a default fallback.
+    const [name, setName] = useState('Valued Customer');
 
     useEffect(() => {
-        if (!sessionStorage.getItem('canAccessThankYou')) {
+        // 2. All sessionStorage logic is now safely inside useEffect.
+        const canAccess = sessionStorage.getItem('canAccessThankYou');
+        if (!canAccess) {
             router.push('/painting-landing'); // Redirect if not authorized
+            return; // Exit early
+        }
+
+        const leadDataString = sessionStorage.getItem('leadDataForThankYou');
+        if (leadDataString) {
+            try {
+                const leadData = JSON.parse(leadDataString);
+                // 3. Update the state with the name from sessionStorage.
+                if (leadData.name) {
+                    setName(leadData.name);
+                }
+            } catch (error) {
+                console.error("Error parsing leadData from sessionStorage:", error);
+                // Handle potential JSON parsing errors if needed
+            }
         }
     }, [router]);
 
-    const leadData = JSON.parse(sessionStorage.getItem('leadDataForThankYou') || '{}');
-    const name = leadData.name || 'Valued Customer';
+    // The line that caused the error has been removed from here.
 
     return (
         <>
@@ -27,6 +45,7 @@ const PaintingThankYou: NextPageWithLayout = () => {
             <div className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
                 <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
                     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
+                        {/* This h1 now uses the 'name' from state */}
                         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight uppercase">Thank You, {name}!</h1>
                         <p className="text-2xl md:text-4xl">You&apos;ve made an <strong>amazing decision</strong> by choosing Atlas HomeServices for your painting project.</p>
                         <div className="flex justify-center">
