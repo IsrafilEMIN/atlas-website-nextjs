@@ -17,7 +17,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks: NavLinkItem[] = [
-    { href: "/painting-landing", label: "Book a Call" },
+    { href: "/painting-landing?utm_source=header&utm_medium=organic", label: "Book a Call" },
     // { href: "/guides", label: "Free Guides" },
     // { href: "/socials", label: "Socials" },
     // { href: "/gallery", label: "Gallery" },

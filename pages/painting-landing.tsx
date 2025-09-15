@@ -144,8 +144,10 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
 // --- THE MAIN PAGE COMPONENT ---
 const PaintingLandingPage: NextPageWithLayout = () => {
     const router = useRouter();
-    const [leadSource, setLeadSource] = useState('Organic Traffic');
-    const [platform] = useState('website');
+    const [utmSource, setUtmSource] = useState('');
+    const [utmMedium, setUtmMedium] = useState('');
+    const [utmCampaign, setUtmCampaign] = useState('');
+    const [utmContent, setUtmContent] = useState('');
     const pageContainerRef = useRef<HTMLDivElement>(null);
     const firstReviewRef = useRef<HTMLDivElement>(null);
     const headerTitle = 'Homeowner\'s Trusted Painter';
@@ -161,14 +163,14 @@ const PaintingLandingPage: NextPageWithLayout = () => {
     ], []);
     useEffect(() => {
         if (router.isReady) {
-            const source = router.query.utm_source as string;
-            const medium = router.query.utm_medium as string;
-            if (source && medium) {
-                if (source.toLowerCase().includes('facebook') && medium.toLocaleLowerCase().includes('ads')) setLeadSource('Facebook Ads');
-                else if (source.toLowerCase().includes('google') && medium.toLocaleLowerCase().includes('ads')) setLeadSource('Google Ads');
-                else if (source.toLowerCase().includes('facebook') && medium.toLocaleLowerCase().includes('organic')) setLeadSource('Facebook Organic');
-                else if (source.toLowerCase().includes('google') && medium.toLocaleLowerCase().includes('organic')) setLeadSource('Google Organic');
-            }
+            const source = router.query.utm_source as string || '';
+            const medium = router.query.utm_medium as string || '';
+            const campaign = router.query.utm_campaign as string || '';
+            const content = router.query.utm_content as string || '';
+            setUtmSource(source);
+            setUtmMedium(medium);
+            setUtmCampaign(campaign);
+            setUtmContent(content);
         }
     }, [router.isReady, router.query]);
    
@@ -194,7 +196,7 @@ const PaintingLandingPage: NextPageWithLayout = () => {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
             event: 'google_lead_form_submit',
-            form_data: { platform: platform, lead_source: leadSource },
+            form_data: { utm_source: utmSource, utm_medium: utmMedium, utm_campaign: utmCampaign, utm_content: utmContent },
         });
         const phoneDigits = data.phone.replace(/\D/g, '');
         const countryDigits = data.countryCode.replace(/\D/g, '');
@@ -209,9 +211,11 @@ const PaintingLandingPage: NextPageWithLayout = () => {
         fpixel.event('Lead', advancedMatchingData, eventId);
         const submissionData = {
             ...data,
-            leadSource,
+            utmSource,
+            utmMedium,
+            utmCampaign,
+            utmContent,
             tool: "Painting Offer Page",
-            platform: platform,
             cleanedPhone: fullPhoneDigits,
         };
       
