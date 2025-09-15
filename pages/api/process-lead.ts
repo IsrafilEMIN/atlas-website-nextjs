@@ -27,6 +27,7 @@ export default async function handler(
     phone: cleanedPhone,
     hs_lead_status: 'New Lead',
     customer_journey: 'New',
+    hubspot_owner_id: '259691210',
     start_date: currentCondition, // This saves the user's selection to your new custom property
     platform: platform || 'website',
     lead_source: leadSource || 'organic',
