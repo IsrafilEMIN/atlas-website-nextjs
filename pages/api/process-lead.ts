@@ -13,7 +13,7 @@ export default async function handler(
     return res.status(500).json({ message: 'Server configuration error.' });
   }
   const hubspotClient = new Client({ accessToken: process.env.HUBSPOT_API_KEY });
-  const { email, firstName, lastName, cleanedPhone, currentCondition, platform, leadSource } = req.body;
+  const { email, firstName, lastName, cleanedPhone, currentCondition, utmSource, utmMedium, utmCampaign, utmContent } = req.body;
   // Exclude contractors from being added to the CRM
   if (currentCondition === 'contractor') {
     return res.status(200).json({ message: 'Lead processed (excluded from CRM).' });
@@ -29,8 +29,10 @@ export default async function handler(
     customer_journey: 'New',
     hubspot_owner_id: '259691210',
     start_date: currentCondition, // This saves the user's selection to your new custom property
-    platform: platform || 'website',
-    lead_source: leadSource || 'organic',
+    utm_source: utmSource || '',
+    utm_medium: utmMedium || 'organic',
+    utm_campaign: utmCampaign || '',
+    utm_content: utmContent || '',
   };
   try {
     // Step 1: Search for an existing contact by email

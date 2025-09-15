@@ -17,9 +17,11 @@ export interface LeadFormData {
 export interface DataLayerEvent {
   event: string;
   form_data: {
-    platform: string;
-    lead_source: string;
-    start_date?: string; // This now allows the 'start_date' property
+    start_date?: string; 
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_content?: string;
   };
 }
 

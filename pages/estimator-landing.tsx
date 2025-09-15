@@ -1,5 +1,3 @@
-// pages/estimator-landing.tsx
-
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -85,10 +83,7 @@ const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) =>
   };
 
   return (
-    // The main container's background, shadow, and rounding have been removed.
-    // Padding is kept to maintain spacing.
     <div className="">
-      {/* Text colors updated to be visible on a dark background */}
       <h3 className="text-xl lg:text-3xl font-bold text-center mb-2 py-4 text-white">Enter Your Info Below To Access</h3>
       <form onSubmit={handleFormSubmit} className="space-y-4" noValidate>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -127,7 +122,6 @@ const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) =>
         </div>
         <div className="pt-2">
           <button type="submit" className="w-full bg-[#093373] text-white font-bold py-3 px-6 rounded-full text-lg transition-colors">Access The Estimator Tool</button>
-          {/* Text color updated to be visible on a dark background */}
           <p className="text-xs text-gray-400 text-center mt-3">100% Free. We respect your privacy.</p>
         </div>
       </form>
@@ -135,59 +129,46 @@ const EmbeddedQualificationForm: React.FC<EmbeddedFormProps> = ({ onSubmit }) =>
   );
 };
 
-// --- THE MAIN PAGE COMPONENT (LOGIC FIXED) ---
+// --- THE MAIN PAGE COMPONENT ---
 const HomeownersShieldPage: NextPageWithLayout = () => {
     const router = useRouter();
-    const [platform, setPlatform] = useState('');
-    const [leadSource, setLeadSource] = useState('');
+    const [utmSource, setUtmSource] = useState('');
+    const [utmMedium, setUtmMedium] = useState('');
+    const [utmCampaign, setUtmCampaign] = useState('');
+    const [utmContent, setUtmContent] = useState('');
 
     useEffect(() => {
         if (router.isReady) {
-            const utm_source = (router.query.utm_source as string || '').toLowerCase();
-            const utm_medium = (router.query.utm_medium as string || '').toLowerCase();
-
-            let newPlatform = 'website';
-            if (utm_source.includes('facebook') || utm_source.includes('fb')) {
-                newPlatform = 'fb';
-            } else if (utm_source.includes('instagram') || utm_source.includes('ig')) {
-                newPlatform = 'ig';
-            } else if (utm_source.includes('google')) {
-                newPlatform = 'google';
-            }
-
-            setPlatform(newPlatform);
-
-            if (utm_medium.includes('ad')) {
-              setLeadSource('estimator_tool_ad');
-            } else if (utm_medium.includes('organic') || utm_medium == '') {
-              setLeadSource('estimator_tool_organic');
-            }
+            const source = router.query.utm_source as string || '';
+            const medium = router.query.utm_medium as string || '';
+            const campaign = router.query.utm_campaign as string || '';
+            const content = router.query.utm_content as string || '';
+            setUtmSource(source);
+            setUtmMedium(medium);
+            setUtmCampaign(campaign);
+            setUtmContent(content);
         }
     }, [router.isReady, router.query]);
 
     const handleFormSubmission = async (data: FormData) => {
         try {
-            // --- Analytics and Tracking ---
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
                 event: 'tool_lead_form_submit',
-                form_data: { platform: platform, lead_source: leadSource, start_date: data.currentCondition },
+                form_data: { utm_source: utmSource, utm_medium: utmMedium, utm_campaign: utmCampaign, utm_content: utmContent, start_date: data.currentCondition },
             });
             fpixel.event('Lead');
 
-            // --- Step 1: Sync lead with the CRM ---
             const crmResponse = await fetch('/api/process-lead', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...data, platform, lead_source: leadSource, start_date: data.currentCondition })
+                body: JSON.stringify({ ...data, utmSource, utmMedium, utmCampaign, utmContent, start_date: data.currentCondition })
             });
 
             if (!crmResponse.ok) {
-                // If CRM sync fails, stop the entire process.
                 throw new Error('Experienced technical issue. Please try again or contact us at info@atlas-paint.com');
             }
             
-            // 2. ADDED: Call the send-estimator-tool API after the CRM sync succeeds.
             const emailResponse = await fetch('/api/send-estimator-tool', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -198,13 +179,10 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
             });
 
             if (!emailResponse.ok) {
-                // If email fails, stop the process. The lead is in the CRM, but the user should be notified.
                 throw new Error('Your info was saved, but we could not send the tool email. Please contact us at info@atlas-paint.com.');
             }
 
-            // --- Step 3: Redirect based on user's intent ---
             const highIntentConditions = ['hire_now', 'hire_3_months'];
-            // 3. MODIFIED: Added 'contractor' to the nurture conditions array.
             const nurtureConditions = ['diy', 'budgeting', 'contractor'];
 
             if (highIntentConditions.includes(data.currentCondition)) {
@@ -212,25 +190,19 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
                 sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email }));
                 router.push('/estimator-consultation');
             } else if (nurtureConditions.includes(data.currentCondition)) {
-                // Contractors will now be redirected here along with DIY and budgeting leads.
                 router.push('/thank-you-estimator');
             }
 
         } catch (error) {
             console.error('Error during form submission process:', error);
-            // --- ADD THIS NOTIFICATION LOGIC ---
-            // We trigger this notification in the background. 
-            // We don't use 'await' because we don't want to hold up the user's error message
-            // while we wait for the notification email to send. This is "fire-and-forget".
             fetch('/api/send-error-notification', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    error: (error as Error).message, // Send the error message
-                    leadData: data // Send the complete form data
+                    error: (error as Error).message,
+                    leadData: data
                 }),
-                }).catch(notificationError => {
-                // This logs an error if the notification API itself fails.
+            }).catch(notificationError => {
                 console.error('Failed to send error notification:', notificationError);
             });
             alert('An error occurred while submitting your information. Please try again.');
@@ -286,9 +258,7 @@ const HomeownersShieldPage: NextPageWithLayout = () => {
             </div>
             <footer className="w-full bg-gray-900 py-12 px-4">
               <div className="max-w-4xl mx-auto text-center">
-                
                 <Image src="/assets/Header - Atlas HomeServices Transparent-White.png" alt="Company Logo" width={300} height={100} className="mx-auto mb-4" unoptimized />
-
                 <div className="space-y-4 text-md text-gray-400">
                   <p>
                     This website is NOT endorsed by YouTube, Google or Facebook in any way. FACEBOOK is a trademark of FACEBOOK Inc. YOUTUBE is a trademark of GOOGLE Inc.
