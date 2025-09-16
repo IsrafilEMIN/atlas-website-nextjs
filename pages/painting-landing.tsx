@@ -268,20 +268,10 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                             Experience a truly <strong><u>hassle-free</u></strong> painting service.
                         </p>
                         <div className="flex flex-col md:flex-row gap-4 max-w-4xl mx-auto">
-                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                            <div className="flex-1 aspect-video overflow-hidden">
                                 <Image
-                                    src="/paintingOfferImages/painting-offer-image-03.png"
+                                    src="/paintingOfferImages/painting-landing-image-01.png"
                                     alt="Beautifully painted interior by Atlas HomeServices - Image 1"
-                                    className="w-full h-full object-cover"
-                                    width={1280}
-                                    height={720}
-                                    priority
-                                />
-                            </div>
-                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                                <Image
-                                    src="/paintingOfferImages/painting-offer-image-04.png"
-                                    alt="Beautifully painted interior by Atlas HomeServices - Image 2"
                                     className="w-full h-full object-cover"
                                     width={1280}
                                     height={720}
@@ -292,7 +282,51 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                         <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
                             <QualificationForm onSubmit={handleFormSubmission} />
                         </div>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-xl mx-auto">
+                        <div className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
+                            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">Why Choose Atlas HomeServices?</h3>
+                            <p className="text-lg md:text-xl text-gray-200">
+                                At Atlas HomeServices, we specialize in transforming your spaces with precision and care. Our team of experienced painters uses only premium materials to ensure a flawless finish that lasts. Whether it&apos;s interior or exterior painting, we handle every project with the utmost professionalism.
+                            </p>
+                            <ul className="mt-6 space-y-2 text-left max-w-2xl mx-auto">
+                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Fully licensed and insured</li>
+                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Eco-friendly paint options available</li>
+                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Satisfaction guaranteed</li>
+                            </ul>
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-4 max-w-5xl mx-auto mt-12">
+                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                                <Image
+                                    src="/paintingOfferImages/painting-offer-image-04.png"
+                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
+                                    className="w-full h-full object-cover"
+                                    width={1280}
+                                    height={720}
+                                    priority
+                                />
+                            </div>
+                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
+                                <Image
+                                    src="/paintingOfferImages/painting-offer-image-03.png"
+                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
+                                    className="w-full h-full object-cover"
+                                    width={1280}
+                                    height={720}
+                                    priority
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
+                            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">How Long Does a Painting Project Take?</h3>
+                            <p className="text-lg md:text-xl text-gray-200">
+                                The duration of your project depends on the size and complexity, but most residential jobs are completed in 3-7 days. We start with a thorough consultation, followed by prep work, painting, and a final walkthrough to ensure everything meets your expectations.
+                            </p>
+                            <ul className="mt-6 space-y-2 text-left max-w-2xl mx-auto">
+                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Quick and efficient without compromising quality</li>
+                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Minimal disruption to your daily life</li>
+                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Clean-up included after every job</li>
+                            </ul>
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-4 max-w-5xl mx-auto mt-12">
                             <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
                                 <Image
                                     src="/paintingOfferImages/painting-offer-image-05.jpeg"
@@ -303,8 +337,6 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                                     priority
                                 />
                             </div>
-                        </div>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-xl mx-auto">
                             <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
                                 <Image
                                     src="/paintingOfferImages/painting-offer-image-06.png"
@@ -316,7 +348,18 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-xl mx-auto">
+                        <div className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
+                            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">What Paints Do We Use?</h3>
+                            <p className="text-lg md:text-xl text-gray-200">
+                                We partner with top brands like Benjamin Moore and Sherwin-Williams for durable, low-VOC paints that are safe for your family and the environment. Our experts can recommend colors and finishes tailored to your style and needs.
+                            </p>
+                            <ul className="mt-6 space-y-2 text-left max-w-2xl mx-auto">
+                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> High-quality, long-lasting results</li>
+                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Custom color matching available</li>
+                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Warranties on all work</li>
+                            </ul>
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-4 max-w-5xl mx-auto mt-12">
                             <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
                                 <Image
                                     src="/paintingOfferImages/painting-offer-image-01.jpg"
@@ -327,8 +370,6 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                                     priority
                                 />
                             </div>
-                        </div>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-xl mx-auto">
                             <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
                                 <Image
                                     src="/paintingOfferImages/painting-offer-image-02.jpg"
