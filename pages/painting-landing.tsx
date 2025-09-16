@@ -227,20 +227,20 @@ const PaintingLandingPage: NextPageWithLayout = () => {
             });
       
             sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email }));
-            const now = new Date();
-            const formatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'America/Toronto',
-                hour: 'numeric',
-                hour12: false
-            });
-            const hour = parseInt(formatter.format(now), 10);
-            if (hour >= 8 && hour < 20) {
-                sessionStorage.setItem('canAccessThankYou', 'false');
-                router.push('/painting-thank-you');
-            } else {
+            // const now = new Date();
+            // const formatter = new Intl.DateTimeFormat('en-US', {
+            //     timeZone: 'America/Toronto',
+            //     hour: 'numeric',
+            //     hour12: false
+            // });
+            // const hour = parseInt(formatter.format(now), 10);
+            // if (hour >= 8 && hour < 20) {
                 sessionStorage.setItem('canAccessThankYou', 'true');
-                router.push('/painting-consultation');
-            }
+                router.push('/painting-thank-you');
+            // } else {
+            //     sessionStorage.setItem('canAccessThankYou', 'true');
+            //     router.push('/painting-consultation');
+            // }
         } catch(error) {
            console.error("Form submission error:", error);
            alert("There was an error submitting your request. Please try again.");
@@ -267,7 +267,7 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                         <p className="mt-3 text-2xl md:text-5xl text-white max-w-6xl mx-auto">
                             Experience a truly <strong><u>hassle-free</u></strong> painting service.
                         </p>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-4xl mx-auto">
+                        <div className="flex flex-col md:flex-row gap-4 max-w-3xl mx-auto">
                             <div className="flex-1 aspect-video overflow-hidden">
                                 <Image
                                     src="/paintingOfferImages/painting-landing-image-01.png"
