@@ -285,7 +285,7 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                         <div className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
                             <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">Why Choose Atlas HomeServices?</h3>
                             <p className="text-lg md:text-xl text-gray-200">
-                                At Atlas HomeServices, we specialize in transforming your spaces with precision and care. Our team of experienced painters uses only premium materials to ensure a flawless finish that lasts. Whether it's interior or exterior painting, we handle every project with the utmost professionalism.
+                                At Atlas HomeServices, we specialize in transforming your spaces with precision and care. Our team of experienced painters uses only premium materials to ensure a flawless finish that lasts. Whether it&apos;s interior or exterior painting, we handle every project with the utmost professionalism.
                             </p>
                             <ul className="mt-6 space-y-2 text-left max-w-2xl mx-auto">
                                 <li className="flex items-center text-lg"><span className="mr-2">✓</span> Fully licensed and insured</li>
