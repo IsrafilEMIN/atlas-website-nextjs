@@ -19,7 +19,6 @@ import { useEffect } from 'react';
 import * as fpixel from '../lib/fpixel';
 // ---------------------------------------------------------
 
-
 // Define a type for pages that might have a custom getLayout method
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -74,7 +73,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta property="og:image" content="/assets/og-image.jpg" />
       </Head>
 
-      {/* Google Tag Manager (The GTM script itself is often placed in _app for better control with next/script) */}
+      {/* Google Tag Manager - Loaded once here */}
       <Script
         id="gtm-script"
         strategy="afterInteractive"
@@ -86,32 +85,18 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           })(window,document,'script','dataLayer','GTM-TNNGCK8P');`,
         }}
       />
-      
-      {/* Google Analytics gtag.js */}
-      <Script
-        strategy="afterInteractive"
-        src="https://www.googletagmanager.com/gtag/js?id=G-QBLLD7KWPN"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-QBLLD7KWPN');
-        `}
-      </Script>
 
-      {/* Google Ads Conversion Tag */}
-      <Script
-        strategy="afterInteractive"
-        src="https://www.googletagmanager.com/gtag/js?id=AW-17058358443"
-      />
-      <Script id="google-ads" strategy="afterInteractive">
+      {/* Optional: Consent Mode Defaults (add/update based on user consent later) */}
+      <Script id="gtm-consent" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'AW-17058358443');
+          gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'analytics_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied'
+          });
         `}
       </Script>
 
@@ -120,7 +105,6 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
       {/* Render the page with the determined layout */}
       {getLayout(<Component {...pageProps} />)}
-
     </QueryClientProvider>
   );
 }
