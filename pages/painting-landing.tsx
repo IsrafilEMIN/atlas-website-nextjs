@@ -32,6 +32,9 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
     });
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+    const [step, setStep] = useState(1);
+    const [showPhone, setShowPhone] = useState(false);
+    const [teaserText, setTeaserText] = useState('');
     const validateField = (name: keyof FormData, value: string) => {
         switch (name) {
             case 'firstName': return value.trim() ? '' : 'First name is required.';
@@ -60,6 +63,21 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
         }
         setFormData((prev) => ({ ...prev, [name]: processedValue }));
         if (errors[name]) setErrors(prev => ({...prev, [name]: ''}));
+        if (name === 'currentCondition') {
+            const highIntent = ['hire_now'];
+            const midIntent = ['hire_1_month', 'hire_1_3_months'];
+            const lowIntent = ['just_looking', 'budgeting_3_plus_months'];
+            setShowPhone(highIntent.includes(value) || midIntent.includes(value));
+            if (highIntent.includes(value)) {
+                setTeaserText('Get Your Free Estimate & PDFs');
+            } else if (midIntent.includes(value)) {
+                setTeaserText('Get A Quick Consultation & PDFs');
+            } else if (lowIntent.includes(value)) {
+                setTeaserText('Get Your Free PDFs');
+            } else {
+                setTeaserText('');
+            }
+        }
     };
     const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target as { name: keyof FormData; value: string };
@@ -81,62 +99,107 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
             onSubmit(formData);
         }
     };
+
+    const options = [
+        { value: 'just_looking', label: "looking for color ideas" },
+        { value: 'budgeting_3_plus_months', label: "exploring for a future project (3+ months)" },
+        { value: 'hire_1_3_months', label: "planning to paint in 1-3 months" },
+        { value: 'hire_1_month', label: "planning to paint within 1 month" },
+        { value: 'hire_now', label: "ready to hire a painter NOW" },
+    ];
+
+    const handleOptionClick = (value: string) => {
+        handleChange({ target: { name: 'currentCondition', value } } as React.ChangeEvent<HTMLSelectElement>);
+        setStep(2);
+    };
+
     return (
         <div className="bg-white rounded-3xl p-6 md:p-8 text-gray-800">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
-                Get Your Free Estimate
-            </h2>
             <form onSubmit={handleFormSubmit} className="space-y-4" noValidate>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label htmlFor="firstName" className="sr-only">First Name</label>
-                        <input type="text" name="firstName" id="firstName" placeholder="First Name *" value={formData.firstName} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.firstName && touched.firstName ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
-                        {errors.firstName && touched.firstName && <p className="mt-1 text-xs text-red-600">{errors.firstName}</p>}
+                {step === 1 && (
+                    <div className="space-y-4">
+                        <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
+                            What is your current plan?
+                        </h2>
+                        {options.map((option) => (
+                            <div
+                                key={option.value}
+                                onClick={() => handleOptionClick(option.value)}
+                                className="cursor-pointer p-4 border rounded-md shadow-sm hover:bg-blue-100 transition-colors"
+                            >
+                                {option.label}
+                            </div>
+                        ))}
                     </div>
-                    <div>
-                        <label htmlFor="lastName" className="sr-only">Last Name</label>
-                        <input type="text" name="lastName" id="lastName" placeholder="Last Name *" value={formData.lastName} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.lastName && touched.lastName ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
-                        {errors.lastName && touched.lastName && <p className="mt-1 text-xs text-red-600">{errors.lastName}</p>}
-                    </div>
-                </div>
-                <div>
-                    <label htmlFor="email" className="sr-only">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Email Address *" value={formData.email} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
-                    {errors.email && touched.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                    <div>
-                        <label htmlFor="countryCode" className="sr-only">Country Code</label>
-                        <select name="countryCode" id="countryCode" value={formData.countryCode} className={`block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.countryCode && touched.countryCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur}>
-                            <option value="+1">+1 (Canada/US)</option>
-                            <option value="+44">+44 (UK)</option>
-                            <option value="+61">+61 (Australia)</option>
-                            <option value="+49">+49 (Germany)</option>
-                            <option value="+33">+33 (France)</option>
-                        </select>
-                        {errors.countryCode && touched.countryCode && <p className="mt-1 text-xs text-red-600">{errors.countryCode}</p>}
-                    </div>
-                    <div className="col-span-2">
-                        <label htmlFor="phone" className="sr-only">Phone</label>
-                        <input type="tel" name="phone" id="phone" placeholder="Phone Number *" value={formData.phone} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone && touched.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} maxLength={14} />
-                        {errors.phone && touched.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
-                    </div>
-                </div>
-                <div>
-                    <label htmlFor="currentCondition" className="sr-only">Current Condition</label>
-                    <select name="currentCondition" id="currentCondition" value={formData.currentCondition} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${formData.currentCondition === "" ? 'text-gray-500' : 'text-gray-900'} ${errors.currentCondition && touched.currentCondition ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur}>
-                        <option value="" disabled>What is your current plan? *</option>
-                        <option value="hire_now">I&apos;m planning to hire a painter now</option>
-                        <option value="hire_3_months">I&apos;m planning to paint within 3 months</option>
-                        <option value="diy">I am planning to DIY</option>
-                        <option value="budgeting">I&apos;m budgeting for a future project</option>
-                        <option value="contractor">I&apos;m a contractor</option>
-                    </select>
-                    {errors.currentCondition && touched.currentCondition && <p className="mt-1 text-xs text-red-600">{errors.currentCondition}</p>}
-                </div>
-                <div className="pt-2">
-                    <button type="submit" className="w-full bg-[#093373] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Submit & Schedule</button>
-                </div>
+                )}
+                {step === 2 && (
+                    <>
+                        <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
+                            {teaserText}
+                        </h2>
+
+                        {/* NEW: PDF Benefits Highlight Section */}
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                            <div className="flex items-left justify-left mb-3">
+                                <svg className="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <span className="text-blue-800 font-semibold">PDFs you'll instantly receive:</span>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex items-start">
+                                    <span className="text-blue-600 mr-2">✓</span>
+                                    <span className="text-blue-800 font-medium">"The 15-Minute Room Inspiration Color Collection"</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <span className="text-blue-600 mr-2">✓</span>
+                                    <span className="text-blue-800 font-medium">"The $5,000 Contractor Scam Prevention Guide"</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label htmlFor="firstName" className="sr-only">First Name</label>
+                                <input type="text" name="firstName" id="firstName" placeholder="First Name *" value={formData.firstName} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.firstName && touched.firstName ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
+                                {errors.firstName && touched.firstName && <p className="mt-1 text-xs text-red-600">{errors.firstName}</p>}
+                            </div>
+                            <div>
+                                <label htmlFor="lastName" className="sr-only">Last Name</label>
+                                <input type="text" name="lastName" id="lastName" placeholder="Last Name *" value={formData.lastName} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.lastName && touched.lastName ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
+                                {errors.lastName && touched.lastName && <p className="mt-1 text-xs text-red-600">{errors.lastName}</p>}
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="email" className="sr-only">Email</label>
+                            <input type="email" name="email" id="email" placeholder="Email Address *" value={formData.email} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
+                            {errors.email && touched.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
+                        </div>
+                        {showPhone && (
+                            <div className="grid grid-cols-3 gap-2">
+                                <div>
+                                    <label htmlFor="countryCode" className="sr-only">Country Code</label>
+                                    <select name="countryCode" id="countryCode" value={formData.countryCode} className={`block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.countryCode && touched.countryCode ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur}>
+                                        <option value="+1">+1 (Canada/US)</option>
+                                        <option value="+44">+44 (UK)</option>
+                                        <option value="+61">+61 (Australia)</option>
+                                        <option value="+49">+49 (Germany)</option>
+                                        <option value="+33">+33 (France)</option>
+                                    </select>
+                                    {errors.countryCode && touched.countryCode && <p className="mt-1 text-xs text-red-600">{errors.countryCode}</p>}
+                                </div>
+                                <div className="col-span-2">
+                                    <label htmlFor="phone" className="sr-only">Phone</label>
+                                    <input type="tel" name="phone" id="phone" placeholder="Phone Number *" value={formData.phone} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.phone && touched.phone ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} maxLength={14} />
+                                    {errors.phone && touched.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
+                                </div>
+                            </div>
+                        )}
+                        <div className="pt-2 flex justify-between">
+                            <button type="button" onClick={() => setStep(1)} className="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-full text-lg hover:bg-gray-400 transition-colors">Back</button>
+                            <button type="submit" className="bg-[#093373] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Submit & Get Your Perks</button>
+                        </div>
+                    </>
+                )}
             </form>
         </div>
     );
@@ -215,7 +278,6 @@ const PaintingLandingPage: NextPageWithLayout = () => {
             utmMedium,
             utmCampaign,
             utmContent,
-            tool: "Painting Offer Page",
             cleanedPhone: fullPhoneDigits,
         };
       
@@ -226,21 +288,19 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                 body: JSON.stringify(submissionData),
             });
       
-            sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email }));
-            // const now = new Date();
-            // const formatter = new Intl.DateTimeFormat('en-US', {
-            //     timeZone: 'America/Toronto',
-            //     hour: 'numeric',
-            //     hour12: false
-            // });
-            // const hour = parseInt(formatter.format(now), 10);
-            // if (hour >= 8 && hour < 20) {
-                sessionStorage.setItem('canAccessThankYou', 'true');
-                router.push('/painting-thank-you');
-            // } else {
-            //     sessionStorage.setItem('canAccessThankYou', 'true');
-            //     router.push('/painting-consultation');
-            // }
+            sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email, intent: data.currentCondition }));
+            const highIntent = ['hire_now'];
+            const midIntent = ['hire_1_month', 'hire_1_3_months'];
+            if (highIntent.includes(data.currentCondition)) {
+                sessionStorage.setItem('canAccessThankYouHigh', 'true');
+                router.push('/painting-thank-you-high');
+            } else if (midIntent.includes(data.currentCondition)) {
+                sessionStorage.setItem('canAccessThankYouMid', 'true');
+                router.push('/painting-thank-you-mid');
+            } else {
+                sessionStorage.setItem('canAccessThankYouLow', 'true');
+                router.push('/painting-thank-you-low');
+            }
         } catch(error) {
            console.error("Form submission error:", error);
            alert("There was an error submitting your request. Please try again.");
@@ -257,30 +317,142 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                 rating={5}
                 reviewCount={5}
             /> */}
-           
             <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
                 <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
                     <div className="space-y-2 md:space-y-8">
-                        <h1 className="mt-0 my-4 lg:mt-4 lg:my-12 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto uppercase">
+                        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-7xl mx-auto uppercase">
                             {headerTitle}
                         </h1>
-                        <p className="mt-3 text-2xl md:text-5xl text-white max-w-6xl mx-auto">
-                            Experience a truly <strong><u>hassle-free</u></strong> painting service.
-                        </p>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-3xl mx-auto">
-                            <div className="flex-1 aspect-video overflow-hidden">
+                        {/* Enhanced Image Layout with Side Images and Arrows */}
+                        <div className="relative max-w-3xl mx-auto hidden lg:block">
+                            {/* Left Side Image - Desktop Only */}
+                            <div className="hidden lg:block absolute -left-[32rem] top-0 w-96">
+                                <h3 className="text-white text-xl font-bold mb-2">FREE DOWNLOAD: THE ROOM INSPIRATION COLOR COLLECTION</h3>
+                                <div className="aspect-[6/5] overflow-hidden rounded-lg shadow-xl">
+                                    <Image
+                                        src="/paintingOfferImages/the-color-collection-cover.png"
+                                        alt="Before transformation - Atlas HomeServices"
+                                        className="w-full h-full object-cover"
+                                        width={600}
+                                        height={800}
+                                        priority
+                                    />
+                                </div>
+                                {/* Right-pointing Arrow with Refined Doodle Loop */}
+                                <div className="absolute -right-32 top-[60%] transform -translate-y-1/2 z-10">
+                                    <svg width="120" height="927" viewBox="0 0 120 900" fill="none" className="text-white drop-shadow-lg">
+                                        <path
+                                            d="M20 348 C60 408, 20 504, 55 516 C75 534, 70 570, 50 564 C30 558, 35 510, 60 528 C95 564, 80 726, 110 852 L100 844.8 M110 852 L115 842.4"
+                                            stroke="currentColor"
+                                            strokeWidth="3"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            fill="none"
+                                        />
+                                        <text x="85" y="480" fill="currentColor" fontSize="14" fontWeight="bold" textAnchor="middle">
+                                            Get it here!
+                                        </text>
+                                    </svg>
+                                </div>
+                            </div>
+                            {/* Center Content */}
+                            <div className="space-y-8">
+                                {/* Wrapper to control image size */}
+                                <div className="max-w-3xl mx-auto">
+                                    <div className="flex flex-col items-center gap-4">
+                                        {/* Main Center Image */}
+                                        <div className="aspect-video overflow-hidden rounded-lg w-2/3">
+                                            <Image
+                                                src="/paintingOfferImages/painting-landing-image-01.png"
+                                                alt="Beautifully painted interior by Atlas HomeServices - Main Image"
+                                                className="w-full h-full object-cover"
+                                                width={1280}
+                                                height={720}
+                                                priority
+                                            />
+                                        </div>
+                                        {/* Second Image */}
+                                        <h3 className="text-white text-2xl font-bold max-w-2xl mx-auto">FREE TOOL: THE INSTANT PROJECT BUDGET PLANNER THAT HELPS YOU ESTIMATE YOUR COSTS</h3>
+                                        <div className="aspect-video overflow-hidden rounded-lg w-4/5">
+                                            <Image
+                                                src="/paintingOfferImages/painting-landing-image-02.png"
+                                                alt="Beautifully painted interior by Atlas HomeServices - Main Image"
+                                                className="w-full h-auto object-cover"
+                                                width={1280}
+                                                height={720}
+                                                priority
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* Form Section */}
+                                <div className="w-full">
+                                    <QualificationForm onSubmit={handleFormSubmission} />
+                                </div>
+                            </div>
+                            {/* Right Side Image - Desktop Only */}
+                            <div className="hidden lg:block absolute -right-[32rem] top-0 w-96">
+                                <h3 className="text-white text-xl font-bold mb-2">FREE DOWNLOAD: THE $5,000 CONTRACTOR SCAM PREVENTION</h3>
+                                <div className="aspect-[6/5] overflow-hidden rounded-lg shadow-xl">
+                                    <Image
+                                        src="/paintingOfferImages/the-scam-prevention-cover.png"
+                                        alt="After transformation - Atlas HomeServices"
+                                        className="w-full h-full object-cover"
+                                        width={600}
+                                        height={800}
+                                        priority
+                                    />
+                                </div>
+                                {/* Left-pointing Arrow with Refined Doodle Loop */}
+                                <div className="absolute -left-32 top-[60%] transform -translate-y-1/2 z-10">
+                                    <svg width="120" height="915" viewBox="0 0 120 888" fill="none" className="text-white drop-shadow-lg scale-x-[-1]">
+                                        <path
+                                            d="M20 348 C50 420, 15 492, 50 516 C110 540, 40 600, 70 552 C120 480, 90 768, 110 840 L100 832.8 M110 840 L115 830.4"
+                                            stroke="currentColor"
+                                            strokeWidth="3"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            fill="none"
+                                        />
+                                        <text x="40" y="480" fill="currentColor" fontSize="14" fontWeight="bold" textAnchor="middle" transform="scale(-1, 1) translate(-120, 0)">
+                                            Get it here!
+                                        </text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Mobile Single Image Version */}
+                        <div className="block lg:hidden max-w-3xl mx-auto">
+                            <div className="aspect-video overflow-hidden rounded-lg shadow-xl mb-2">
                                 <Image
                                     src="/paintingOfferImages/painting-landing-image-01.png"
-                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
+                                    alt="Beautiful painting transformation - Atlas HomeServices"
                                     className="w-full h-full object-cover"
                                     width={1280}
                                     height={720}
                                     priority
                                 />
                             </div>
-                        </div>
-                        <div className="mt-8 md:mt-10 mx-auto w-full max-w-2xl">
-                            <QualificationForm onSubmit={handleFormSubmission} />
+                            {/* Mobile Merged Side Images */}
+                            <div className="gap-4">
+                                <div>
+                                    <h3 className="text-white text-xl font-bold mb-2 text-center">FREE TOOL & DOWNLOADS</h3>
+                                    <div className="aspect-[6/5] overflow-hidden rounded-lg shadow-xl">
+                                        <Image
+                                            src="/paintingOfferImages/the-landing-page-image.png"
+                                            alt="Before transformation - Atlas HomeServices"
+                                            className="w-full h-full object-cover"
+                                            width={600}
+                                            height={800}
+                                            priority
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Mobile Form */}
+                            <div className="w-full max-w-2xl mx-auto">
+                                <QualificationForm onSubmit={handleFormSubmission} />
+                            </div>
                         </div>
                         <div className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
                             <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">Why Choose Atlas HomeServices?</h3>
