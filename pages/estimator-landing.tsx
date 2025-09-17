@@ -33,7 +33,6 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
     const [step, setStep] = useState(1);
-    const [showPhone, setShowPhone] = useState(false);
     const [teaserText, setTeaserText] = useState('');
     const validateField = (name: keyof FormData, value: string) => {
         switch (name) {
@@ -67,11 +66,10 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
             const highIntent = ['hire_now'];
             const midIntent = ['hire_1_month', 'hire_1_3_months'];
             const lowIntent = ['just_looking', 'budgeting_3_plus_months'];
-            setShowPhone(highIntent.includes(value) || midIntent.includes(value));
             if (highIntent.includes(value)) {
-                setTeaserText('Get Your Free Estimate & PDFs');
+                setTeaserText('Get Your Free Estimate & All The Perks');
             } else if (midIntent.includes(value)) {
-                setTeaserText('Get A Quick Consultation & PDFs');
+                setTeaserText('Get A Quick Consultation & All The Perks');
             } else if (lowIntent.includes(value)) {
                 setTeaserText('Get Your Free PDFs');
             } else {
@@ -154,7 +152,6 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
                             <input type="email" name="email" id="email" placeholder="Email Address *" value={formData.email} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
                             {errors.email && touched.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
                         </div>
-                        {showPhone && (
                             <div className="grid grid-cols-3 gap-2">
                                 <div>
                                     <label htmlFor="countryCode" className="sr-only">Country Code</label>
@@ -173,7 +170,6 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
                                     {errors.phone && touched.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
                                 </div>
                             </div>
-                        )}
                         <div className="pt-2 flex justify-between">
                             <button type="button" onClick={() => setStep(1)} className="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-full text-lg hover:bg-gray-400 transition-colors">Back</button>
                             <button type="submit" className="bg-[#093373] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Submit & Get Your Perks</button>
@@ -410,6 +406,18 @@ const EstimatorLandingPage: NextPageWithLayout = () => {
                             {/* Mobile Form */}
                             <div className="w-full max-w-2xl mx-auto">
                                 <QualificationForm onSubmit={handleFormSubmission} />
+                            </div>
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto mt-12">
+                            <div className="flex-1 aspect-video">
+                                <Image
+                                    src="/paintingOfferImages/painting-landing-image-01.png"
+                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
+                                    className="w-full h-full object-cover"
+                                    width={1280}
+                                    height={720}
+                                    priority
+                                />
                             </div>
                         </div>
                         <div className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">

@@ -33,7 +33,6 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
     const [step, setStep] = useState(1);
-    const [showPhone, setShowPhone] = useState(false);
     const [teaserText, setTeaserText] = useState('');
     const validateField = (name: keyof FormData, value: string) => {
         switch (name) {
@@ -67,13 +66,12 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
             const highIntent = ['hire_now'];
             const midIntent = ['hire_1_month', 'hire_1_3_months'];
             const lowIntent = ['just_looking', 'budgeting_3_plus_months'];
-            setShowPhone(highIntent.includes(value) || midIntent.includes(value));
             if (highIntent.includes(value)) {
-                setTeaserText('Get Your Free Estimate & PDFs');
+                setTeaserText('Get Your Free Estimate & All The Perks');
             } else if (midIntent.includes(value)) {
-                setTeaserText('Get A Quick Consultation & PDFs');
+                setTeaserText('Get A Quick Consultation & All The Perks');
             } else if (lowIntent.includes(value)) {
-                setTeaserText('Get Your Free PDFs');
+                setTeaserText('Get Your Free Perks');
             } else {
                 setTeaserText('');
             }
@@ -101,11 +99,11 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
     };
 
     const options = [
-        { value: 'just_looking', label: "looking for color ideas" },
-        { value: 'budgeting_3_plus_months', label: "exploring for a future project (3+ months)" },
-        { value: 'hire_1_3_months', label: "planning to paint in 1-3 months" },
-        { value: 'hire_1_month', label: "planning to paint within 1 month" },
         { value: 'hire_now', label: "ready to hire a painter NOW" },
+        { value: 'hire_1_month', label: "planning to paint within 1 month" },
+        { value: 'hire_1_3_months', label: "planning to paint in 1-3 months" },
+        { value: 'budgeting_3_plus_months', label: "exploring for a future project (3+ months)" },
+        { value: 'just_looking', label: "looking for color ideas" },
     ];
 
     const handleOptionClick = (value: string) => {
@@ -137,26 +135,6 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
                         <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
                             {teaserText}
                         </h2>
-
-                        {/* NEW: PDF Benefits Highlight Section */}
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                            <div className="flex items-left justify-left mb-3">
-                                <svg className="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <span className="text-blue-800 font-semibold">PDFs you'll instantly receive:</span>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="flex items-start">
-                                    <span className="text-blue-600 mr-2">✓</span>
-                                    <span className="text-blue-800 font-medium">"The 15-Minute Room Inspiration Color Collection"</span>
-                                </div>
-                                <div className="flex items-start">
-                                    <span className="text-blue-600 mr-2">✓</span>
-                                    <span className="text-blue-800 font-medium">"The $5,000 Contractor Scam Prevention Guide"</span>
-                                </div>
-                            </div>
-                        </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label htmlFor="firstName" className="sr-only">First Name</label>
@@ -174,7 +152,6 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
                             <input type="email" name="email" id="email" placeholder="Email Address *" value={formData.email} required className={`block w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'}`} onChange={handleChange} onBlur={handleBlur} />
                             {errors.email && touched.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
                         </div>
-                        {showPhone && (
                             <div className="grid grid-cols-3 gap-2">
                                 <div>
                                     <label htmlFor="countryCode" className="sr-only">Country Code</label>
@@ -193,7 +170,6 @@ const QualificationForm: React.FC<QualificationFormProps> = ({ onSubmit }) => {
                                     {errors.phone && touched.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
                                 </div>
                             </div>
-                        )}
                         <div className="pt-2 flex justify-between">
                             <button type="button" onClick={() => setStep(1)} className="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-full text-lg hover:bg-gray-400 transition-colors">Back</button>
                             <button type="submit" className="bg-[#093373] text-white font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-800 transition-colors">Submit & Get Your Perks</button>
