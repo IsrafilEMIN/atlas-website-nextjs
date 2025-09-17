@@ -265,17 +265,10 @@ const PaintingLandingPage: NextPageWithLayout = () => {
             });
       
             sessionStorage.setItem('leadDataForThankYou', JSON.stringify({ name: `${data.firstName} ${data.lastName}`, email: data.email, intent: data.currentCondition }));
-            const highIntent = ['hire_now'];
-            const midIntent = ['hire_1_month', 'hire_1_3_months'];
-            if (highIntent.includes(data.currentCondition)) {
-                sessionStorage.setItem('canAccessThankYouHigh', 'true');
-                router.push('/painting-thank-you-high');
-            } else if (midIntent.includes(data.currentCondition)) {
-                sessionStorage.setItem('canAccessThankYouMid', 'true');
-                router.push('/painting-thank-you-mid');
-            } else {
-                sessionStorage.setItem('canAccessThankYouLow', 'true');
-                router.push('/painting-thank-you-low');
+            const userIntent = ['hire_now', 'hire_1_month', 'hire_1_3_months', 'budgeting_3_plus_months', 'just_looking'];
+            if (userIntent.includes(data.currentCondition)) {
+                sessionStorage.setItem('canAccessThankYou', 'true');
+                router.push('/painting-thank-you');
             }
         } catch(error) {
            console.error("Form submission error:", error);
