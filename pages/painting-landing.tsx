@@ -289,7 +289,7 @@ const PaintingLandingPage: NextPageWithLayout = () => {
             <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
                 <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
                     <div className="space-y-2 md:space-y-8">
-                        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-7xl mx-auto uppercase">
+                        <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-7xl mx-auto uppercase">
                             {headerTitle}
                         </h1>
                         {/* Enhanced Image Layout with Side Images and Arrows */}
@@ -327,10 +327,11 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                             {/* Center Content */}
                             <div className="space-y-8">
                                 {/* Wrapper to control image size */}
-                                <div className="max-w-3xl mx-auto">
+                                <div className="max-w-4xl mx-auto">
                                     <div className="flex flex-col items-center gap-4">
                                         {/* Main Center Image */}
-                                        <div className="aspect-video overflow-hidden rounded-lg w-2/3">
+                                        <h3 className="text-white text-3xl font-bold mb-2">Experience turly <strong><u>stress-free</u></strong> painting experience</h3>
+                                        <div className="aspect-video overflow-hidden rounded-lg">
                                             <Image
                                                 src="/paintingOfferImages/painting-landing-image-01.png"
                                                 alt="Beautifully painted interior by Atlas HomeServices - Main Image"
@@ -340,18 +341,8 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                                                 priority
                                             />
                                         </div>
-                                        {/* Second Image */}
-                                        <h3 className="text-white text-2xl font-bold max-w-2xl mx-auto">FREE TOOL: THE INSTANT PROJECT BUDGET PLANNER THAT HELPS YOU ESTIMATE YOUR COSTS</h3>
-                                        <div className="aspect-video overflow-hidden rounded-lg w-4/5">
-                                            <Image
-                                                src="/paintingOfferImages/painting-landing-image-02.png"
-                                                alt="Beautifully painted interior by Atlas HomeServices - Main Image"
-                                                className="w-full h-auto object-cover"
-                                                width={1280}
-                                                height={720}
-                                                priority
-                                            />
-                                        </div>
+                                        <h3 className="text-white text-4xl font-bold">GET YOUR FREE ESTIMATE</h3>
+                                        <h3 className="text-white text-2xl font-bold mb-2">AND FREE TOOL & DOWNLOAD TO HELP YOU</h3>
                                     </div>
                                 </div>
                                 {/* Form Section */}
@@ -361,10 +352,10 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                             </div>
                             {/* Right Side Image - Desktop Only */}
                             <div className="hidden lg:block absolute -right-[32rem] top-0 w-96">
-                                <h3 className="text-white text-xl font-bold mb-2">FREE DOWNLOAD: THE $5,000 CONTRACTOR SCAM PREVENTION</h3>
-                                <div className="aspect-[6/5] overflow-hidden rounded-lg shadow-xl">
+                                <h3 className="text-white text-xl font-bold mb-2">FREE TOOL: THE INSTANT PROJECT BUDGET PLANNER THAT HELPS YOU ESTIMATE YOUR COSTS</h3>
+                                <div className="aspect-square overflow-hidden rounded-lg">
                                     <Image
-                                        src="/paintingOfferImages/the-scam-prevention-cover.png"
+                                        src="/paintingOfferImages/estimator-tool-demo.png"
                                         alt="After transformation - Atlas HomeServices"
                                         className="w-full h-full object-cover"
                                         width={600}
@@ -405,8 +396,9 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                             {/* Mobile Merged Side Images */}
                             <div className="gap-4">
                                 <div>
-                                    <h3 className="text-white text-xl font-bold mb-2 text-center">FREE TOOL & DOWNLOADS</h3>
-                                    <div className="aspect-[6/5] overflow-hidden rounded-lg shadow-xl">
+                                    <h3 className="text-white text-xl font-bold mb-2 text-center">GET YOUR FREE ESTIMATE</h3>
+                                    <h3 className="text-white text-sm font-bold text-center">AND FREE TOOL & DOWNLOAD TO HELP YOU</h3>
+                                    <div className="aspect-[5/5] overflow-hidden rounded-lg w-3/4 mx-auto">
                                         <Image
                                             src="/paintingOfferImages/the-landing-page-image.png"
                                             alt="Before transformation - Atlas HomeServices"

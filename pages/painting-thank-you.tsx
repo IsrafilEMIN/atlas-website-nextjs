@@ -11,11 +11,11 @@ const PaintingThankYouHigh: NextPageWithLayout = () => {
     const [name, setName] = useState('Valued Customer');
 
     useEffect(() => {
-        // const canAccess = sessionStorage.getItem('canAccessThankYou');
-        // if (!canAccess) {
-        //     router.push('/painting-landing');
-        //     return;
-        // }
+        const canAccess = sessionStorage.getItem('canAccessThankYou');
+        if (!canAccess) {
+            router.push('/painting-landing');
+            return;
+        }
 
         const leadDataString = sessionStorage.getItem('leadDataForThankYou');
         if (leadDataString) {
@@ -40,18 +40,17 @@ const PaintingThankYouHigh: NextPageWithLayout = () => {
                 <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
                     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
                         <h1 className="text-3xl md:text-6xl font-extrabold tracking-tight uppercase">Thank You<br></br> {name}</h1>
-                        <p className="text-2xl md:text-4xl">You're interested in new ideas, and we hope our tools and guides can help you.</p>
+                        <p className="text-2xl md:text-4xl">You&apos;re interested in new ideas, and we hope our tools and guides can help you.</p>
                         <div className="flex justify-center">
                             <svg className="w-32 h-32 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <p className="text-2xl mt-8">If you're expecting a free estimate, our team will reach out to you ASAP<br></br>(within 1 hour between 8AM - 8PM)</p>
-                        <p className="text-xl md:text-2xl font-semibold bg-white/10 p-4 rounded-lg shadow-md text-left">Check your email for the full bundle:<br></br>✔️ The Room Inspiration Color Collection<br></br>✔️ The $5,000 Contractor Scam Prevention Guide<br></br>✔️ The Instant Project Budget Planner Tool</p>
+                        <p className="text-2xl mt-8">If you&apos;re expecting a free estimate, our team will reach out to you ASAP<br></br>(within 1 hour between 8AM - 8PM)</p>
+                        <p className="text-xl md:text-2xl font-semibold bg-white/10 p-4 rounded-lg shadow-md text-left">Check your email for the full bundle:<br></br>✔️ The Room Inspiration Color Collection<br></br>✔️ The Instant Project Budget Planner Tool</p>
                         <p className="text-xl md:text-2xl font-semibold bg-white/10 p-4 rounded-lg shadow-md">⬇️ You can also access them below ⬇️</p>
                         <div className="flex flex-col space-y-4">
-                            <a href="/color-collection.pdf" download className="bg-[#093373] text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-800 transition-colors shadow-lg">Download &quot;The Room Inspiration Color Collection&quot;</a>
-                            <a href="/mistake-checklist.pdf" download className="bg-[#093373] text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-800 transition-colors shadow-lg">Download &quot;The $5,000 Contractor Scam Prevention Guide&quot;</a>
+                            <a href="https://atlas-paint.com/color-collection.pdf" download className="bg-[#093373] text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-800 transition-colors shadow-lg">Download &quot;The Room Inspiration Color Collection&quot;</a>
                             <a href="https://atlas-paint.com/estimatora7b3x9c2v1z4pq8r" target="_blank" className="bg-[#093373] text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-800 transition-colors shadow-lg">Open Estimator Tool</a>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
