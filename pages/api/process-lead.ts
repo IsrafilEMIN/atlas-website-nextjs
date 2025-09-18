@@ -136,7 +136,7 @@ export default async function handler(
     await notifyAdminOfFailure(email, firstName, lastName, 'complete_failure', { hubspotError, emailError });
     
     // Store lead data locally for manual processing
-    await storeFailedLead({ email, firstName, lastName, cleanedPhone, currentCondition });
+    // await storeFailedLead({ email, firstName, lastName, cleanedPhone, currentCondition });
     
     return res.status(500).json({ 
       message: 'Lead processing failed. We\'ve been notified and will contact you shortly.',
