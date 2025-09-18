@@ -123,11 +123,11 @@ export default async function handler(
     }
 
     // Attempt retry with fallback email service or queue for later
-    try {
-      await queueEmailForRetry(email, firstName, colorPaletteLink, estimatorLink);
-    } catch (queueError) {
-      console.error('Failed to queue email for retry:', queueError);
-    }
+    // try {
+    //   await queueEmailForRetry(email, firstName, colorPaletteLink, estimatorLink);
+    // } catch (queueError) {
+    //   console.error('Failed to queue email for retry:', queueError);
+    // }
   }
 
   // Step 3: Handle various failure scenarios
