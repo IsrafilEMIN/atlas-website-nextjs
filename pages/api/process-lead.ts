@@ -403,12 +403,12 @@ async function notifyAdminOfFailure(
 }
 
 // Helper function to queue email for retry
-async function queueEmailForRetry(
-  email: string,
-  firstName: string,
-  colorPaletteLink: string,
-  estimatorLink: string
-) {
+// async function queueEmailForRetry(
+//   email: string,
+//   firstName: string,
+//   colorPaletteLink: string,
+//   estimatorLink: string
+// ) {
   // Implementation depends on your infrastructure
   // Options:
   // 1. Store in database for cron job processing
@@ -425,8 +425,8 @@ async function queueEmailForRetry(
   //   createdAt: new Date()
   // });
   
-  console.log('Email queued for retry:', { email, firstName });
-}
+//   console.log('Email queued for retry:', { email, firstName });
+// }
 
 // Helper function to store failed lead data
 async function storeFailedLead(leadData: any) {
