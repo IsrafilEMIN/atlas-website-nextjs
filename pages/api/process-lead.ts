@@ -429,7 +429,7 @@ async function notifyAdminOfFailure(
 // }
 
 // Helper function to store failed lead data
-async function storeFailedLead(leadData: any) {
+// async function storeFailedLead(leadData: any) {
   // Store in database or file system for manual recovery
   // This ensures no lead is ever lost
   
@@ -440,5 +440,5 @@ async function storeFailedLead(leadData: any) {
   //   processed: false
   // });
   
-  console.log('Failed lead stored for manual processing:', leadData);
-}
+  // console.log('Failed lead stored for manual processing:', leadData);
+// }
