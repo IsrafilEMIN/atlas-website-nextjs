@@ -280,6 +280,7 @@ const PaintingLandingPage: NextPageWithLayout = () => {
             <Head>
                 <title>Book a call with us - Atlas HomeServices</title>
                 <meta name="description" content="Experience a seamless booking process for your next painting project. Atlas HomeServices guarantees quality and satisfaction." />
+                <meta name="robots" content="noindex" />
             </Head>
             {/* <GoogleReviewPill
                 reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review"
@@ -297,7 +298,7 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                             {/* Left Side Image - Desktop Only */}
                             <div className="hidden lg:block absolute -left-[32rem] top-0 w-96">
                                 <h3 className="text-white text-xl font-bold mb-2">FREE DOWNLOAD: THE ROOM INSPIRATION COLOR COLLECTION</h3>
-                                <div className="aspect-[6/5] overflow-hidden rounded-lg shadow-xl">
+                                <div className="aspect-[6/5] overflow-hidden rounded-lg">
                                     <Image
                                         src="/paintingOfferImages/the-color-collection-cover.png"
                                         alt="Before transformation - Atlas HomeServices"
@@ -383,7 +384,7 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                         </div>
                         {/* Mobile Single Image Version */}
                         <div className="block lg:hidden max-w-3xl mx-auto">
-                            <div className="aspect-video overflow-hidden rounded-lg shadow-xl mb-2">
+                            <div className="aspect-video overflow-hidden rounded-lg mb-2">
                                 <Image
                                     src="/paintingOfferImages/painting-landing-image-01.png"
                                     alt="Beautiful painting transformation - Atlas HomeServices"
@@ -540,7 +541,7 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                     </div>
                 </div>
             </div>
-            <footer className="w-full bg-gray-900 py-12 px-4">
+            <footer className="w-full bg-[#131628] py-12 px-4">
               <div className="max-w-4xl mx-auto text-center">
               
                 <Image src="/assets/Header - Atlas HomeServices Transparent-White.png" alt="Company Logo" width={300} height={100} className="mx-auto mb-4" unoptimized />

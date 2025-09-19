@@ -280,6 +280,7 @@ const EstimatorLandingPage: NextPageWithLayout = () => {
             <Head>
                 <title>Book a call with us - Atlas HomeServices</title>
                 <meta name="description" content="Experience a seamless booking process for your next painting project. Atlas HomeServices guarantees quality and satisfaction." />
+                <meta name="robots" content="noindex" />
             </Head>
             {/* <GoogleReviewPill
                 reviewLink="https://g.page/r/CXRbxbGzZYE3EBI/review"
@@ -290,8 +291,8 @@ const EstimatorLandingPage: NextPageWithLayout = () => {
             <div ref={pageContainerRef} className="flex flex-col items-center min-h-screen relative text-white pb-20 challenge-page-gradient">
                 <div className="w-full px-4 sm:px-6 lg:px-6 py-8 sm:py-10 text-center z-10">
                     <div className="space-y-2 md:space-y-8">
-                        <h1 className="lg:mb-10 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-7xl mx-auto uppercase">
-                            {headerTitle}
+                        <h1 className="lg:mb-10 text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-white max-w-7xl mx-auto uppercase">
+                            FREE TOOL: THE INSTANT PROJECT BUDGET PLANNER THAT HELPS YOU ESTIMATE YOUR COSTS
                         </h1>
                         {/* Enhanced Image Layout with Side Images and Arrows */}
                         <div className="relative max-w-3xl mx-auto hidden lg:block">
@@ -327,7 +328,6 @@ const EstimatorLandingPage: NextPageWithLayout = () => {
                             </div>
                             {/* Center Content */}
                             <div className="space-y-8">
-                                <h3 className="text-white text-2xl font-bold max-w-2xl mx-auto">FREE TOOL: THE INSTANT PROJECT BUDGET PLANNER THAT HELPS YOU ESTIMATE YOUR COSTS</h3>
                                 {/* Wrapper to control image size */}
                                 <div className="max-w-3xl mx-auto">
                                     {/* Main Center Image */}
@@ -347,44 +347,14 @@ const EstimatorLandingPage: NextPageWithLayout = () => {
                                     <QualificationForm onSubmit={handleFormSubmission} />
                                 </div>
                             </div>
-                            {/* Right Side Image - Desktop Only */}
-                            <div className="hidden lg:block absolute -right-[32rem] top-0 w-96">
-                                <h3 className="text-white text-xl font-bold mb-2">FREE DOWNLOAD: THE $5,000 CONTRACTOR SCAM PREVENTION</h3>
-                                <div className="aspect-[6/5] overflow-hidden rounded-lg">
-                                    <Image
-                                        src="/paintingOfferImages/the-scam-prevention-cover.png"
-                                        alt="After transformation - Atlas HomeServices"
-                                        className="w-full h-full object-cover"
-                                        width={600}
-                                        height={800}
-                                        priority
-                                    />
-                                </div>
-                                {/* Left-pointing Arrow with Refined Doodle Loop */}
-                                <div className="absolute -left-32 top-1/3 transform -translate-y-1/2 z-10">
-                                    <svg width="120" height="680" viewBox="0 0 120 660" fill="none" className="text-white drop-shadow-lg scale-x-[-1]">
-                                        <path
-                                            d="M20 290 C50 350, 15 410, 50 430 C110 450, 40 500, 70 460 C120 420, 90 580, 110 620 L100 614 M110 620 L115 612"
-                                            stroke="currentColor"
-                                            strokeWidth="3"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            fill="none"
-                                        />
-                                        <text x="40" y="400" fill="currentColor" fontSize="14" fontWeight="bold" textAnchor="middle" transform="scale(-1, 1) translate(-120, 0)">
-                                            Get it here!
-                                        </text>
-                                    </svg>
-                                </div>
-                            </div>
                         </div>
                         {/* Mobile Single Image Version */}
                         <div className="block lg:hidden">
                             {/* Mobile Merged Side Images */}
                             <div className="gap-4">
                                 <div>
-                                    <h3 className="mt-6 text-yellow text-xl font-bold mb-2 text-center">FREE TOOL & DOWNLOADS</h3>
-                                    <h3 className="mt-2 text-white text-lg md:text-xl font-bold mb-2 text-center">✅Cost Estimator ✅Color Collection<br></br>✅Contractor Scam Prevention Guide<br></br>That Helped Numerous Homeowners</h3>                                    <div className="overflow-hidden rounded-lg">
+                                    <h3 className="mt-6 text-yellow text-xl font-bold mb-2 text-center">+ FREE DOWNLOAD</h3>
+                                    <h3 className="mt-2 text-white text-lg md:text-xl font-bold mb-2 text-center">The Room Inspiration Color Collection</h3>                                    <div className="overflow-hidden rounded-lg">
                                         <Image
                                             src="/paintingOfferImages/the-landing-page-image.png"
                                             alt="Before transformation - Atlas HomeServices"
@@ -401,144 +371,70 @@ const EstimatorLandingPage: NextPageWithLayout = () => {
                                 <QualificationForm onSubmit={handleFormSubmission} />
                             </div>
                         </div>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto mt-12">
-                            <div className="flex-1 aspect-video">
-                                <Image
-                                    src="/paintingOfferImages/painting-landing-image-01.png"
-                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
-                                    className="w-full h-full object-cover"
-                                    width={1280}
-                                    height={720}
-                                    priority
-                                />
+                        <div className="mt-12 max-w-4xl mx-auto">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 uppercase">Here are the 9 &quot;plays&quot; you&apos;ll get access to</h2>
+                        <p className="text-lg text-center mb-8">When you download the free playbook, you&apos;ll unlock 9 proven plays that help gyms pack their classes, boost profit, and keep members coming back.</p>
+                        <ul className="space-y-4 text-left">
+                            <li className="flex items-start">
+                            <span className="mr-2 text-yellow-500 text-xl">✓</span>
+                            <div>
+                                <span className="font-bold">Reactivation Play:</span> Convert your old leads into paying members with this proven 3-day SMS/email sequence that you can copy and paste.
                             </div>
-                        </div>
-                        <div className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
-                            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">Why Choose Atlas HomeServices?</h3>
-                            <p className="text-lg md:text-xl text-gray-200">
-                                At Atlas HomeServices, we specialize in transforming your spaces with precision and care. Our team of experienced painters uses only premium materials to ensure a flawless finish that lasts. Whether it&apos;s interior or exterior painting, we handle every project with the utmost professionalism.
-                            </p>
-                            <ul className="mt-6 space-y-2 text-left max-w-2xl mx-auto">
-                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Fully licensed and insured</li>
-                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Eco-friendly paint options available</li>
-                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Satisfaction guaranteed</li>
-                            </ul>
-                        </div>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-5xl mx-auto mt-12">
-                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                                <Image
-                                    src="/paintingOfferImages/painting-offer-image-04.png"
-                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
-                                    className="w-full h-full object-cover"
-                                    width={1280}
-                                    height={720}
-                                    priority
-                                />
+                            </li>
+                            <li className="flex items-start">
+                            <span className="mr-2 text-yellow-500 text-xl">✓</span>
+                            <div>
+                                <span className="font-bold">Warm Outreach:</span> Turn the 6 types of social followers and leads into booked appointments consistently.
                             </div>
-                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                                <Image
-                                    src="/paintingOfferImages/painting-offer-image-03.png"
-                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
-                                    className="w-full h-full object-cover"
-                                    width={1280}
-                                    height={720}
-                                    priority
-                                />
+                            </li>
+                            <li className="flex items-start">
+                            <span className="mr-2 text-yellow-500 text-xl">✓</span>
+                            <div>
+                                <span className="font-bold">Class Card Downsell:</span> What to offer prospects who say &quot;no&quot; so they still hand you $600+ instead of walking away empty-handed.
                             </div>
-                        </div>
-                        <div className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
-                            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">How Long Does a Painting Project Take?</h3>
-                            <p className="text-lg md:text-xl text-gray-200">
-                                The duration of your project depends on the size and complexity, but most residential jobs are completed in 3-7 days. We start with a thorough consultation, followed by prep work, painting, and a final walkthrough to ensure everything meets your expectations.
-                            </p>
-                            <ul className="mt-6 space-y-2 text-left max-w-2xl mx-auto">
-                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Quick and efficient without compromising quality</li>
-                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Minimal disruption to your daily life</li>
-                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Clean-up included after every job</li>
-                            </ul>
-                        </div>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-5xl mx-auto mt-12">
-                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                                <Image
-                                    src="/paintingOfferImages/painting-offer-image-05.jpeg"
-                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
-                                    className="w-full h-full object-cover"
-                                    width={1280}
-                                    height={720}
-                                    priority
-                                />
+                            </li>
+                            <li className="flex items-start">
+                            <span className="mr-2 text-yellow-500 text-xl">✓</span>
+                            <div>
+                                <span className="font-bold">The Diamond Sale:</span> The most powerful &quot;psychological selling&quot; system that strategically uses a series of 4 offers to get more leads to buy higher-ticket packages.
                             </div>
-                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                                <Image
-                                    src="/paintingOfferImages/painting-offer-image-06.png"
-                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
-                                    className="w-full h-full object-cover"
-                                    width={1280}
-                                    height={720}
-                                    priority
-                                />
+                            </li>
+                            <li className="flex items-start">
+                            <span className="mr-2 text-yellow-500 text-xl">✓</span>
+                            <div>
+                                <span className="font-bold">Class Pack Bolt On:</span> The new way to sell &quot;unlimited memberships&quot; without actually selling unlimited access (this actually makes money).
                             </div>
-                        </div>
-                        <div className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
-                            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">What Paints Do We Use?</h3>
-                            <p className="text-lg md:text-xl text-gray-200">
-                                We partner with top brands like Benjamin Moore and Sherwin-Williams for durable, low-VOC paints that are safe for your family and the environment. Our experts can recommend colors and finishes tailored to your style and needs.
-                            </p>
-                            <ul className="mt-6 space-y-2 text-left max-w-2xl mx-auto">
-                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> High-quality, long-lasting results</li>
-                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Custom color matching available</li>
-                                <li className="flex items-center text-lg"><span className="mr-2">✓</span> Warranties on all work</li>
-                            </ul>
-                        </div>
-                        <div className="flex flex-col md:flex-row gap-4 max-w-5xl mx-auto mt-12">
-                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                                <Image
-                                    src="/paintingOfferImages/painting-offer-image-01.jpg"
-                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
-                                    className="w-full h-full object-cover"
-                                    width={1280}
-                                    height={720}
-                                    priority
-                                />
+                            </li>
+                            <li className="flex items-start">
+                            <span className="mr-2 text-yellow-500 text-xl">✓</span>
+                            <div>
+                                <span className="font-bold">The Whale Play:</span> A one-day play that you can run for your top members to get them to spend more and stay longer.
                             </div>
-                            <div className="flex-1 aspect-video bg-slate-800 shadow-2xl overflow-hidden border border-white">
-                                <Image
-                                    src="/paintingOfferImages/painting-offer-image-02.jpg"
-                                    alt="Beautifully painted interior by Atlas HomeServices - Image 1"
-                                    className="w-full h-full object-cover"
-                                    width={1280}
-                                    height={720}
-                                    priority
-                                />
+                            </li>
+                            <li className="flex items-start">
+                            <span className="mr-2 text-yellow-500 text-xl">✓</span>
+                            <div>
+                                <span className="font-bold">The Free Internal Play:</span> The 28-day challenge system that transforms your most disengaged members into your biggest advocates and referral sources.
                             </div>
-                        </div>
-                    </div>
-                    <div className="pt-12 sm:pt-28 text-center">
-                        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-5xl mx-auto">
-                            What Our Happy Clients Say
-                        </h2>
-                        <div className="mt-12 mx-auto w-full max-w-3xl space-y-0">
-                            {reviews.map((review, index) => (
-                                <div
-                                    key={index}
-                                    ref={index === 0 ? firstReviewRef : null}
-                                    className="bg-black/10 rounded-lg shadow-2xl"
-                                >
-                                <Image
-                                    src={review.src}
-                                    alt={review.alt}
-                                    className="w-full h-auto border-2 border-gray-400/50 rounded-md"
-                                    width={review.width}
-                                    height={review.height}
-                                    unoptimized
-                                />
-                                </div>
-                            ))}
+                            </li>
+                            <li className="flex items-start">
+                            <span className="mr-2 text-yellow-500 text-xl">✓</span>
+                            <div>
+                                <span className="font-bold">The Referral Week Play:</span> How to get your existing members to WANT to refer their friends, family, and colleagues naturally.
+                            </div>
+                            </li>
+                            <li className="flex items-start">
+                            <span className="mr-2 text-yellow-500 text-xl">✓</span>
+                            <div>
+                                <span className="font-bold">Free Cash Fridays:</span> The 10-minute weekly ritual that builds an incredible culture with your members and gets referrals pouring in.
+                            </div>
+                            </li>
+                        </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            <footer className="w-full bg-gray-900 py-12 px-4">
+            <footer className="w-full bg-[#131628] py-12 px-4">
               <div className="max-w-4xl mx-auto text-center">
               
                 <Image src="/assets/Header - Atlas HomeServices Transparent-White.png" alt="Company Logo" width={300} height={100} className="mx-auto mb-4" unoptimized />
