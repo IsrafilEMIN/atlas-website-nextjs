@@ -189,7 +189,6 @@ const EstimatorLandingPage: NextPageWithLayout = () => {
     const [utmContent, setUtmContent] = useState('');
     const pageContainerRef = useRef<HTMLDivElement>(null);
     const firstReviewRef = useRef<HTMLDivElement>(null);
-    const headerTitle = 'Homeowner\'s Trusted Painter';
     const reviews = useMemo(() => [
         { src: "/testimonialImages/testimonial-image-08.png", alt: "Google review for Atlas HomeServices", width: 800, height: 400 },
         { src: "/testimonialImages/testimonial-image-01.png", alt: "HomeStars review for Atlas HomeServices", width: 800, height: 400 },
