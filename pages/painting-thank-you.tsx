@@ -11,11 +11,11 @@ const PaintingThankYouHigh: NextPageWithLayout = () => {
     const [message, setMessage] = useState('We hope our tools and guides can help you.');
 
     useEffect(() => {
-        // const canAccess = sessionStorage.getItem('canAccessThankYou');
-        // if (!canAccess) {
-        //     router.push('/painting-landing');
-        //     return;
-        // }
+        const canAccess = sessionStorage.getItem('canAccessThankYou');
+        if (!canAccess) {
+            router.push('/painting-landing');
+            return;
+        }
 
         const leadDataString = sessionStorage.getItem('leadDataForThankYou');
         if (leadDataString) {

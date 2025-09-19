@@ -331,6 +331,8 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                                 <div className="max-w-4xl mx-auto">
                                     <div className="flex flex-col items-center gap-4">
                                         {/* Main Center Image */}
+                                        <h3 className="text-white text-5xl font-bold mt-6">GET YOUR FREE ESTIMATE</h3>
+                                        <h3 className="text-white text-2xl font-bold mb-2">And Free Tool & Download To Help You</h3>
                                         <h3 className="text-white text-3xl font-bold mb-2">Experience turly <strong><u>stress-free</u></strong> painting experience</h3>
                                         <div className="aspect-video overflow-hidden rounded-lg">
                                             <Image
@@ -342,8 +344,6 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                                                 priority
                                             />
                                         </div>
-                                        <h3 className="text-white text-4xl font-bold">GET YOUR FREE ESTIMATE</h3>
-                                        <h3 className="text-white text-2xl font-bold mb-2">AND FREE TOOL & DOWNLOAD TO HELP YOU</h3>
                                     </div>
                                 </div>
                                 {/* Form Section */}
@@ -384,7 +384,9 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                         </div>
                         {/* Mobile Single Image Version */}
                         <div className="block lg:hidden max-w-3xl mx-auto">
-                            <div className="aspect-video overflow-hidden rounded-lg mb-2">
+                            <h3 className="text-white text-2xl font-bold mb-2 text-center mt-4">GET YOUR FREE ESTIMATE</h3>
+                            <h3 className="text-white text-md font-bold text-center mb-2">And Free Tool & Download To Help You</h3>
+                            <div className="aspect-video overflow-hidden rounded-lg">
                                 <Image
                                     src="/paintingOfferImages/painting-landing-image-01.png"
                                     alt="Beautiful painting transformation - Atlas HomeServices"
@@ -397,8 +399,6 @@ const PaintingLandingPage: NextPageWithLayout = () => {
                             {/* Mobile Merged Side Images */}
                             <div className="gap-4">
                                 <div>
-                                    <h3 className="text-white text-xl font-bold mb-2 text-center">GET YOUR FREE ESTIMATE</h3>
-                                    <h3 className="text-white text-sm font-bold text-center">AND FREE TOOL & DOWNLOAD TO HELP YOU</h3>
                                     <div className="aspect-[5/5] overflow-hidden rounded-lg w-3/4 mx-auto">
                                         <Image
                                             src="/paintingOfferImages/the-landing-page-image.png"
