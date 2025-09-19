@@ -356,6 +356,7 @@ export default function App() {
 
     return (
         <div className="bg-[#f0f2f5] min-h-screen px-6 py-24 font-sans">
+            <meta name="robots" content="noindex" />
             <style>{`
                 .btn-primary { background-color: #093373; color: #ffffff; }
                 .btn-primary:hover { background-color: #0c4194; }
