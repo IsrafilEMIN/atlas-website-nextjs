@@ -166,7 +166,7 @@ export default function App() {
                     <p className="text-sm text-gray-500 mt-2">Transform your indoor spaces</p>
                 </SelectableCard>
                 <SelectableCard label="Exterior Painting" selected={false} onClick={() => setServiceType('exterior')}>
-                    <p className="text-sm text-gray-500 mt-2">Refresh your home's curb appeal</p>
+                    <p className="text-sm text-gray-500 mt-2">Refresh your home&apos;s curb appeal</p>
                 </SelectableCard>
                 <SelectableCard label="Cabinet Refinishing" selected={false} onClick={() => setServiceType('cabinets')}>
                     <p className="text-sm text-gray-500 mt-2">Update your kitchen or bath</p>
