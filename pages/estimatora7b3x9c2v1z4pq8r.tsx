@@ -370,7 +370,7 @@ export default function App() {
             <div className="max-w-2xl mx-auto text-left space-y-4">
                 <h3 className="text-xl font-semibold text-gray-900">Understanding Your Estimate</h3>
                 <p className="text-gray-600">
-                    This is a rough estimate based on standard pricing in Richmond Hill, Ontario. 
+                    This is a rough estimate based on standard pricing in GTA area, Ontario. 
                     Actual costs may vary based on precise measurements and other factors.
                 </p>
             </div>
@@ -401,7 +401,7 @@ export default function App() {
     );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 px-4 py-12">
+        <div className="px-4 py-24">
             <style>{`
                 @keyframes slideIn {
                     from { opacity: 0; transform: translateX(20px); }
