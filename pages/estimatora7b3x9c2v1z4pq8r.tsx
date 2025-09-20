@@ -1,194 +1,54 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 // --- TYPE DEFINITIONS ---
-interface Room {
-    id: number;
-    type: 'Bedroom' | 'Bathroom' | 'Living Room' | 'Dining Room' | 'Kitchen' | 'Hallway' | 'Entryway' | 'Office';
-    length: number | string;
-    width: number | string;
-    ceilingHeight: number | string;
-    paintWalls: boolean;
-    paintCeiling: boolean;
-    paintTrim: boolean;
-    doors: number | string;
-    paintDoorsCheck: boolean;
-}
-
-interface ExteriorItem {
-    id: number;
-    siding: string;
-    sqft: number | string;
-    stories: string;
-    trimLft: number | string;
-    doors: number | string;
-}
-
-type PrepCondition = 'good' | 'fair' | 'poor' | '';
-type PaintQuality = 'good' | 'better' | 'best' | '';
+type ServiceType = '' | 'interior' | 'exterior' | 'cabinets';
+// PrepCondition and PaintQuality types removed
+type AreaType = '' | 'floor' | 'wall';
 
 interface SelectableCardProps { label: string; selected: boolean; onClick: () => void; children?: React.ReactNode; }
-interface RoomModalProps { room: Room | null; onSave: (roomData: Room) => void; onClose: () => void; }
-interface ExteriorModalProps { item: ExteriorItem | null; onSave: (itemData: ExteriorItem) => void; onClose: () => void; }
 
-// --- HELPER & MODAL COMPONENTS ---
+// --- HELPER COMPONENTS ---
 const SelectableCard: React.FC<SelectableCardProps> = ({ label, selected, onClick, children = null }) => (
-    <div className={`selectable-card border-2 rounded-lg p-4 cursor-pointer text-center transition-all duration-200 ${selected ? 'border-[#093373] shadow-lg scale-105' : 'border-gray-200 hover:border-blue-400'}`} onClick={onClick}>
-        <h4 className="font-bold text-lg text-[#162733]">{label}</h4>
+    <div 
+        className={`relative overflow-hidden border rounded-2xl p-6 cursor-pointer text-center transition-all duration-300 ${
+            selected 
+                ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg scale-[1.02]' 
+                : 'border-gray-200 bg-white hover:border-blue-300 hover:shadow-md hover:scale-[1.01]'
+        }`} 
+        onClick={onClick}
+    >
+        {selected && (
+            <div className="absolute top-3 right-3 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                <svg className="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+            </div>
+        )}
+        <h4 className={`font-semibold text-lg mb-1 transition-colors ${selected ? 'text-blue-700' : 'text-gray-800'}`}>
+            {label}
+        </h4>
         {children}
     </div>
 );
 
-const RoomModal: React.FC<RoomModalProps> = ({ room, onSave, onClose }) => {
-    const initialRoomState: Room = {
-        id: Date.now(), type: 'Bedroom', length: '', width: '', ceilingHeight: 8,
-        paintWalls: true, paintCeiling: false, paintTrim: false, doors: '', paintDoorsCheck: false,
-    };
-    const [formData, setFormData] = useState<Room>(room || initialRoomState);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target;
-        let checked: boolean | undefined;
-        if (type === 'checkbox') {
-            checked = (e.target as HTMLInputElement).checked;
-        }
-        const newValue = type === 'checkbox' ? checked : value;
-        setFormData(prev => ({ ...prev, [name]: newValue }));
-    };
-
-    const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newType = e.target.value as Room['type'];
-        setFormData(prev => ({ ...prev, type: newType }));
-    };
-
-    const handleSave = () => {
-        if (!formData.length || !formData.width) {
-            alert("Please enter valid room dimensions."); return;
-        }
-        onSave(formData);
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full animate-fade-in-up max-h-[90vh] overflow-y-auto">
-                <h3 className="text-2xl font-serif font-semibold text-[#162733] mb-6">{room ? 'Edit' : 'Add'} Interior Space</h3>
-                <div className="space-y-4">
-                    <div>
-                        <label htmlFor="room-type" className="block text-sm font-medium text-gray-700">Room Type</label>
-                        <select id="room-type" name="type" value={formData.type} onChange={handleTypeChange} className="mt-1 block w-full py-2 px-3 border-2 border-gray-400 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#093373] focus:border-[#093373]">
-                            <option>Bedroom</option><option>Living Room</option><option>Kitchen</option><option>Bathroom</option><option>Hallway</option><option>Entryway</option><option>Office</option><option>Dining Room</option>
-                        </select>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="room-length" className="block text-sm font-medium text-gray-700">Length (ft)</label>
-                            <input type="number" id="room-length" name="length" value={formData.length} onChange={handleChange} className="mt-1 block w-full rounded-md shadow-sm border-2 border-gray-400 focus:ring-[#093373] focus:border-[#093373]" placeholder="e.g., 12" />
-                        </div>
-                        <div>
-                            <label htmlFor="room-width" className="block text-sm font-medium text-gray-700">Width (ft)</label>
-                            <input type="number" id="room-width" name="width" value={formData.width} onChange={handleChange} className="mt-1 block w-full rounded-md shadow-sm border-2 border-gray-400 focus:ring-[#093373] focus:border-[#093373]" placeholder="e.g., 15" />
-                        </div>
-                    </div>
-                    <div>
-                        <label htmlFor="ceiling-height" className="block text-sm font-medium text-gray-700">Ceiling Height (ft)</label>
-                        <select id="ceiling-height" name="ceilingHeight" value={String(formData.ceilingHeight)} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border-2 border-gray-400 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#093373] focus:border-[#093373]">
-                            <option value="8">8 ft (Standard)</option><option value="9">9 ft</option><option value="10">10 ft</option><option value="12">12+ ft (High/Vaulted)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <p className="block text-sm font-medium text-gray-700 mb-2">Standard Items to Paint</p>
-                        <div className="space-y-2">
-                            <label className="flex items-center"><input type="checkbox" name="paintWalls" checked={formData.paintWalls} onChange={handleChange} className="h-4 w-4 rounded border-2 border-gray-400 text-[#093373] focus:ring-[#093373] mr-2" />Walls</label>
-                            <label className="flex items-center"><input type="checkbox" name="paintCeiling" checked={formData.paintCeiling} onChange={handleChange} className="h-4 w-4 rounded border-2 border-gray-400 text-[#093373] focus:ring-[#093373] mr-2" />Ceiling</label>
-                            <label className="flex items-center"><input type="checkbox" name="paintTrim" checked={formData.paintTrim} onChange={handleChange} className="h-4 w-4 rounded border-2 border-gray-400 text-[#093373] focus:ring-[#093373] mr-2" />Trim & Baseboards</label>
-                            <div className="flex items-center gap-4">
-                                <label className="flex items-center"><input type="checkbox" name="paintDoorsCheck" checked={formData.paintDoorsCheck} onChange={handleChange} className="h-4 w-4 rounded border-2 border-gray-400 text-[#093373] focus:ring-[#093373] mr-2" />Room Doors</label>
-                                <input type="number" name="doors" value={formData.doors} onChange={handleChange} className={`block w-20 rounded-md shadow-sm border-2 border-gray-400 focus:ring-[#093373] focus:border-[#093373] ${!formData.paintDoorsCheck ? 'bg-gray-100 cursor-not-allowed' : ''}`} placeholder="Qty" disabled={!formData.paintDoorsCheck} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="mt-8 flex justify-end gap-4">
-                    <button onClick={onClose} className="btn-secondary font-bold py-2 px-6 rounded-lg">Cancel</button>
-                    <button onClick={handleSave} className="btn-primary font-bold py-2 px-6 rounded-lg">Save Space</button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const ExteriorModal: React.FC<ExteriorModalProps> = ({ item, onSave, onClose }) => {
-    const [formData, setFormData] = useState<ExteriorItem>(item || {
-        id: Date.now(), siding: 'Vinyl', sqft: '', stories: '1', trimLft: '', doors: '',
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => { 
-        const { name, value } = e.target; 
-        setFormData(prev => ({ ...prev, [name]: value })); 
-    };
-
-    const handleSave = () => {
-        if (!formData.sqft) { alert("Please enter a valid surface area."); return; }
-        onSave(formData);
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full animate-fade-in-up max-h-[90vh] overflow-y-auto">
-                <h3 className="text-2xl font-serif font-semibold text-[#162733] mb-6">{item ? 'Edit' : 'Add'} Exterior Surface</h3>
-                <div className="space-y-4">
-                    <div>
-                        <label htmlFor="siding-type" className="block text-sm font-medium text-gray-700">Siding Material</label>
-                        <select id="siding-type" name="siding" value={formData.siding} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border-2 border-gray-400 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#093373] focus:border-[#093373]">
-                            <option>Vinyl</option><option>Wood</option><option>Stucco</option><option>Brick</option><option>Metal</option><option>Fiber Cement</option>
-                        </select>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="surface-sqft" className="block text-sm font-medium text-gray-700">Siding Area (sq ft)</label>
-                            <input type="number" id="surface-sqft" name="sqft" value={formData.sqft} onChange={handleChange} className="mt-1 block w-full rounded-md shadow-sm border-2 border-gray-400 focus:ring-[#093373] focus:border-[#093373]" placeholder="e.g., 1500" />
-                        </div>
-                        <div>
-                            <label htmlFor="stories" className="block text-sm font-medium text-gray-700">Number of Stories</label>
-                            <select id="stories" name="stories" value={formData.stories} onChange={handleChange} className="mt-1 block w-full py-2 px-3 border-2 border-gray-400 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#093373] focus:border-[#093373]">
-                                <option value="1">1 Story</option><option value="2">2 Stories</option><option value="3">3 Stories</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label htmlFor="exterior-trim-lft" className="block text-sm font-medium text-gray-700">Trim (linear ft)</label>
-                        <input type="number" id="exterior-trim-lft" name="trimLft" value={formData.trimLft} onChange={handleChange} className="mt-1 block w-full rounded-md shadow-sm border-2 border-gray-400 focus:ring-[#093373] focus:border-[#093373]" />
-                    </div>
-                    <div>
-                        <label htmlFor="exterior-doors-qty" className="block text-sm font-medium text-gray-700">Exterior Doors (qty)</label>
-                        <input type="number" id="exterior-doors-qty" name="doors" value={formData.doors} onChange={handleChange} className="mt-1 block w-full rounded-md shadow-sm border-2 border-gray-400 focus:ring-[#093373] focus:border-[#093373]" />
-                    </div>
-                </div>
-                <div className="mt-8 flex justify-end gap-4">
-                    <button onClick={onClose} className="btn-secondary font-bold py-2 px-6 rounded-lg">Cancel</button>
-                    <button onClick={handleSave} className="btn-primary font-bold py-2 px-6 rounded-lg">Save Surface</button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
 // --- MAIN APP COMPONENT ---
 export default function App() {
-    const [currentStep, setCurrentStep] = useState(1);
-    const estimatorRef = useRef<HTMLDivElement>(null);
-    const [projectType, setProjectType] = useState('');
-    const [rooms, setRooms] = useState<Room[]>([]);
-    const [exteriorItems, setExteriorItems] = useState<ExteriorItem[]>([]);
-    const [selectedPrep, setSelectedPrep] = useState<PrepCondition>('');
-    const [selectedPaintQuality, setSelectedPaintQuality] = useState<PaintQuality>('');
-    const [isRoomModalOpen, setIsRoomModalOpen] = useState(false);
-    const [isExteriorModalOpen, setIsExteriorModalOpen] = useState(false);
-    const [editingRoom, setEditingRoom] = useState<Room | null>(null);
-    const [editingExteriorItem, setEditingExteriorItem] = useState<ExteriorItem | null>(null);
+    const [serviceType, setServiceType] = useState<ServiceType>('');
+    const [stories, setStories] = useState<number>(1);
+    const [hasBasement, setHasBasement] = useState<boolean>(false);
+    const [areaType, setAreaType] = useState<AreaType>('');
+    const [floorArea, setFloorArea] = useState<string>('');
+    const [wallArea, setWallArea] = useState<string>('');
+    const [cabinetsArea, setCabinetsArea] = useState<string>('');
+    // selectedPrep and selectedPaintQuality states removed
     const [estimate, setEstimate] = useState({ low: 0, high: 0 });
     const [isLoading, setIsLoading] = useState(false);
+    const [showResult, setShowResult] = useState(false);
+    const [activeAreaInput, setActiveAreaInput] = useState<AreaType>('');
 
-    useEffect(() => {
+    const estimatorRef = useRef<HTMLDivElement>(null);
+
+    const scrollToTop = () => {
         if (estimatorRef.current) {
             const headerOffset = 300;
             const elementPosition = estimatorRef.current.getBoundingClientRect().top + window.scrollY;
@@ -198,186 +58,365 @@ export default function App() {
                 behavior: 'smooth'
             });
         }
-    }, [currentStep]);
+    };
 
-    const fetchEstimate = useCallback(async () => {
-        if ((rooms.length === 0 && exteriorItems.length === 0) || !selectedPrep || !selectedPaintQuality) {
-            alert("Please select prep condition and paint quality before calculating.");
+    useEffect(() => {
+        scrollToTop();
+    }, []);
+
+    useEffect(() => {
+        scrollToTop();
+    }, [serviceType, showResult]);
+
+    const getTitle = () => {
+        switch (serviceType) {
+            case 'interior': return 'Interior Painting';
+            case 'exterior': return 'Exterior Painting';
+            case 'cabinets': return 'Cabinet Refinishing';
+            default: return 'Home Improvement';
+        }
+    };
+
+    const calculateEstimate = () => {
+        let currentArea: number;
+        if (serviceType === 'cabinets') {
+            currentArea = parseInt(cabinetsArea) || 0;
+        } else {
+            currentArea = areaType === 'floor' ? (parseInt(floorArea) || 0) : (parseInt(wallArea) || 0);
+        }
+        
+        // Updated validation to remove checks for prep and paint quality
+        if (currentArea <= 0 || (serviceType !== 'cabinets' && !areaType)) {
+            alert("Please fill in all required fields.");
             return;
         }
+        
         setIsLoading(true);
-        try {
-            const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-            const response = await fetch(`${baseUrl}/api/calculate-estimate`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ rooms, exteriorItems, projectType, selectedPrep, selectedPaintQuality }),
-            });
-            if (!response.ok) throw new Error('API Error');
-            const data = await response.json();
-            setEstimate(data);
-        } catch (error) {
-            console.error("Failed to fetch estimate:", error);
-        }
-        setIsLoading(false);
-    }, [rooms, exteriorItems, projectType, selectedPrep, selectedPaintQuality]);
+        setTimeout(() => {
+            let paintedArea: number;
+            if (serviceType === 'cabinets') {
+                paintedArea = parseInt(cabinetsArea) || 0; // doors & drawers count
+            } else {
+                const inputArea = areaType === 'floor' ? (parseInt(floorArea) || 0) : (parseInt(wallArea) || 0);
+                if (areaType === 'floor') {
+                    if (serviceType === 'interior') {
+                        paintedArea = inputArea * 2.5;
+                    } else {
+                        paintedArea = inputArea * 1.5;
+                    }
+                } else {
+                    paintedArea = inputArea;
+                }
+            }
 
-    const handleFinalCalculate = async () => {
-        await fetchEstimate();
-        setCurrentStep(4);
-    };
+            // --- LOGIC MODIFIED ---
+            // Removed laborRate and materialRate switch statements.
+            // Using a single, hardcoded rate for simplicity and realism.
+            let rate: number;
+            if (serviceType === 'cabinets') {
+                // Assuming an average price per door/drawer.
+                rate = 180; 
+            } else if (serviceType == 'interior') {
+                rate = 1; 
+            } else {
+                rate = 2;
+            }
+            // --- END MODIFICATION ---
 
-    const handleSaveRoom = (roomData: Room) => {
-        const index = rooms.findIndex(r => r.id === roomData.id);
-        if (index > -1) { setRooms(rooms.map(r => r.id === roomData.id ? roomData : r)); }
-        else { setRooms([...rooms, roomData]); }
-        setIsRoomModalOpen(false); setEditingRoom(null);
-    };
+            if (serviceType !== 'cabinets') {
+                if (stories === 2) rate *= 1.1;
+                if (stories >= 3) rate *= 1.2;
+                if (hasBasement && serviceType === 'interior') rate *= 1.1;
+            }
 
-    const handleSaveExterior = (itemData: ExteriorItem) => {
-        const index = exteriorItems.findIndex(i => i.id === itemData.id);
-        if (index > -1) { setExteriorItems(exteriorItems.map(i => i.id === itemData.id ? itemData : i)); }
-        else { setExteriorItems([...exteriorItems, itemData]); }
-        setIsExteriorModalOpen(false); setEditingExteriorItem(null);
+            const prepCost = 0;
+            const base = paintedArea * rate + prepCost;
+            const low = Math.round(base * 0.9); // Adjusted range to be a bit tighter
+            const high = Math.round(base * 1.1);
+
+            setEstimate({ low, high });
+            setIsLoading(false);
+            setShowResult(true);
+        }, 1000);
     };
 
     const startOver = () => {
-        setProjectType(''); setRooms([]); setExteriorItems([]);
-        setSelectedPrep(''); setSelectedPaintQuality(''); setCurrentStep(1);
+        setServiceType('');
+        setStories(1);
+        setHasBasement(false);
+        setAreaType('');
+        setFloorArea('');
+        setWallArea('');
+        setCabinetsArea('');
+        // setSelectedPrep and setSelectedPaintQuality resets removed
+        setShowResult(false);
+        setActiveAreaInput('');
     };
 
-    const formatCurrency = (num: number) => `$${num.toLocaleString()}`;
+    const formatCurrency = (num: number) => `$${num.toLocaleString()} CAD`;
 
-    const renderStep1 = () => (
-        <div className="text-center">
-            <h2 className="text-2xl md:text-3xl font-serif font-semibold text-[#162733] mb-8">What are we painting today?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-                <SelectableCard label="Interior" selected={projectType === 'interior'} onClick={() => setProjectType('interior')} />
-                <SelectableCard label="Exterior" selected={projectType === 'exterior'} onClick={() => setProjectType('exterior')} />
-                <SelectableCard label="Both" selected={projectType === 'both'} onClick={() => setProjectType('both')} />
+    const renderServiceSelection = () => (
+        <div className="text-center space-y-8">
+            <div className="space-y-3">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">What service do you need?</h2>
+                <p className="text-lg text-gray-600">Choose your project type to get started</p>
             </div>
-            <div className="mt-10 flex justify-center gap-4">
-                <button onClick={() => setCurrentStep(2)} className="btn-primary font-bold py-2 px-6 rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!projectType}>Continue</button>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <SelectableCard label="Interior Painting" selected={false} onClick={() => setServiceType('interior')}>
+                    <p className="text-sm text-gray-500 mt-2">Transform your indoor spaces</p>
+                </SelectableCard>
+                <SelectableCard label="Exterior Painting" selected={false} onClick={() => setServiceType('exterior')}>
+                    <p className="text-sm text-gray-500 mt-2">Refresh your home's curb appeal</p>
+                </SelectableCard>
+                <SelectableCard label="Cabinet Refinishing" selected={false} onClick={() => setServiceType('cabinets')}>
+                    <p className="text-sm text-gray-500 mt-2">Update your kitchen or bath</p>
+                </SelectableCard>
             </div>
         </div>
     );
 
-    const renderStep2 = () => (
-        <div>
-            <h2 className="text-2xl md:text-3xl font-serif font-semibold text-center text-[#162733] mb-6">Build Your Project</h2>
-            <div className="max-w-3xl mx-auto">
-                <div className="space-y-8">
-                    {(projectType === 'interior' || projectType === 'both') && (
-                        <div>
-                            <h3 className="text-xl font-semibold mb-4 text-gray-700">Interior Spaces</h3>
-                            <div className="space-y-4 mb-6">{rooms.length > 0 ? rooms.map(room => (
-                                <div key={room.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-                                    <div><p className="font-bold text-lg text-[#162733]">{room.type}</p><p className="text-sm text-gray-600">{room.length}&apos;x{room.width}&apos;</p></div>
-                                    <div className="flex gap-2"><button onClick={() => { setEditingRoom(room); setIsRoomModalOpen(true); }} className="text-blue-600 hover:text-blue-800 font-semibold">Edit</button><button onClick={() => setRooms(rooms.filter(r => r.id !== room.id))} className="text-red-600 hover:text-red-800 font-semibold">Delete</button></div>
-                                </div>
-                            )) : <p className="text-center text-gray-500 py-4">No spaces added yet.</p>}</div>
-                            <button onClick={() => { setEditingRoom(null); setIsRoomModalOpen(true); }} className="w-full btn-secondary font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>Add Interior Space</button>
+    const renderAreaInputs = () => {
+        const wallLabel = serviceType === 'exterior' ? 'Surface Area of Sidings (sq ft)' : 'Wall Surface Area (sq ft)';
+        const wallPlaceholder = serviceType === 'exterior' ? 'Enter surface area of sidings to be painted' : 'Enter wall surface area to be painted';
+
+        return (
+            <div className="relative min-h-[120px] flex items-center justify-center">
+                {!activeAreaInput ? (
+                    // Side by side view
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl mx-auto">
+                        <div className="space-y-3">
+                            <label className="text-sm font-medium text-gray-700">Floor Area (sq ft)</label>
+                            <input
+                                type="text"
+                                value={floorArea}
+                                onFocus={() => { setAreaType('floor'); setActiveAreaInput('floor'); }}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^0-9]/g, '');
+                                    setFloorArea(value);
+                                }}
+                                className="w-full px-4 py-3 text-lg border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                                placeholder="Enter total floor area"
+                            />
                         </div>
-                    )}
-                    {(projectType === 'exterior' || projectType === 'both') && (
-                        <div>
-                            <h3 className="text-xl font-semibold mb-4 text-gray-700">Exterior Surfaces</h3>
-                            <div className="space-y-4 mb-6">{exteriorItems.length > 0 ? exteriorItems.map(item => (
-                                <div key={item.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-                                    <div><p className="font-bold text-lg text-[#162733]">{item.sqft} sq ft {item.siding}</p><p className="text-sm text-gray-600">{item.stories}-story</p></div>
-                                    <div className="flex gap-2"><button onClick={() => { setEditingExteriorItem(item); setIsExteriorModalOpen(true); }} className="text-blue-600 hover:text-blue-800 font-semibold">Edit</button><button onClick={() => setExteriorItems(exteriorItems.filter(i => i.id !== item.id))} className="text-red-600 hover:text-red-800 font-semibold">Delete</button></div>
-                                </div>
-                            )) : <p className="text-center text-gray-500 py-4">No surfaces added yet.</p>}</div>
-                            <button onClick={() => { setEditingExteriorItem(null); setIsExteriorModalOpen(true); }} className="w-full btn-secondary font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>Add Exterior Surface</button>
+                        
+                        <div className="space-y-3">
+                            <label className="text-sm font-medium text-gray-700">{wallLabel}</label>
+                            <input
+                                type="text"
+                                value={wallArea}
+                                onFocus={() => { setAreaType('wall'); setActiveAreaInput('wall'); }}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^0-9]/g, '');
+                                    setWallArea(value);
+                                }}
+                                className="w-full px-4 py-3 text-lg border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                                placeholder={wallPlaceholder}
+                            />
                         </div>
-                    )}
-                </div>
-                <div className="mt-10 flex justify-center gap-4">
-                    <button onClick={() => setCurrentStep(1)} className="btn-secondary font-bold py-2 px-6 rounded-lg">Back</button>
-                    <button onClick={() => setCurrentStep(3)} className="btn-primary font-bold py-3 px-6 rounded-lg shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={(rooms.length === 0 && exteriorItems.length === 0)}>Next: Prep & Quality</button>
-                </div>
-            </div>
-        </div>
-    );
-
-    const renderStep3 = () => (
-        <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-serif font-semibold text-center text-[#162733] mb-8">The Details That Matter</h2>
-            <div className="mb-10">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">How much prep work is needed?</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-                    <SelectableCard label="Good Condition" selected={selectedPrep === 'good'} onClick={() => setSelectedPrep('good')}><p className="text-sm text-gray-600 mt-1">Minor prep. Surfaces have few, if any, holes to fill.</p></SelectableCard>
-                    <SelectableCard label="Fair Condition" selected={selectedPrep === 'fair'} onClick={() => setSelectedPrep('fair')}><p className="text-sm text-gray-600 mt-1">Moderate prep. Some scuffs, scratches, and minor patching needed.</p></SelectableCard>
-                    <SelectableCard label="Poor Condition" selected={selectedPrep === 'poor'} onClick={() => setSelectedPrep('poor')}><p className="text-sm text-gray-600 mt-1">Extensive prep. Significant repairs or wallpaper removal needed.</p></SelectableCard>
-                </div>
-            </div>
-            <div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">What quality of paint do you have in mind?</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-                    <SelectableCard label="Good (Builder)" selected={selectedPaintQuality === 'good'} onClick={() => setSelectedPaintQuality('good')}><p className="text-sm text-gray-600 mt-1">Meets basic needs. Good for low-traffic areas.</p></SelectableCard>
-                    <SelectableCard label="Better (Professional)" selected={selectedPaintQuality === 'better'} onClick={() => setSelectedPaintQuality('better')}><p className="text-sm text-gray-600 mt-1">Our most popular choice. Excellent durability and finish.</p></SelectableCard>
-                    <SelectableCard label="Best (Premium)" selected={selectedPaintQuality === 'best'} onClick={() => setSelectedPaintQuality('best')}><p className="text-sm text-gray-600 mt-1">Superior longevity, richer color, and a truly luxurious finish. (e.g., BM Aura, SW Emerald)</p></SelectableCard>
-                </div>
-            </div>
-            <div className="text-center mt-10 flex justify-center gap-4">
-                <button onClick={() => setCurrentStep(2)} className="btn-secondary font-bold py-3 px-8 rounded-lg text-lg">Back</button>
-                <button onClick={handleFinalCalculate} className="btn-primary font-bold py-3 px-8 rounded-lg text-lg shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!selectedPrep || !selectedPaintQuality}>
-                    See My Estimate
-                </button>
-            </div>
-        </div>
-    );
-
-    const renderStep4 = () => (
-        <div className="text-center">
-            <h2 className="text-2xl font-serif text-[#162733] mb-2">Your Estimated Project Range</h2>
-            <div className="text-4xl md:text-6xl font-bold text-[#093373] my-4 min-h-[72px] flex items-center justify-center">
-                {isLoading ? (
-                    <span className="animate-pulse">Calculating...</span>
+                    </div>
                 ) : (
-                    <span>{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</span>
+                    // Centered single field view
+                    <div className="w-full max-w-md mx-auto animate-[slideIn_0.3s_ease-out]">
+                        <div className="space-y-3">
+                            <label className="text-sm font-medium text-gray-700">
+                                {activeAreaInput === 'floor' ? 'Floor Area (sq ft)' : wallLabel}
+                            </label>
+                            <div className="relative">
+                                <button
+                                    onClick={() => {
+                                        setActiveAreaInput('');
+                                        if (activeAreaInput === 'floor') setFloorArea('');
+                                        if (activeAreaInput === 'wall') setWallArea('');
+                                        setAreaType('');
+                                    }}
+                                    className="absolute -left-12 top-1/2 transform -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors animate-[fadeIn_0.3s_ease-out]"
+                                >
+                                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <input
+                                    type="text"
+                                    value={activeAreaInput === 'floor' ? floorArea : wallArea}
+                                    onChange={(e) => {
+                                        const value = e.target.value.replace(/[^0-9]/g, '');
+                                        if (activeAreaInput === 'floor') setFloorArea(value);
+                                        if (activeAreaInput === 'wall') setWallArea(value);
+                                    }}
+                                    className="w-full px-4 py-3 text-lg border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+                                    placeholder={activeAreaInput === 'floor' ? 'Enter total floor area' : wallPlaceholder}
+                                    autoFocus
+                                />
+                            </div>
+                        </div>
+                    </div>
                 )}
             </div>
-            <div className="text-left max-w-2xl mx-auto">
-                <h3 className="text-xl font-serif font-semibold text-[#162733] mb-4">Understanding Your Estimate</h3>
-                <p className="text-gray-600 mb-4">Our estimates assume a professional, insured crew that properly prepares all surfaces and uses high-quality materials.</p>
+        );
+    };
+
+    const renderCabinetsInput = () => (
+        <div className="max-w-md mx-auto">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+                Total Number of Doors & Drawers
+            </label>
+            <input
+                type="text"
+                value={cabinetsArea}
+                onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, '');
+                    setCabinetsArea(value);
+                }}
+                className="w-full px-4 py-3 text-lg border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                placeholder="e.g., 20"
+            />
+        </div>
+    );
+
+    const renderForm = () => {
+        let isDisabled = false;
+        if (serviceType === 'cabinets') {
+            isDisabled = !cabinetsArea;
+        } else {
+            if (!areaType) isDisabled = true;
+            else if (areaType === 'floor') isDisabled = !floorArea;
+            else if (areaType === 'wall') isDisabled = !wallArea;
+        }
+
+        return (
+            <div className="text-center space-y-10">
+                <div className="space-y-3">
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                        {getTitle()} Estimate
+                    </h2>
+                </div>
+                
+                <div className="max-w-3xl mx-auto space-y-10">
+                    {serviceType !== 'cabinets' && (
+                        <div className="space-y-4 text-left">
+                            <label className="block text-sm font-medium text-gray-700">Stories (Excluding Basement)</label>
+                            <select 
+                                value={stories} 
+                                onChange={(e) => setStories(parseInt(e.target.value))}
+                                className="w-full px-4 py-3 text-lg border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                            >
+                                <option value={1}>1 Story</option>
+                                <option value={2}>2 Stories</option>
+                                <option value={3}>3+ Stories</option>
+                            </select>
+                        </div>
+                    )}
+                    
+                    {serviceType === 'interior' && (
+                        <div className="text-left">
+                            <label className="flex items-center space-x-3 cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    checked={hasBasement} 
+                                    onChange={(e) => setHasBasement(e.target.checked)}
+                                    className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500"
+                                />
+                                <span className="text-gray-700 font-medium">Has basement?</span>
+                            </label>
+                        </div>
+                    )}
+                    
+                    <div className="space-y-6">
+                        <h3 className="text-xl font-semibold text-gray-800">
+                            {serviceType === 'cabinets' ? 'Enter Cabinet Details' : 'Enter Area Details'}
+                        </h3>
+                        {serviceType === 'cabinets' ? renderCabinetsInput() : renderAreaInputs()}
+                    </div>
+                    
+                    {/* Surface Condition and Paint Quality UI sections have been removed */}
+                    
+                    <div className="flex flex-col sm:flex-row justify-center gap-4 pt-8">
+                        <button 
+                            onClick={() => setServiceType('')}
+                            className="px-8 py-3 text-lg font-semibold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                        >
+                            Back to Services
+                        </button>
+                        <button 
+                            onClick={calculateEstimate}
+                            disabled={isDisabled}
+                            className="px-8 py-3 text-lg font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-lg"
+                        >
+                            Calculate Estimate
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div className="mt-8 flex flex-col items-center gap-4">
-                <button onClick={() => window.location.href = '/painting-landing?utm_source=estimator_tool&utm_medium=lead_magnet'} className="btn-primary font-bold py-4 px-10 rounded-lg text-xl shadow-xl">
+        );
+    };
+
+    const renderResult = () => (
+        <div className="text-center space-y-8">
+            <div className="space-y-3">
+                <h2 className="text-3xl font-bold text-gray-900">Your Estimated Project Range</h2>
+                <p className="text-gray-600">Based on your specifications</p>
+            </div>
+            
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 border border-blue-200">
+                <div className="text-4xl md:text-5xl font-bold text-blue-700 min-h-[60px] flex items-center justify-center">
+                    {isLoading ? (
+                        <span className="animate-pulse">Calculating...</span>
+                    ) : (
+                        <span>{formatCurrency(estimate.low)} - {formatCurrency(estimate.high)}</span>
+                    )}
+                </div>
+            </div>
+            
+            <div className="max-w-2xl mx-auto text-left space-y-4">
+                <h3 className="text-xl font-semibold text-gray-900">Understanding Your Estimate</h3>
+                <p className="text-gray-600">
+                    This is a rough estimate based on standard pricing in Richmond Hill, Ontario. 
+                    Actual costs may vary based on precise measurements and other factors.
+                </p>
+            </div>
+            
+            <div className="space-y-6">
+                <button 
+                    onClick={() => window.location.href = '/painting-landing?utm_source=estimator_tool&utm_medium=lead_magnet'}
+                    className="px-10 py-4 text-xl font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors shadow-lg"
+                >
                     Schedule a Free, Exact Quote
                 </button>
-                <div className="flex items-center gap-4">
-                    <button onClick={() => setCurrentStep(3)} className="btn-secondary font-bold py-2 px-6 rounded-lg">Back</button>
-                    <button onClick={startOver} className="btn-secondary font-bold py-2 px-6 rounded-lg">Start Over</button>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                    <button 
+                        onClick={() => setShowResult(false)}
+                        className="px-6 py-3 font-semibold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                    >
+                        Back
+                    </button>
+                    <button 
+                        onClick={startOver}
+                        className="px-6 py-3 font-semibold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                    >
+                        Start Over
+                    </button>
                 </div>
             </div>
         </div>
     );
 
     return (
-        <div className="bg-[#f0f2f5] min-h-screen px-6 py-24 font-sans">
-            <meta name="robots" content="noindex" />
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 px-4 py-12">
             <style>{`
-                .btn-primary { background-color: #093373; color: #ffffff; }
-                .btn-primary:hover { background-color: #0c4194; }
-                .btn-secondary { background-color: #e0e7ff; color: #162733; }
-                .btn-secondary:hover { background-color: #c7d2fe; }
-                @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Inter:wght@400;700&display=swap');
-                .font-serif { font-family: 'Lora', serif; }
-                .font-sans { font-family: 'Inter', sans-serif; }
-                @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-                .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
+                @keyframes slideIn {
+                    from { opacity: 0; transform: translateX(20px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
             `}</style>
-            <div ref={estimatorRef} className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl">
-                <div className="relative app-container p-6 md:p-10">
-                    {currentStep === 1 && renderStep1()}
-                    {currentStep === 2 && renderStep2()}
-                    {currentStep === 3 && renderStep3()}
-                    {currentStep === 4 && renderStep4()}
+            <div ref={estimatorRef} className="w-full max-w-5xl mx-auto">
+                <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+                    {!serviceType ? renderServiceSelection() : (showResult ? renderResult() : renderForm())}
                 </div>
             </div>
-            {isRoomModalOpen && <RoomModal room={editingRoom} onSave={handleSaveRoom} onClose={() => { setIsRoomModalOpen(false); setEditingRoom(null); }} />}
-            {isExteriorModalOpen && <ExteriorModal item={editingExteriorItem} onSave={handleSaveExterior} onClose={() => { setIsExteriorModalOpen(false); setEditingExteriorItem(null); }} />}
         </div>
     );
 }
