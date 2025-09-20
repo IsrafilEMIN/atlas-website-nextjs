@@ -83,9 +83,6 @@ export default function Home() {
       <div className="bg-white">
         <main className="w-full">
           <Hero />
-          <TrustBadges />
-          <OurProcess />
-          <DownloadGuides /> {/* Kept your original component */}
         </main>
       </div>
     </>
