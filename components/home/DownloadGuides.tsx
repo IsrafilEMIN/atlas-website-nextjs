@@ -1,6 +1,5 @@
 // components/home/DownloadGuides.tsx
 import * as React from "react";
-import Image from "next/image";
 import { Download, ChevronRight } from "lucide-react";
 
 export default function DownloadGuides() {
@@ -44,7 +43,7 @@ export default function DownloadGuides() {
             Free Color Guide
           </h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Get expert insights on 2025's trending colors that increase home value and appeal.
+            Get expert insights on 2025&apos;s trending colors that increase home value and appeal.
           </p>
         </div>
 
@@ -56,13 +55,6 @@ export default function DownloadGuides() {
               <div className="absolute inset-0 flex items-center justify-center">
                 <Download className="w-12 h-12 text-slate-400" />
               </div>
-              {/* Uncomment when you have the actual image */}
-              {/* <Image
-                src="/guides/cover-image.png"
-                alt="2025 Color Trends Guide Cover"
-                fill
-                className="object-cover"
-              /> */}
             </div>
 
             {/* Content */}

@@ -15,28 +15,28 @@ const LuxuryPaintingHomepage = () => {
 
   // Sophisticated hero carousel data
   const heroSlides = [
-    {
-      title: "Elevate Your Space",
-      subtitle: "With Timeless Elegance",
-      description: "Where craftsmanship meets sophistication for interiors that inspire",
-      image: "linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #4a5568 100%)",
-      accent: "#D4AF37"
-    },
-    {
-      title: "Artisan Quality",
-      subtitle: "Exceptional Results",
-      description: "Every surface transformed with meticulous attention to detail and premium materials",
-      image: "linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%)",
-      accent: "#B8860B"
-    },
-    {
-      title: "Your Vision",
-      subtitle: "Our Mastery",
-      description: "Luxury painting services that transform houses into distinguished homes",
-      image: "linear-gradient(135deg, #374151 0%, #4b5563 50%, #6b7280 100%)",
-      accent: "#CD853F"
-    }
-  ];
+  {
+    title: "Professional Results",
+    subtitle: "On Time, Every Time",
+    description: "Quality painting services that keep your projects on schedule and on budget",
+    image: "linear-gradient(135deg, #64748b 0%, #94a3b8 50%, #cbd5e1 100%)",
+    accent: "#475569"
+  },
+  {
+    title: "Trusted by Professionals",
+    subtitle: "Realtors & General Contractors",
+    description: "Reliable painting partner for flips, new construction, and commercial projects",
+    image: "linear-gradient(135deg, #6b7280 0%, #9ca3af 50%, #d1d5db 100%)",
+    accent: "#4b5563"
+  },
+  {
+    title: "Quality Meets Speed",
+    subtitle: "No Compromises",
+    description: "Expert craftsmanship with efficient processes that deliver results when you need them",
+    image: "linear-gradient(135deg, #78716c 0%, #a8a29e 50%, #d6d3d1 100%)",
+    accent: "#57534e"
+  }
+];
 
   const steps = [
     {
@@ -72,7 +72,7 @@ const LuxuryPaintingHomepage = () => {
   const trustBadges = [
     { 
       name: '500+', 
-      description: 'Luxury Projects',
+      description: '  Projects',
       icon: <Users className="w-12 h-12 text-amber-600" />
     },
     { 
@@ -180,7 +180,7 @@ const LuxuryPaintingHomepage = () => {
             <h3 className="text-sm font-medium text-stone-600 tracking-widest uppercase mb-4">Distinguished Excellence</h3>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-            {trustBadges.map((badge, index) => (
+            {trustBadges.map((badge) => (
               <div key={badge.name} className="text-center group">
                 <div className="mb-6 flex justify-center transform group-hover:scale-105 transition-transform duration-500">
                   {badge.icon}
@@ -236,11 +236,10 @@ const LuxuryPaintingHomepage = () => {
       </section>
 
       {/* Premium Guide Section */}
-      <section className="py-32 bg-stone-50">
+      {/* <section className="py-32 bg-stone-50">
         <div className="max-w-4xl mx-auto px-8 text-center">
           <div className="bg-white rounded-none shadow-2xl p-16 relative overflow-hidden border border-stone-100">
-            {/* Subtle background elements */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-amber-50 rounded-full blur-3xl opacity-60"></div>
+\            <div className="absolute top-0 right-0 w-48 h-48 bg-amber-50 rounded-full blur-3xl opacity-60"></div>
             <div className="absolute bottom-0 left-0 w-40 h-40 bg-stone-50 rounded-full blur-2xl opacity-80"></div>
             
             <div className="relative z-10">
@@ -274,7 +273,7 @@ const LuxuryPaintingHomepage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Sophisticated CTA Section */}
       <section className="py-16 bg-gradient-to-b from-stone-800 via-stone-900 to-stone-800 relative overflow-hidden">
