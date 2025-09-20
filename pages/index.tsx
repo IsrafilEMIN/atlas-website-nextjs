@@ -3,9 +3,6 @@ import Head from "next/head";
 
 // --- Import your new home page sections ---
 import Hero from "@/components/home/Hero";
-import TrustBadges from "@/components/home/TrustBadges";
-import OurProcess from "@/components/home/OurProcess";
-import DownloadGuides from "@/components/home/DownloadGuides";
 
 export default function Home() {
   const schemaPayload = {
@@ -83,9 +80,6 @@ export default function Home() {
       <div className="bg-white">
         <main className="w-full">
           <Hero />
-          <TrustBadges />
-          <OurProcess />
-          <DownloadGuides /> {/* Kept your original component */}
         </main>
       </div>
     </>
